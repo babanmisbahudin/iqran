@@ -4,14 +4,10 @@ import 'audio_service.dart';
 class AudioPlayerService {
   static final AudioPlayer _player = AudioPlayer();
 
-  static bool get isPlaying => _player.playing;
+  static AudioPlayer get player => _player;
 
   static Future<void> playSurah(int surahNumber) async {
-    final qariKey = await AudioService.loadQari();
-
-    final url =
-        'https://equran.id/content/audio/$qariKey/${surahNumber.toString().padLeft(3, '0')}.mp3';
-
+    final url = await AudioService.getAudioUrl(surahNumber);
     await _player.setUrl(url);
     await _player.play();
   }
@@ -23,4 +19,6 @@ class AudioPlayerService {
   static Future<void> stop() async {
     await _player.stop();
   }
+
+  static bool get isPlaying => _player.playing;
 }

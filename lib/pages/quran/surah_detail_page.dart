@@ -48,18 +48,13 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
         actions: [
           IconButton(
             tooltip: 'Latin',
-            icon: Icon(
-              Icons.text_fields,
-              color: showLatin ? cs.primary : null,
-            ),
+            icon: Icon(Icons.text_fields, color: showLatin ? cs.primary : null),
             onPressed: () => setState(() => showLatin = !showLatin),
           ),
           IconButton(
             tooltip: 'Terjemahan',
-            icon: Icon(
-              Icons.translate,
-              color: showTranslate ? cs.primary : null,
-            ),
+            icon:
+                Icon(Icons.translate, color: showTranslate ? cs.primary : null),
             onPressed: () => setState(() => showTranslate = !showTranslate),
           ),
         ],
@@ -71,8 +66,12 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
       body: FutureBuilder<List<Ayat>>(
         future: QuranService.fetchAyat(widget.nomor),
         builder: (context, ayatSnap) {
-          if (!ayatSnap.hasData) {
+          if (ayatSnap.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!ayatSnap.hasData || ayatSnap.data!.isEmpty) {
+            return const Center(child: Text('Ayat tidak tersedia'));
           }
 
           final ayatList = ayatSnap.data!;
@@ -111,12 +110,11 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                 itemCount: ayatList.length + 1,
                 itemBuilder: (context, index) {
                   // =========================
-                  // AUDIO PANEL DI ATAS
+                  // AUDIO PANEL (DI ATAS)
                   // =========================
                   if (index == 0) {
                     return SurahAudioPanel(
                       surahNumber: widget.nomor,
-                      surahName: widget.nama,
                     );
                   }
 
@@ -142,7 +140,9 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                           if (!mounted) return;
 
                           // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          final messenger = ScaffoldMessenger.of(context);
+
+                          messenger.showSnackBar(
                             SnackBar(
                               content: Text(
                                 'Progress disimpan: ${widget.nama} ayat ${ayat.nomor}',
@@ -237,9 +237,6 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                                   color: cs.outline.withValues(alpha: 0.3),
                                 ),
 
-                              // ======================
-                              // LATIN
-                              // ======================
                               if (showLatin) ...[
                                 const SizedBox(height: 10),
                                 Text(
@@ -254,9 +251,6 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                                 ),
                               ],
 
-                              // ======================
-                              // TERJEMAHAN
-                              // ======================
                               if (showTranslate) ...[
                                 const SizedBox(height: 12),
                                 Text(

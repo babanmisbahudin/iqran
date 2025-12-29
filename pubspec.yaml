@@ -10,14 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   http: ^1.2.0
   shared_preferences: ^2.2.2
   google_fonts: ^6.1.0
   cupertino_icons: ^1.0.6
-
-  # AUDIO PLAYER (WAJIB UNTUK MUROTTAL)
   just_audio: ^0.9.38
+
 
 dev_dependencies:
   flutter_test:
