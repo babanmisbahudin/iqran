@@ -1,16 +1,44 @@
-# iqran
+# Iqran – Qur’an Murajaah App
 
-A new Flutter project.
+Iqran adalah aplikasi Al-Qur’an berbasis Flutter yang dirancang untuk **murajaah (mengulang bacaan)** secara konsisten, ringan, dan fokus.  
+Aplikasi ini menekankan kemudahan melanjutkan bacaan terakhir, penandaan ayat, serta mode belajar untuk pemula.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## Fitur Utama
 
-A few resources to get you started if this is your first Flutter project:
+-  **Daftar Surah Al-Qur’an**
+-  **Tampilan Ayat Arab (font Qur’an)**
+-  **Latin (opsional)**
+-  **Terjemahan Bahasa Indonesia (opsional)**
+-  **Bookmark Ayat** (long press)
+-  **Progress Murajaah**
+  - Simpan surah & ayat terakhir dibaca
+  - Auto-scroll ke ayat terakhir
+  - Penanda visual yang jelas
+-  **Dark Mode & Light Mode**
+-  **Pengaturan ukuran font Arab**
+-  Penyimpanan lokal (SharedPreferences)
+-  UI ringan & responsif
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+##  Alur Penggunaan
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Pilih surah
+2. Tap ayat → **progress otomatis tersimpan**
+3. Long press ayat → **bookmark**
+4. Buka kembali surah → **auto-scroll ke ayat terakhir**
+5. Aktifkan Latin / Terjemahan jika dibutuhkan
+
+## Developer
+Baban Misbahudin
+Instagram : @himisbah
+Linkedin  : Baban Misbahudin
+Dibuat dengan niat untuk ibadah, konsistensi, dan belajar.
+
+## Lisensi
+Project ini bersifat personal & edukatif.
+Silakan digunakan, dimodifikasi, dan dikembangkan dengan tetap menghargai sumber data & pengembang.
+
+## Kontribusi
+Pull request, ide, dan diskusi sangat terbuka.
+Silakan fork dan oprek
