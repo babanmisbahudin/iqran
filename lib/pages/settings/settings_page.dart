@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'audio_settings_card.dart';
 
 class SettingsPage extends StatelessWidget {
   final bool isDark;
@@ -16,17 +17,13 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
 
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 520, // biar rapi di tablet
-          ),
+          constraints: const BoxConstraints(maxWidth: 520),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               // =========================
               // TAMPILAN
@@ -59,14 +56,12 @@ class SettingsPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         'Ukuran Font Arab: ${fontSize.toInt()}',
-                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Slider(
                         min: 20,
                         max: 40,
                         divisions: 10,
                         value: fontSize,
-                        label: fontSize.toInt().toString(),
                         onChanged: onFont,
                       ),
                     ],
@@ -77,88 +72,27 @@ class SettingsPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // =========================
-              // TENTANG APLIKASI
+              // AUDIO MUROTTAL ✅
               // =========================
-              Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Tentang Aplikasi',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'Iqran adalah aplikasi Al-Qur’an pribadi '
-                        'yang dirancang untuk membantu murajaah '
-                        'secara konsisten dan nyaman.\n\n'
-                        'Fitur utama:\n'
-                        '• Membaca Al-Qur’an\n'
-                        '• Bookmark ayat\n'
-                        '• Progress murajaah\n'
-                        '• Mode belajar (Latin & Terjemahan)',
-                        style: TextStyle(height: 1.5),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const AudioSettingsCard(),
 
               const SizedBox(height: 20),
 
               // =========================
-              // DEVELOPER / COPYRIGHT
+              // TENTANG
               // =========================
               Card(
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Pengembang',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'Dibuat oleh:\n'
-                        'Baban Misbahudin / @himisbah\n\n'
-                        '© 2025 Iqran App\n'
-                        'Semua hak cipta dilindungi.',
-                        style: TextStyle(height: 1.5),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 18,
-                            color: cs.primary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Versi 1.0.0',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ],
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Iqran adalah aplikasi Al-Qur’an pribadi '
+                    'untuk membantu murajaah secara konsisten.\n\n'
+                    '© 2025 Iqran App',
+                    style: TextStyle(height: 1.5),
                   ),
                 ),
               ),

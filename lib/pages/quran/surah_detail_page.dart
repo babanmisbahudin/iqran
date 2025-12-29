@@ -7,6 +7,8 @@ import '../../services/progress_service.dart';
 import '../../models/ayat.dart';
 import '../../models/ayat_bookmark.dart';
 
+import '../../widgets/surah_audio_panel.dart';
+
 class SurahDetailPage extends StatefulWidget {
   final int nomor;
   final String nama;
@@ -50,9 +52,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
               Icons.text_fields,
               color: showLatin ? cs.primary : null,
             ),
-            onPressed: () {
-              setState(() => showLatin = !showLatin);
-            },
+            onPressed: () => setState(() => showLatin = !showLatin),
           ),
           IconButton(
             tooltip: 'Terjemahan',
@@ -60,12 +60,14 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
               Icons.translate,
               color: showTranslate ? cs.primary : null,
             ),
-            onPressed: () {
-              setState(() => showTranslate = !showTranslate);
-            },
+            onPressed: () => setState(() => showTranslate = !showTranslate),
           ),
         ],
       ),
+
+      // =========================
+      // BODY
+      // =========================
       body: FutureBuilder<List<Ayat>>(
         future: QuranService.fetchAyat(widget.nomor),
         builder: (context, ayatSnap) {
@@ -91,15 +93,14 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
                 if (index != -1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (!_scrollController.hasClients) return;
-
-                    _scrollController.animateTo(
-                      index * 150.0,
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOut,
-                    );
+                    if (_scrollController.hasClients) {
+                      _scrollController.animateTo(
+                        index * 150.0,
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.easeOut,
+                      );
+                    }
                   });
-
                   _hasAutoScrolled = true;
                 }
               }
@@ -107,9 +108,19 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
               return ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: ayatList.length,
+                itemCount: ayatList.length + 1,
                 itemBuilder: (context, index) {
-                  final ayat = ayatList[index];
+                  // =========================
+                  // AUDIO PANEL DI ATAS
+                  // =========================
+                  if (index == 0) {
+                    return SurahAudioPanel(
+                      surahNumber: widget.nomor,
+                      surahName: widget.nama,
+                    );
+                  }
+
+                  final ayat = ayatList[index - 1];
                   final isLastRead =
                       lastSurah == widget.nomor && lastAyat == ayat.nomor;
 
@@ -129,6 +140,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                           );
 
                           if (!mounted) return;
+
                           // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -141,6 +153,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
                           setState(() {});
                         },
+
                         onLongPress: () async {
                           if (isBookmarked) {
                             await BookmarkService.remove(
@@ -160,6 +173,10 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
                           if (mounted) setState(() {});
                         },
+
+                        // =========================
+                        // AYAT CARD
+                        // =========================
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 18),
                           padding: const EdgeInsets.all(16),
@@ -183,7 +200,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // ======================
-                              // AYAT ARAB + BADGE
+                              // ARAB + BADGE
                               // ======================
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,39 +220,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                                     ),
                                   ),
                                   if (isLastRead)
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 8),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            cs.primary.withValues(alpha: 0.15),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.schedule,
-                                            size: 14,
-                                            color: cs.primary,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            'Terakhir dibaca',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall
-                                                ?.copyWith(
-                                                  color: cs.primary,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                    _LastReadBadge(cs)
                                   else if (isBookmarked)
                                     const Icon(
                                       Icons.star,
@@ -293,6 +278,40 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+// =========================
+// BADGE TERAKHIR DIBACA
+// =========================
+class _LastReadBadge extends StatelessWidget {
+  final ColorScheme cs;
+  const _LastReadBadge(this.cs);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: cs.primary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.schedule, size: 14, color: cs.primary),
+          const SizedBox(width: 4),
+          Text(
+            'Terakhir dibaca',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ],
       ),
     );
   }

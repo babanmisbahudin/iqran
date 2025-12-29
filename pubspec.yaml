@@ -16,12 +16,18 @@ dependencies:
   google_fonts: ^6.1.0
   cupertino_icons: ^1.0.6
 
+  # AUDIO PLAYER (WAJIB UNTUK MUROTTAL)
+  just_audio: ^0.9.38
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
+  # SPLASH SCREEN
   flutter_native_splash: ^2.4.0
+
+  # APP ICON
   flutter_launcher_icons: ^0.13.1
 
 flutter:
