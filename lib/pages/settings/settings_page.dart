@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'audio_settings_card.dart';
+import '../../widgets/developer_info_card.dart';
 
 class SettingsPage extends StatelessWidget {
   final bool isDark;
@@ -17,7 +18,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -54,9 +54,7 @@ class SettingsPage extends StatelessWidget {
                         onChanged: onTheme,
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        'Ukuran Font Arab: ${fontSize.toInt()}',
-                      ),
+                      Text('Ukuran Font Arab: ${fontSize.toInt()}'),
                       Slider(
                         min: 20,
                         max: 40,
@@ -72,14 +70,14 @@ class SettingsPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // =========================
-              // AUDIO MUROTTAL ✅
+              // AUDIO MUROTTAL
               // =========================
               const AudioSettingsCard(),
 
               const SizedBox(height: 20),
 
               // =========================
-              // TENTANG
+              // TENTANG APLIKASI
               // =========================
               Card(
                 elevation: 0,
@@ -96,6 +94,13 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
+
+              const SizedBox(height: 20),
+
+              // =========================
+              // DEVELOPER & COPYRIGHT
+              // =========================
+              const DeveloperInfoCard(),
 
               const SizedBox(height: 32),
             ],
