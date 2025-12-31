@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../theme/app_theme.dart';
 import 'main_navigation.dart';
+import '../widgets/global_audio_fab.dart';
 
 class IqranApp extends StatefulWidget {
   const IqranApp({super.key});
@@ -17,21 +19,21 @@ class _IqranAppState extends State<IqranApp> {
   @override
   void initState() {
     super.initState();
-    _load();
+    _loadPreferences();
   }
 
-  Future<void> _load() async {
-    final p = await SharedPreferences.getInstance();
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isDark = p.getBool('dark') ?? true;
-      arabFont = p.getDouble('font') ?? 28;
+      isDark = prefs.getBool('dark') ?? true;
+      arabFont = prefs.getDouble('font') ?? 28;
     });
   }
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setBool('dark', isDark);
-    await p.setDouble('font', arabFont);
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('dark', isDark);
+    await prefs.setDouble('font', arabFont);
   }
 
   @override
@@ -39,17 +41,20 @@ class _IqranAppState extends State<IqranApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(isDark),
-      home: MainNavigation(
-        isDark: isDark,
-        fontSize: arabFont,
-        onTheme: (v) {
-          setState(() => isDark = v);
-          _save();
-        },
-        onFont: (v) {
-          setState(() => arabFont = v);
-          _save();
-        },
+      home: Scaffold(
+        body: MainNavigation(
+          isDark: isDark,
+          fontSize: arabFont,
+          onTheme: (value) {
+            setState(() => isDark = value);
+            _savePreferences();
+          },
+          onFont: (value) {
+            setState(() => arabFont = value);
+            _savePreferences();
+          },
+        ),
+        floatingActionButton: const GlobalAudioFAB(),
       ),
     );
   }
