@@ -57,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                       Text('Ukuran Font Arab: ${fontSize.toInt()}'),
                       Slider(
                         min: 20,
-                        max: 40,
+                        max: 50,
                         divisions: 10,
                         value: fontSize,
                         onChanged: onFont,
@@ -87,9 +87,8 @@ class SettingsPage extends StatelessWidget {
                 child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Iqran adalah aplikasi Al-Qur’an pribadi '
-                    'untuk membantu murajaah secara konsisten.\n\n'
-                    '© 2025 Iqran App',
+                    'Iqran (Iqro Al-Quran) '
+                    'untuk membantu murajaah secara konsisten.',
                     style: TextStyle(height: 1.5),
                   ),
                 ),

@@ -3,10 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AudioService {
   static const _keyQari = 'selected_qari';
 
-  /// 🔑 key = internal, value = label
+  /// 🔑 key = internal, value = label (nama tampil)
   static const Map<String, String> qariList = {
     'juhany': 'Abdullah Al-Juhany',
+    'alqasim': 'Abdul Muhsin Al-Qasim',
     'sudais': 'Abdurrahman As-Sudais',
+    'ibrahim': 'Ibrahim Al-Dossari',
     'afasy': 'Misyari Rasyid Al-Afasy',
     'yasser': 'Yasser Al-Dosari',
   };
@@ -14,7 +16,9 @@ class AudioService {
   /// 🔗 folder CDN (WAJIB cocok dengan equran)
   static const Map<String, String> qariFolder = {
     'juhany': 'Abdullah-Al-Juhany',
+    'alqasim': 'Abdul-Muhsin-Al-Qasim',
     'sudais': 'Abdurrahman-as-Sudais',
+    'ibrahim': 'Ibrahim-Al-Dossari',
     'afasy': 'Misyari-Rasyid-Al-Afasy',
     'yasser': 'Yasser-Al-Dosari',
   };
