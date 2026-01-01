@@ -58,8 +58,9 @@ class SettingsPage extends StatelessWidget {
                               const SizedBox(height: 12),
                               SwitchListTile(
                                 contentPadding: EdgeInsets.zero,
-                                title: const Text('Dark Mode'),
-                                subtitle: const Text('Aktifkan mode gelap'),
+                                title: const Text('Light/Dark Mode'),
+                                subtitle:
+                                    const Text('Aktifkan mode terang/gelap'),
                                 value: isDark,
                                 onChanged: onTheme,
                               ),

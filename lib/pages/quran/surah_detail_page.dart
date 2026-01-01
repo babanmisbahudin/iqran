@@ -5,7 +5,6 @@ import '../../services/progress_service.dart';
 import '../../services/surah_bookmark_service.dart';
 
 import '../../models/ayat.dart';
-
 import '../../widgets/surah_audio_panel.dart';
 
 class SurahDetailPage extends StatefulWidget {
@@ -24,22 +23,57 @@ class SurahDetailPage extends StatefulWidget {
   State<SurahDetailPage> createState() => _SurahDetailPageState();
 }
 
-class _SurahDetailPageState extends State<SurahDetailPage> {
+class _SurahDetailPageState extends State<SurahDetailPage>
+    with SingleTickerProviderStateMixin {
   bool showLatin = false;
   bool showTranslate = false;
 
   final ScrollController _scrollController = ScrollController();
   bool _hasAutoScrolled = false;
 
+  // =========================
+  // BOOKMARK ANIMATION
+  // =========================
+  late final AnimationController _bookmarkController;
+  late final Animation<double> _scaleAnim;
+  late final Animation<double> _opacityAnim;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bookmarkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+
+    _scaleAnim = Tween<double>(begin: 1.0, end: 1.15)
+        .chain(CurveTween(curve: Curves.easeInOut))
+        .animate(_bookmarkController);
+
+    _opacityAnim = Tween<double>(begin: 0.6, end: 1.0)
+        .chain(CurveTween(curve: Curves.easeInOut))
+        .animate(_bookmarkController);
+
+    _bookmarkController.repeat(reverse: true);
+
+    Future.delayed(const Duration(seconds: 4), () {
+      if (mounted) _bookmarkController.stop();
+    });
+  }
+
   @override
   void dispose() {
+    _bookmarkController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       // =========================
@@ -54,12 +88,24 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             builder: (context, snap) {
               final isBookmarked = snap.data ?? false;
 
+              final icon = Icon(
+                Icons.star,
+                color: isBookmarked ? Colors.amber : cs.onSurface,
+              );
+
               return IconButton(
                 tooltip: 'Surah Favorit',
-                icon: Icon(
-                  Icons.star,
-                  color: isBookmarked ? Colors.amber : Colors.white,
-                ),
+                icon: isBookmarked
+                    ? icon
+                    : ScaleTransition(
+                        scale: _scaleAnim,
+                        child: isDark
+                            ? icon
+                            : FadeTransition(
+                                opacity: _opacityAnim,
+                                child: icon,
+                              ),
+                      ),
                 onPressed: () async {
                   if (isBookmarked) {
                     await SurahBookmarkService.remove(widget.nomor);
@@ -79,7 +125,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             tooltip: 'Latin',
             icon: Icon(
               Icons.text_fields,
-              color: showLatin ? cs.primary : null,
+              color: showLatin ? cs.primary : cs.onSurface,
             ),
             onPressed: () => setState(() => showLatin = !showLatin),
           ),
@@ -87,7 +133,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             tooltip: 'Terjemahan',
             icon: Icon(
               Icons.translate,
-              color: showTranslate ? cs.primary : null,
+              color: showTranslate ? cs.primary : cs.onSurface,
             ),
             onPressed: () => setState(() => showTranslate = !showTranslate),
           ),
@@ -116,7 +162,9 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
               final lastSurah = progressSnap.data?['surah'];
               final lastAyat = progressSnap.data?['ayat'];
 
-              // AUTO SCROLL
+              // =========================
+              // AUTO SCROLL TERAKHIR DIBACA
+              // =========================
               if (!_hasAutoScrolled &&
                   lastSurah == widget.nomor &&
                   lastAyat != null) {
@@ -126,7 +174,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (_scrollController.hasClients) {
                       _scrollController.animateTo(
-                        index * 150.0,
+                        index * 180.0,
                         duration: const Duration(milliseconds: 600),
                         curve: Curves.easeOut,
                       );
@@ -153,6 +201,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
                   return GestureDetector(
                     onTap: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+
                       await ProgressService.save(
                         surah: widget.nomor,
                         ayat: ayat.nomor,
@@ -160,11 +210,10 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
                       if (!mounted) return;
 
-                      // ignore: use_build_context_synchronously
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      messenger.showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Progress disimpan: ${widget.nama} ayat ${ayat.nomor}',
+                            'Terakhir dibaca: ${widget.nama} ayat ${ayat.nomor}',
                           ),
                           duration: const Duration(seconds: 1),
                         ),
@@ -173,10 +222,10 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       setState(() {});
                     },
                     child: Container(
-                      margin: const EdgeInsets.only(bottom: 18),
-                      padding: const EdgeInsets.all(16),
+                      margin: const EdgeInsets.only(bottom: 26),
+                      padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(18),
                         color: isLastRead
                             ? cs.primary.withValues(alpha: 0.12)
                             : null,
@@ -204,6 +253,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                                     style: TextStyle(
                                       fontFamily: 'QuranFont',
                                       fontSize: widget.fontSize,
+                                      height: 1.9,
+                                      letterSpacing: 0.5,
                                       color: cs.onSurface,
                                     ),
                                   ),
@@ -213,22 +264,29 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                             ],
                           ),
                           if (showLatin || showTranslate)
-                            Divider(
-                              thickness: 0.6,
-                              color: cs.outline.withValues(alpha: 0.3),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Divider(
+                                thickness: 0.6,
+                                color: cs.outline.withValues(alpha: 0.3),
+                              ),
                             ),
                           if (showLatin)
-                            Text(
-                              ayat.latin,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(fontStyle: FontStyle.italic),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                ayat.latin,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  height: 1.6,
+                                ),
+                              ),
                             ),
                           if (showTranslate)
                             Text(
                               ayat.indo,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(height: 1.7),
                             ),
                         ],
                       ),
@@ -255,18 +313,25 @@ class _LastReadBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: cs.primary.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(14),
       ),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.schedule, size: 14, color: cs.primary),
-          const SizedBox(width: 4),
+          const SizedBox(height: 4),
           Text(
-            'Terakhir dibaca',
+            'Terakhir',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          Text(
+            'dibaca',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: cs.primary,
                   fontWeight: FontWeight.w600,
