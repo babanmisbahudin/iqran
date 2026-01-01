@@ -5,16 +5,50 @@ import '../../services/progress_service.dart';
 import '../../models/surah.dart';
 import 'surah_detail_page.dart';
 
-class SurahListPage extends StatelessWidget {
+class SurahListPage extends StatefulWidget {
   final double fontSize;
   const SurahListPage({super.key, required this.fontSize});
 
   @override
+  State<SurahListPage> createState() => _SurahListPageState();
+}
+
+class _SurahListPageState extends State<SurahListPage> {
+  bool _isSearching = false;
+  String _keyword = '';
+
+  @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Al-Qur’an')),
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Cari surah…',
+                  border: InputBorder.none,
+                ),
+                style: theme.textTheme.titleMedium,
+                onChanged: (v) {
+                  setState(() => _keyword = v.toLowerCase());
+                },
+              )
+            : const Text('Al-Qur’an'),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                _keyword = '';
+              });
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder<List<Surah>>(
         future: QuranService.fetchSurah(),
         builder: (_, snapshot) {
@@ -22,19 +56,36 @@ class SurahListPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final surahList = snapshot.data!;
+          final allSurah = snapshot.data!;
+
+          /// ======================
+          /// FILTER SURAH
+          /// ======================
+          final filteredSurah = _keyword.isEmpty
+              ? allSurah
+              : allSurah.where((s) {
+                  return s.namaLatin.toLowerCase().contains(_keyword) ||
+                      s.nama.toLowerCase().contains(_keyword) ||
+                      s.nomor.toString().contains(_keyword);
+                }).toList();
 
           return FutureBuilder<Map<String, int>?>(
             future: ProgressService.load(),
             builder: (_, progressSnap) {
               final lastSurah = progressSnap.data?['surah'];
 
+              if (filteredSurah.isEmpty) {
+                return const Center(
+                  child: Text('Surah tidak ditemukan'),
+                );
+              }
+
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: surahList.length,
+                itemCount: filteredSurah.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
                 itemBuilder: (context, index) {
-                  final e = surahList[index];
+                  final e = filteredSurah[index];
                   final isLastRead = e.nomor == lastSurah;
 
                   return Container(
@@ -65,24 +116,18 @@ class SurahListPage extends StatelessWidget {
                           Expanded(
                             child: Text(
                               e.namaLatin,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                           if (isLastRead)
                             Text(
                               'Terakhir dibaca',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: cs.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: cs.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                         ],
                       ),
@@ -92,11 +137,11 @@ class SurahListPage extends StatelessWidget {
                       // ======================
                       subtitle: Text(
                         '${e.jumlahAyat} ayat',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: theme.textTheme.bodySmall,
                       ),
 
                       // ======================
-                      // NAMA ARAB (DIPERBESAR)
+                      // NAMA ARAB
                       // ======================
                       trailing: Text(
                         e.nama,
@@ -115,7 +160,7 @@ class SurahListPage extends StatelessWidget {
                             builder: (_) => SurahDetailPage(
                               nomor: e.nomor,
                               nama: e.namaLatin,
-                              fontSize: fontSize,
+                              fontSize: widget.fontSize,
                             ),
                           ),
                         );

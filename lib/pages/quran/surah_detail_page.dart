@@ -12,12 +12,29 @@ class SurahDetailPage extends StatefulWidget {
   final String nama;
   final double fontSize;
 
+  /// =========================
+  /// DEFAULT CONSTRUCTOR
+  /// =========================
   const SurahDetailPage({
     super.key,
     required this.nomor,
     required this.nama,
     required this.fontSize,
   });
+
+  /// =========================
+  /// CONSTRUCTOR DARI BOOKMARK
+  /// =========================
+  factory SurahDetailPage.fromBookmark({
+    required int nomor,
+    required String nama,
+  }) {
+    return SurahDetailPage(
+      nomor: nomor,
+      nama: nama,
+      fontSize: 28, // default aman & konsisten
+    );
+  }
 
   @override
   State<SurahDetailPage> createState() => _SurahDetailPageState();
@@ -76,9 +93,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      // =========================
-      // APP BAR
-      // =========================
       appBar: AppBar(
         title: Text(widget.nama),
         actions: [
@@ -139,10 +153,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
           ),
         ],
       ),
-
-      // =========================
-      // BODY
-      // =========================
       body: FutureBuilder<List<Ayat>>(
         future: QuranService.fetchAyat(widget.nomor),
         builder: (context, ayatSnap) {
@@ -162,9 +172,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
               final lastSurah = progressSnap.data?['surah'];
               final lastAyat = progressSnap.data?['ayat'];
 
-              // =========================
-              // AUTO SCROLL TERAKHIR DIBACA
-              // =========================
               if (!_hasAutoScrolled &&
                   lastSurah == widget.nomor &&
                   lastAyat != null) {
@@ -190,9 +197,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                 itemCount: ayatList.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    return SurahAudioPanel(
-                      surahNumber: widget.nomor,
-                    );
+                    return SurahAudioPanel(surahNumber: widget.nomor);
                   }
 
                   final ayat = ayatList[index - 1];
@@ -254,7 +259,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                                       fontSize: widget.fontSize,
                                       height: 1.9,
                                       letterSpacing: 0.5,
-                                      color: cs.onSurface,
                                     ),
                                   ),
                                 ),
@@ -262,31 +266,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                               if (isLastRead) _LastReadBadge(cs),
                             ],
                           ),
-                          if (showLatin || showTranslate)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Divider(
-                                thickness: 0.6,
-                                color: cs.outline.withValues(alpha: 0.3),
-                              ),
-                            ),
-                          if (showLatin)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                ayat.latin,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                  height: 1.6,
-                                ),
-                              ),
-                            ),
-                          if (showTranslate)
-                            Text(
-                              ayat.indo,
-                              style: theme.textTheme.bodyMedium
-                                  ?.copyWith(height: 1.7),
-                            ),
                         ],
                       ),
                     ),
@@ -317,25 +296,13 @@ class _LastReadBadge extends StatelessWidget {
         color: cs.primary.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Column(
+      child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.schedule, size: 14, color: cs.primary),
-          const SizedBox(height: 4),
-          Text(
-            'Terakhir',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: cs.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-          Text(
-            'dibaca',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: cs.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
+          Icon(Icons.schedule, size: 14),
+          SizedBox(height: 4),
+          Text('Terakhir'),
+          Text('dibaca'),
         ],
       ),
     );

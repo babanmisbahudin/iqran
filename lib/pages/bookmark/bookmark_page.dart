@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+
 import '../../services/surah_bookmark_service.dart';
 import '../../models/surah_bookmark.dart';
+import '../quran/surah_detail_page.dart';
 
 class BookmarkPage extends StatelessWidget {
   const BookmarkPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Surah Favorit')),
+      appBar: AppBar(
+        title: const Text('Surah Favorit'),
+      ),
       body: FutureBuilder<List<SurahBookmark>>(
         future: SurahBookmarkService.getAll(),
         builder: (context, snapshot) {
@@ -17,23 +24,76 @@ class BookmarkPage extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Belum ada surah favorit'));
+            return const Center(
+              child: Text('Belum ada surah favorit'),
+            );
           }
 
           final list = snapshot.data!;
 
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
             itemCount: list.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final surah = list[index];
 
-              return ListTile(
-                leading: const Icon(Icons.star, color: Colors.amber),
-                title: Text(surah.nama),
-                subtitle: Text('Surah ke-${surah.nomor}'),
-                onTap: () {
-                  // nanti bisa navigasi ke SurahDetailPage
-                },
+              return Material(
+                color: cs.surface,
+                borderRadius: BorderRadius.circular(14),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(14),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SurahDetailPage.fromBookmark(
+                          nomor: surah.nomor,
+                          nama: surah.nama,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                surah.nama,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Surah ke-${surah.nomor}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: cs.onSurface.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               );
             },
           );
