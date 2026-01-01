@@ -11,10 +11,21 @@ class Ayat {
     required this.indo,
   });
 
-  factory Ayat.fromJson(Map<String, dynamic> j) => Ayat(
-        nomor: j['nomorAyat'],
-        arab: j['teksArab'],
-        latin: j['teksLatin'],
-        indo: j['teksIndonesia'],
-      );
+  factory Ayat.fromJson(Map<String, dynamic> json) {
+    return Ayat(
+      nomor: json['nomorAyat'],
+      arab: json['teksArab'],
+      latin: json['teksLatin'],
+      indo: json['teksIndonesia'],
+    );
+  }
+
+  factory Ayat.fromMap(Map<String, dynamic> map) {
+    return Ayat(
+      nomor: map['nomor'],
+      arab: map['arab'],
+      latin: map['latin'],
+      indo: map['indo'],
+    );
+  }
 }

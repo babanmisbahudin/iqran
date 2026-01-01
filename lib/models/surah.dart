@@ -3,21 +3,29 @@ class Surah {
   final String nama;
   final String namaLatin;
   final int jumlahAyat;
-  final String tempatTurun;
 
   Surah({
     required this.nomor,
     required this.nama,
     required this.namaLatin,
     required this.jumlahAyat,
-    required this.tempatTurun,
   });
 
-  factory Surah.fromJson(Map<String, dynamic> j) => Surah(
-        nomor: j['nomor'],
-        nama: j['nama'],
-        namaLatin: j['namaLatin'],
-        jumlahAyat: j['jumlahAyat'],
-        tempatTurun: j['tempatTurun'],
-      );
+  factory Surah.fromJson(Map<String, dynamic> json) {
+    return Surah(
+      nomor: json['nomor'],
+      nama: json['nama'],
+      namaLatin: json['namaLatin'],
+      jumlahAyat: json['jumlahAyat'],
+    );
+  }
+
+  factory Surah.fromMap(Map<String, dynamic> map) {
+    return Surah(
+      nomor: map['nomor'],
+      nama: map['nama'],
+      namaLatin: map['nama_latin'],
+      jumlahAyat: map['jumlah_ayat'],
+    );
+  }
 }

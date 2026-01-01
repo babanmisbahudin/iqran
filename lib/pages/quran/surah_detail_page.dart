@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../../services/quran_service.dart';
 import '../../services/progress_service.dart';
@@ -12,9 +13,6 @@ class SurahDetailPage extends StatefulWidget {
   final String nama;
   final double fontSize;
 
-  /// =========================
-  /// DEFAULT CONSTRUCTOR
-  /// =========================
   const SurahDetailPage({
     super.key,
     required this.nomor,
@@ -22,9 +20,6 @@ class SurahDetailPage extends StatefulWidget {
     required this.fontSize,
   });
 
-  /// =========================
-  /// CONSTRUCTOR DARI BOOKMARK
-  /// =========================
   factory SurahDetailPage.fromBookmark({
     required int nomor,
     required String nama,
@@ -32,7 +27,7 @@ class SurahDetailPage extends StatefulWidget {
     return SurahDetailPage(
       nomor: nomor,
       nama: nama,
-      fontSize: 28, // default aman & konsisten
+      fontSize: 28,
     );
   }
 
@@ -48,9 +43,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
   final ScrollController _scrollController = ScrollController();
   bool _hasAutoScrolled = false;
 
-  // =========================
-  // BOOKMARK ANIMATION
-  // =========================
   late final AnimationController _bookmarkController;
   late final Animation<double> _scaleAnim;
   late final Animation<double> _opacityAnim;
@@ -96,7 +88,22 @@ class _SurahDetailPageState extends State<SurahDetailPage>
       appBar: AppBar(
         title: Text(widget.nama),
         actions: [
-          /// ⭐ BOOKMARK SURAH
+          /// 📵 OFFLINE INDICATOR (FIXED)
+          FutureBuilder<List<ConnectivityResult>>(
+            future: Connectivity().checkConnectivity(),
+            builder: (_, snap) {
+              final results = snap.data ?? [];
+              if (results.contains(ConnectivityResult.none)) {
+                return const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Icon(Icons.wifi_off),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+
+          /// ⭐ BOOKMARK
           FutureBuilder<bool>(
             future: SurahBookmarkService.isBookmarked(widget.nomor),
             builder: (context, snap) {
@@ -143,6 +150,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
             ),
             onPressed: () => setState(() => showLatin = !showLatin),
           ),
+
           IconButton(
             tooltip: 'Terjemahan',
             icon: Icon(
@@ -176,7 +184,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                   lastSurah == widget.nomor &&
                   lastAyat != null) {
                 final index = ayatList.indexWhere((a) => a.nomor == lastAyat);
-
                 if (index != -1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (_scrollController.hasClients) {
@@ -211,9 +218,8 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                         ayat: ayat.nomor,
                       );
 
-                      if (!mounted) return;
+                      if (!context.mounted) return;
 
-                      // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -258,7 +264,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                                       fontFamily: 'QuranFont',
                                       fontSize: widget.fontSize,
                                       height: 1.9,
-                                      letterSpacing: 0.5,
                                     ),
                                   ),
                                 ),
@@ -266,6 +271,32 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                               if (isLastRead) _LastReadBadge(cs),
                             ],
                           ),
+                          if (showLatin || showTranslate)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Divider(
+                                thickness: 0.6,
+                                color: cs.outline.withValues(alpha: 0.3),
+                              ),
+                            ),
+                          if (showLatin)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                ayat.latin,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          if (showTranslate)
+                            Text(
+                              ayat.indo,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                height: 1.7,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -280,9 +311,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
   }
 }
 
-// =========================
-// BADGE TERAKHIR DIBACA
-// =========================
 class _LastReadBadge extends StatelessWidget {
   final ColorScheme cs;
   const _LastReadBadge(this.cs);
