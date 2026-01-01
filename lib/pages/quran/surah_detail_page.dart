@@ -88,7 +88,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
             builder: (context, snap) {
               final isBookmarked = snap.data ?? false;
 
-              final icon = Icon(
+              final starIcon = Icon(
                 Icons.star,
                 color: isBookmarked ? Colors.amber : cs.onSurface,
               );
@@ -96,14 +96,14 @@ class _SurahDetailPageState extends State<SurahDetailPage>
               return IconButton(
                 tooltip: 'Surah Favorit',
                 icon: isBookmarked
-                    ? icon
+                    ? starIcon
                     : ScaleTransition(
                         scale: _scaleAnim,
                         child: isDark
-                            ? icon
+                            ? starIcon
                             : FadeTransition(
                                 opacity: _opacityAnim,
-                                child: icon,
+                                child: starIcon,
                               ),
                       ),
                 onPressed: () async {
@@ -174,7 +174,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (_scrollController.hasClients) {
                       _scrollController.animateTo(
-                        index * 180.0,
+                        index * 180,
                         duration: const Duration(milliseconds: 600),
                         curve: Curves.easeOut,
                       );
@@ -201,8 +201,6 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
                   return GestureDetector(
                     onTap: () async {
-                      final messenger = ScaffoldMessenger.of(context);
-
                       await ProgressService.save(
                         surah: widget.nomor,
                         ayat: ayat.nomor,
@@ -210,7 +208,8 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
                       if (!mounted) return;
 
-                      messenger.showSnackBar(
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             'Terakhir dibaca: ${widget.nama} ayat ${ayat.nomor}',
