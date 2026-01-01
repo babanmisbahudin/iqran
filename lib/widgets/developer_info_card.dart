@@ -85,7 +85,7 @@ class DeveloperInfoCard extends StatelessWidget {
             const Divider(),
             const SizedBox(height: 8),
             const Text(
-              '© 2025 Iqran App\nAll rights reserved.',
+              '© 2026 Iqran App\nAll rights reserved.',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
