@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../pages/quran/surah_list_page.dart';
-import '../pages/bookmark/bookmark_page.dart';
+import '../pages/home/home_page.dart';
 import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
+import '../pages/quran/surah_list_page.dart';
 
 class MainNavigation extends StatefulWidget {
   final bool isDark;
@@ -28,8 +28,7 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      SurahListPage(fontSize: widget.fontSize),
-      const BookmarkPage(),
+      const HomePage(),
       const ProgressPage(),
       SettingsPage(
         isDark: widget.isDark,
@@ -37,6 +36,7 @@ class _MainNavigationState extends State<MainNavigation> {
         onTheme: widget.onTheme,
         onFont: widget.onFont,
       ),
+      SurahListPage(fontSize: widget.fontSize),
     ];
 
     return Scaffold(
@@ -54,16 +54,20 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
           );
         },
-        child: pages[index],
+        child: PageStorage(
+          bucket: PageStorageBucket(),
+          child: pages[index],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (i) => setState(() => index = i),
+        type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Qur'an"),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Bookmark'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
           BottomNavigationBarItem(icon: Icon(Icons.insights), label: 'Progress'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Pengaturan'),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Qur'an"),
         ],
       ),
     );
