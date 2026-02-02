@@ -64,8 +64,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-    final greetingFormat = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
-    final dateStr = greetingFormat.format(now);
+
+    String dateStr;
+    try {
+      final greetingFormat = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
+      dateStr = greetingFormat.format(now);
+    } catch (e) {
+      // Fallback if locale not initialized (e.g., on web)
+      dateStr = '${now.day}/${now.month}/${now.year}';
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
