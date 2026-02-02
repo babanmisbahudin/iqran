@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../pages/home/home_page.dart';
 import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
-import '../pages/quran/surah_list_page.dart';
 
 class MainNavigation extends StatefulWidget {
   final bool isDark;
@@ -36,7 +35,6 @@ class _MainNavigationState extends State<MainNavigation> {
         onTheme: widget.onTheme,
         onFont: widget.onFont,
       ),
-      SurahListPage(fontSize: widget.fontSize),
     ];
 
     return Scaffold(
@@ -67,7 +65,6 @@ class _MainNavigationState extends State<MainNavigation> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
           BottomNavigationBarItem(icon: Icon(Icons.insights), label: 'Progress'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Pengaturan'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Qur'an"),
         ],
       ),
     );

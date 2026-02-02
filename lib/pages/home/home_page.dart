@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../quran/surah_list_page.dart';
 import '../qibla/qibla_page.dart';
 import '../ibadah/ibadah_page.dart';
 import '../bookmark/bookmark_page.dart';
@@ -111,6 +112,20 @@ class _HomePageState extends State<HomePage> {
                   childAspectRatio: 1.0,
                   children: [
                     FeatureCard(
+                      icon: Icons.menu_book,
+                      title: 'Al-Qur\'an',
+                      description: 'Baca Qur\'an',
+                      gradientColor: Color.lerp(
+                        Colors.green,
+                        cs.surfaceContainer,
+                        0.3,
+                      )!,
+                      onTap: () => _navigateToPage(
+                        context,
+                        SurahListPage(fontSize: 16),
+                      ),
+                    ),
+                    FeatureCard(
                       icon: Icons.bookmark,
                       title: 'Bookmark',
                       description: 'Ayat Favorit',
@@ -123,11 +138,11 @@ class _HomePageState extends State<HomePage> {
                           _navigateToPage(context, const BookmarkPage()),
                     ),
                     FeatureCard(
-                      icon: Icons.menu_book,
-                      title: 'Doa',
-                      description: 'Kumpulan Doa',
+                      icon: Icons.favorite,
+                      title: 'Puasa',
+                      description: 'Puasa Ramadhan',
                       gradientColor: Color.lerp(
-                        Colors.orange,
+                        Colors.pink,
                         cs.surfaceContainer,
                         0.3,
                       )!,
@@ -135,11 +150,11 @@ class _HomePageState extends State<HomePage> {
                           _navigateToPage(context, const IbadahPage()),
                     ),
                     FeatureCard(
-                      icon: Icons.favorite,
-                      title: 'Puasa',
-                      description: 'Puasa Ramadhan',
+                      icon: Icons.menu_book,
+                      title: 'Doa',
+                      description: 'Kumpulan Doa',
                       gradientColor: Color.lerp(
-                        Colors.pink,
+                        Colors.orange,
                         cs.surfaceContainer,
                         0.3,
                       )!,
