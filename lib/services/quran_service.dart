@@ -14,6 +14,12 @@ class QuranService {
   // =========================
   static Future<List<Surah>> fetchSurahLocal() async {
     final db = await QuranDB.instance;
+
+    // Web tidak support database, return empty
+    if (db == null) {
+      return [];
+    }
+
     final rows = await db.query('surah');
     return rows.map((e) => Surah.fromMap(e)).toList();
   }
@@ -24,6 +30,13 @@ class QuranService {
   static Future<List<Surah>> fetchSurah() async {
     final db = await QuranDB.instance;
     final conn = await Connectivity().checkConnectivity();
+
+    // Web: selalu gunakan API
+    if (db == null) {
+      final res = await http.get(Uri.parse('$_baseUrl/surat'));
+      final List data = jsonDecode(res.body)['data'];
+      return data.map((e) => Surah.fromJson(e)).toList();
+    }
 
     if (conn.contains(ConnectivityResult.none)) {
       return fetchSurahLocal();
@@ -51,6 +64,13 @@ class QuranService {
   static Future<List<Ayat>> fetchAyat(int surah) async {
     final db = await QuranDB.instance;
     final conn = await Connectivity().checkConnectivity();
+
+    // Web: selalu gunakan API
+    if (db == null) {
+      final res = await http.get(Uri.parse('$_baseUrl/surat/$surah'));
+      final List data = jsonDecode(res.body)['data']['ayat'];
+      return data.map((e) => Ayat.fromJson(e)).toList();
+    }
 
     if (conn.contains(ConnectivityResult.none)) {
       final rows = await db.query(

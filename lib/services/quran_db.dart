@@ -1,10 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class QuranDB {
   static Database? _db;
 
-  static Future<Database> get instance async {
+  static Future<Database?> get instance async {
+    // Web tidak support sqflite, return null
+    if (kIsWeb) {
+      return null;
+    }
+
     if (_db != null) return _db!;
     _db = await _init();
     return _db!;

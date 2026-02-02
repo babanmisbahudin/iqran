@@ -213,7 +213,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
                   return GestureDetector(
                     onTap: () async {
-                      await ProgressService.save(
+                      await ProgressService.saveWithHistory(
                         surah: widget.nomor,
                         ayat: ayat.nomor,
                       );
