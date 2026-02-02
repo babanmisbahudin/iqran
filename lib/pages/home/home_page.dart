@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../models/prayer_time.dart';
-import '../../services/prayer_service.dart';
-import '../../services/city_storage_service.dart';
-import '../prayer/prayer_page.dart';
 import '../qibla/qibla_page.dart';
 import '../ibadah/ibadah_page.dart';
 import '../bookmark/bookmark_page.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
-import 'widgets/next_prayer_card.dart';
 import 'widgets/stats_section.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,25 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<PrayerTime?> _nextPrayerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _nextPrayerFuture = _loadNextPrayer();
-  }
-
-  Future<PrayerTime?> _loadNextPrayer() async {
-    try {
-      final city = await CityStorageService.getSelectedCity();
-      if (city == null) return null;
-
-      return await PrayerService.getTodayPrayerTimes(cityId: city.id);
-    } catch (e) {
-      return null;
-    }
-  }
-
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -114,73 +90,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Next Prayer Section
-                FutureBuilder<PrayerTime?>(
-                  future: _nextPrayerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(
-                        height: 120,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-
-                    if (snapshot.hasError || !snapshot.hasData) {
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: cs.surfaceContainer,
-                          border: Border.all(
-                            color: cs.outlineVariant,
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Jadwal Sholat',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Atur lokasi untuk melihat jadwal sholat',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: cs.onSurfaceVariant,
-                                  ),
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  _navigateToPage(context, const PrayerPage()),
-                              child: const Text('Atur Lokasi'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return GestureDetector(
-                      onTap: () =>
-                          _navigateToPage(context, const PrayerPage()),
-                      child: NextPrayerCard(
-                        prayerTime: snapshot.data!,
-                        onTap: () =>
-                            _navigateToPage(context, const PrayerPage()),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-
                 // Today's Stats Section
                 const StatsSection(),
                 const SizedBox(height: 20),
@@ -228,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     FeatureCard(
                       icon: Icons.favorite,
                       title: 'Puasa',
-                      description: 'Tracker Puasa',
+                      description: 'Puasa Ramadhan',
                       gradientColor: Color.lerp(
                         Colors.pink,
                         cs.surfaceContainer,
