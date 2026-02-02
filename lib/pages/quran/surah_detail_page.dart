@@ -43,6 +43,9 @@ class _SurahDetailPageState extends State<SurahDetailPage>
   final ScrollController _scrollController = ScrollController();
   bool _hasAutoScrolled = false;
 
+  // GlobalKey untuk setiap ayat (precise scroll)
+  final Map<int, GlobalKey> _ayatKeys = {};
+
   late final AnimationController _bookmarkController;
   late final Animation<double> _scaleAnim;
   late final Animation<double> _opacityAnim;
@@ -68,6 +71,57 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) _bookmarkController.stop();
+    });
+  }
+
+  void _scrollToAyat(int ayatNomor, {int retries = 0}) {
+    if (retries > 20) return; // Max 20 retries
+
+    // PHASE 1: Rough jump to force ListView to build widgets in that area
+    // (Only on first attempt, retries use callback only)
+    if (retries == 0 && _scrollController.hasClients) {
+      try {
+        // Audio panel height + (ayat number - 1) * estimated item height
+        // Estimated item height: margin(26) + padding(36) + text(~100) = ~170px
+        const audioHeight = 80.0;
+        const avgItemHeight = 170.0;
+        final estimatedOffset = audioHeight + (ayatNomor - 1) * avgItemHeight;
+
+        // Jump to rough position to force ListView.builder to build items
+        _scrollController.jumpTo(
+          estimatedOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+        );
+      } catch (e) {
+        // Ignore errors during jump
+      }
+    }
+
+    // PHASE 2: Fine-tune with GlobalKey after frame renders
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      if (_ayatKeys.containsKey(ayatNomor)) {
+        final key = _ayatKeys[ayatNomor];
+        final ayatContext = key?.currentContext;
+
+        if (ayatContext != null && mounted) {
+          // Widget is now built, use ensureVisible for precise scroll
+          Scrollable.ensureVisible(
+            ayatContext,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOut,
+            alignment: 0.2,
+          );
+        } else if (mounted && retries < 20) {
+          // Widget still not built, retry with exponential backoff
+          // Delays: 100ms, 200ms, 300ms, 400ms, etc.
+          Future.delayed(Duration(milliseconds: 100 * (retries + 1)), () {
+            if (mounted) {
+              _scrollToAyat(ayatNomor, retries: retries + 1);
+            }
+          });
+        }
+      }
     });
   }
 
@@ -185,15 +239,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                   lastAyat != null) {
                 final index = ayatList.indexWhere((a) => a.nomor == lastAyat);
                 if (index != -1) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_scrollController.hasClients) {
-                      _scrollController.animateTo(
-                        index * 180,
-                        duration: const Duration(milliseconds: 600),
-                        curve: Curves.easeOut,
-                      );
-                    }
-                  });
+                  _scrollToAyat(lastAyat);
                   _hasAutoScrolled = true;
                 }
               }
@@ -210,6 +256,11 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                   final ayat = ayatList[index - 1];
                   final isLastRead =
                       lastSurah == widget.nomor && lastAyat == ayat.nomor;
+
+                  // Create GlobalKey untuk ayat ini jika belum ada
+                  if (!_ayatKeys.containsKey(ayat.nomor)) {
+                    _ayatKeys[ayat.nomor] = GlobalKey();
+                  }
 
                   return GestureDetector(
                     onTap: () async {
@@ -232,6 +283,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                       setState(() {});
                     },
                     child: Container(
+                      key: _ayatKeys[ayat.nomor],
                       margin: const EdgeInsets.only(bottom: 26),
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(

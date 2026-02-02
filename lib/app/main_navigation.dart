@@ -40,12 +40,27 @@ class _MainNavigationState extends State<MainNavigation> {
     ];
 
     return Scaffold(
-      body: pages[index],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.05),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: pages[index],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (i) => setState(() => index = i),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Qur’an'),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Qur'an"),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Bookmark'),
           BottomNavigationBarItem(icon: Icon(Icons.insights), label: 'Progress'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
