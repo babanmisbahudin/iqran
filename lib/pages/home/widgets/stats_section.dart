@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 
 class StatsSection extends StatelessWidget {
-  const StatsSection({super.key});
+  final int versesReadToday;
+
+  const StatsSection({
+    super.key,
+    this.versesReadToday = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    // Calculate derived stats
+    final totalSessions = versesReadToday > 0 ? 1 : 0;
+    final dailyTarget = versesReadToday > 0
+        ? ((versesReadToday / 50.0) * 100).toInt()
+        : 0;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -51,7 +62,7 @@ class StatsSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '0',
+                    '$versesReadToday',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: cs.primary,
@@ -74,7 +85,7 @@ class StatsSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '0',
+                    '$totalSessions',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: cs.primary,
@@ -97,7 +108,7 @@ class StatsSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '0%',
+                    '$dailyTarget%',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: cs.primary,
