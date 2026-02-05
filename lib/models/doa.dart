@@ -16,10 +16,10 @@ class Doa {
   factory Doa.fromJson(Map<String, dynamic> json) {
     return Doa(
       id: (json['id'] ?? json['ID'] ?? 0).toString(),
-      title: json['title'] ?? json['judul'] ?? json['nama'] ?? '',
+      title: json['title'] ?? json['judul'] ?? json['nama'] ?? json['doa'] ?? '',
       arabic: json['arab'] ?? json['arabic'] ?? json['ayat'] ?? '',
       latin: json['latin'] ?? json['transliterasi'] ?? '',
-      translation: json['terjemahan'] ?? json['translation'] ?? json['arti'] ?? '',
+      translation: json['terjemahan'] ?? json['translation'] ?? json['arti'] ?? json['artinya'] ?? '',
     );
   }
 

@@ -4,12 +4,18 @@ import '../quran/surah_list_page.dart';
 import '../qibla/qibla_page.dart';
 import '../ibadah/ibadah_page.dart';
 import '../bookmark/bookmark_page.dart';
+import '../good_deed/good_deed_page.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
 import 'widgets/stats_section.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final double fontSize;
+
+  const HomePage({
+    super.key,
+    this.fontSize = 16.0,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -138,18 +144,6 @@ class _HomePageState extends State<HomePage> {
                           _navigateToPage(context, const BookmarkPage()),
                     ),
                     FeatureCard(
-                      icon: Icons.favorite,
-                      title: 'Puasa',
-                      description: 'Puasa Ramadhan',
-                      gradientColor: Color.lerp(
-                        Colors.pink,
-                        cs.surfaceContainer,
-                        0.3,
-                      )!,
-                      onTap: () =>
-                          _navigateToPage(context, const IbadahPage()),
-                    ),
-                    FeatureCard(
                       icon: Icons.menu_book,
                       title: 'Doa',
                       description: 'Kumpulan Doa',
@@ -172,6 +166,18 @@ class _HomePageState extends State<HomePage> {
                       )!,
                       onTap: () =>
                           _navigateToPage(context, const QiblaPage()),
+                    ),
+                    FeatureCard(
+                      icon: Icons.favorite_outline,
+                      title: 'Kebaikan',
+                      description: 'Tracker Kebaikan',
+                      gradientColor: Color.lerp(
+                        Colors.red,
+                        cs.surfaceContainer,
+                        0.3,
+                      )!,
+                      onTap: () =>
+                          _navigateToPage(context, const GoodDeedPage()),
                     ),
                   ],
                 ),
