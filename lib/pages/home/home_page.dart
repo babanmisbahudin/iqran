@@ -63,7 +63,14 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-    );
+    ).then((_) {
+      // Reload data when user returns from navigation
+      if (mounted) {
+        setState(() {
+          _loadData();
+        });
+      }
+    });
   }
 
   @override
