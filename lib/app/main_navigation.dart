@@ -27,7 +27,7 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomePage(fontSize: widget.fontSize),
+      HomePage(key: ValueKey(widget.fontSize), fontSize: widget.fontSize),
       const ProgressPage(),
       SettingsPage(
         isDark: widget.isDark,

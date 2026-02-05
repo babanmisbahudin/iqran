@@ -23,11 +23,12 @@ class SurahDetailPage extends StatefulWidget {
   factory SurahDetailPage.fromBookmark({
     required int nomor,
     required String nama,
+    double fontSize = 28,
   }) {
     return SurahDetailPage(
       nomor: nomor,
       nama: nama,
-      fontSize: 28,
+      fontSize: fontSize,
     );
   }
 
@@ -72,6 +73,15 @@ class _SurahDetailPageState extends State<SurahDetailPage>
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) _bookmarkController.stop();
     });
+  }
+
+  @override
+  void didUpdateWidget(SurahDetailPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Trigger rebuild jika fontSize berubah saat membaca
+    if (oldWidget.fontSize != widget.fontSize) {
+      setState(() {});
+    }
   }
 
   void _scrollToAyat(int ayatNomor, {int retries = 0}) {

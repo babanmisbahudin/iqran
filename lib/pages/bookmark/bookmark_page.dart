@@ -5,7 +5,12 @@ import '../../models/surah_bookmark.dart';
 import '../quran/surah_detail_page.dart';
 
 class BookmarkPage extends StatelessWidget {
-  const BookmarkPage({super.key});
+  final double fontSize;
+
+  const BookmarkPage({
+    super.key,
+    this.fontSize = 28.0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,7 @@ class BookmarkPage extends StatelessWidget {
                         builder: (_) => SurahDetailPage.fromBookmark(
                           nomor: surah.nomor,
                           nama: surah.nama,
+                          fontSize: fontSize,
                         ),
                       ),
                     );

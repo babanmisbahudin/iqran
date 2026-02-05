@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                       )!,
                       onTap: () => _navigateToPage(
                         context,
-                        SurahListPage(fontSize: 16),
+                        SurahListPage(fontSize: widget.fontSize),
                       ),
                     ),
                     FeatureCard(
@@ -140,8 +140,10 @@ class _HomePageState extends State<HomePage> {
                         cs.surfaceContainer,
                         0.3,
                       )!,
-                      onTap: () =>
-                          _navigateToPage(context, const BookmarkPage()),
+                      onTap: () => _navigateToPage(
+                        context,
+                        BookmarkPage(fontSize: widget.fontSize),
+                      ),
                     ),
                     FeatureCard(
                       icon: Icons.menu_book,
