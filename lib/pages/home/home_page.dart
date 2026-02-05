@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../quran/surah_list_page.dart';
+import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
 import '../../services/progress_service.dart';
 import 'widgets/feature_card.dart';
@@ -117,12 +118,26 @@ class _HomePageState extends State<HomePage> {
                     future: _progressFuture,
                     builder: (context, snapshot) {
                       final progress = snapshot.data;
+                      final surahNumber = progress?['surah'];
+                      final ayatNumber = progress?['ayat'];
+
                       return LastReadSection(
-                        surah: progress?['surah'],
-                        ayat: progress?['ayat'],
+                        surah: surahNumber,
+                        ayat: ayatNumber,
                         onTap: () {
-                          // Navigate to Qur'an page - this will be handled by parent
-                          // We'll use PageStorage to navigate to Qur'an tab
+                          // Navigate to the last read surah if data exists
+                          if (surahNumber != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => SurahDetailPage.fromBookmark(
+                                  nomor: surahNumber,
+                                  nama: 'Surah',
+                                  fontSize: widget.fontSize,
+                                ),
+                              ),
+                            );
+                          }
                         },
                       );
                     },
