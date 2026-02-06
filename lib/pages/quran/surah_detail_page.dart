@@ -7,9 +7,9 @@ import '../../services/surah_bookmark_service.dart';
 import '../../services/tajweed_service.dart';
 
 import '../../models/ayat.dart';
-import '../../widgets/surah_audio_panel.dart';
 import '../../widgets/tajweed_text.dart';
 import '../../widgets/tajweed_legend.dart';
+import '../../widgets/surah_audio_panel.dart';
 
 class SurahDetailPage extends StatefulWidget {
   final int nomor;
@@ -368,10 +368,11 @@ class _SurahDetailPageState extends State<SurahDetailPage>
             itemCount: ayatList.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) {
+                // Audio playback control panel
                 return SurahAudioPanel(
                   surahNumber: widget.nomor,
-                  surahName: widget.nama, // Latin name (displayed in UI)
-                  surahNameLatin: widget.nama, // Latin name
+                  surahName: widget.nama,
+                  surahNameLatin: widget.nama, // Using nama as fallback
                   ayatCount: ayatList.length,
                 );
               }

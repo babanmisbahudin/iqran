@@ -54,7 +54,7 @@ class DeveloperInfoCard extends StatelessWidget {
                   tooltip: 'Instagram',
                   icon: const FaIcon(FontAwesomeIcons.instagram),
                   onPressed: () => _open(
-                    'https://www.instagram.com/haimisbah_/',
+                    'https://www.instagram.com/himisbah_/',
                   ),
                 ),
                 IconButton(

@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme/app_theme.dart';
 import 'main_navigation.dart';
-import '../widgets/mini_player/mini_player_overlay.dart';
 import '../services/onboarding_service.dart';
 import '../pages/onboarding/first_time_onboarding_page.dart';
 import '../pages/onboarding/daily_onboarding_page.dart';
@@ -124,32 +123,23 @@ class _IqranAppState extends State<IqranApp> {
       theme: AppTheme.build(isDark),
 
       // =========================
-      // ROOT SCAFFOLD WITH MINI-PLAYER
+      // MAIN NAVIGATION
       // =========================
-      home: Scaffold(
-        body: Stack(
-          children: [
-            MainNavigation(
-              isDark: isDark,
-              fontSize: arabFont,
+      home: MainNavigation(
+        isDark: isDark,
+        fontSize: arabFont,
 
-              // Toggle theme
-              onTheme: (value) {
-                setState(() => isDark = value);
-                _savePreferences();
-              },
+        // Toggle theme
+        onTheme: (value) {
+          setState(() => isDark = value);
+          _savePreferences();
+        },
 
-              // Change arab font size
-              onFont: (value) {
-                setState(() => arabFont = value);
-                _savePreferences();
-              },
-            ),
-
-            // Mini-player overlay (positioned above bottom nav)
-            const MiniPlayerOverlay(bottomOffset: 72),
-          ],
-        ),
+        // Change arab font size
+        onFont: (value) {
+          setState(() => arabFont = value);
+          _savePreferences();
+        },
       ),
     );
   }
