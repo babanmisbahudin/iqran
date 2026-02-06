@@ -50,5 +50,10 @@
 	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan jadwal sholat dan arah kiblat yang akurat sesuai lokasi Anda.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan jadwal sholat dan arah kiblat yang akurat sesuai lokasi Anda.</string>
+	<!-- BACKGROUND AUDIO MODE -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

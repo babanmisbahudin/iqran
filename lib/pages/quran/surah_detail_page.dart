@@ -368,7 +368,12 @@ class _SurahDetailPageState extends State<SurahDetailPage>
             itemCount: ayatList.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return SurahAudioPanel(surahNumber: widget.nomor);
+                return SurahAudioPanel(
+                  surahNumber: widget.nomor,
+                  surahName: widget.nama, // Latin name (displayed in UI)
+                  surahNameLatin: widget.nama, // Latin name
+                  ayatCount: ayatList.length,
+                );
               }
 
               final ayat = ayatList[index - 1];

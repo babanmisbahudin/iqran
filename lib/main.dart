@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'app/iqran_app.dart';
 import 'services/onboarding_service.dart';
+import 'services/background_audio_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,15 @@ void main() async {
 
   // Initialize onboarding service
   await OnboardingService.initialize();
+
+  // Initialize background audio service
+  if (!kIsWeb) {
+    try {
+      await BackgroundAudioService.init();
+    } catch (e) {
+      debugPrint('⚠️ Failed to initialize background audio service: $e');
+    }
+  }
 
   runApp(const IqranApp());
 }

@@ -50,6 +50,15 @@ class GlobalAudioFAB extends StatelessWidget {
             tooltipMessage = 'Lanjutkan murottal';
             break;
 
+          case PlayerStateStatus.error:
+            icon = const Icon(
+              Icons.error_outline,
+              key: ValueKey('error'),
+            );
+            onPressed = null;
+            tooltipMessage = 'Terjadi kesalahan';
+            break;
+
           case PlayerStateStatus.idle:
             return const SizedBox.shrink();
         }
