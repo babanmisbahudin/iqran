@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../quran/surah_list_page.dart';
 import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
@@ -73,19 +72,24 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  String _formatDateIndo(DateTime date) {
+    const months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+    final dayName = days[date.weekday % 7];
+    final monthName = months[date.month - 1];
+    return '$dayName, ${date.day} $monthName ${date.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
 
-    String dateStr;
-    try {
-      final greetingFormat = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
-      dateStr = greetingFormat.format(now);
-    } catch (e) {
-      // Fallback if locale not initialized (e.g., on web)
-      dateStr = '${now.day}/${now.month}/${now.year}';
-    }
+    final dateStr = _formatDateIndo(now);
 
     return Scaffold(
       body: RefreshIndicator(
