@@ -33,7 +33,13 @@ class _IqranAppState extends State<IqranApp> {
     // Check if first launch
     if (await OnboardingService.isFirstLaunch()) {
       setState(() {
-        _initialRoute = const FirstTimeOnboardingPage();
+        _initialRoute = FirstTimeOnboardingPage(
+          onComplete: () {
+            setState(() {
+              _initialRoute = null;
+            });
+          },
+        );
         _isLoadingRoute = false;
       });
       return;

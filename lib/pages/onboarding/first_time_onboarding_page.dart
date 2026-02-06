@@ -4,7 +4,12 @@ import 'widgets/onboarding_slide.dart';
 import 'widgets/skip_button.dart';
 
 class FirstTimeOnboardingPage extends StatefulWidget {
-  const FirstTimeOnboardingPage({Key? key}) : super(key: key);
+  final VoidCallback? onComplete;
+
+  const FirstTimeOnboardingPage({
+    Key? key,
+    this.onComplete,
+  }) : super(key: key);
 
   @override
   State<FirstTimeOnboardingPage> createState() =>
@@ -53,7 +58,7 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
     await OnboardingService.completeFirstLaunch();
     await OnboardingService.markOnboardingShown();
     if (mounted) {
-      Navigator.of(context).pop();
+      widget.onComplete?.call();
     }
   }
 
@@ -70,7 +75,7 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
 
       if (mounted) {
         // Navigate back to main app
-        Navigator.of(context).pop();
+        widget.onComplete?.call();
       }
     }
   }
