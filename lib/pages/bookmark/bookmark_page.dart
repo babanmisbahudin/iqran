@@ -89,7 +89,14 @@ class _BookmarkPageState extends State<BookmarkPage> {
                             fontSize: widget.fontSize,
                           ),
                         ),
-                      );
+                      ).then((_) {
+                        // Reload data when user returns from reading
+                        if (mounted) {
+                          setState(() {
+                            _loadData();
+                          });
+                        }
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

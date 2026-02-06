@@ -98,9 +98,10 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 40),
                   // Header with greeting
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Assalamu\'alaikum',
@@ -118,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 40),
 
                   // Continue Reading Section
                   FutureBuilder<Map<String, int>?>(
@@ -141,9 +142,17 @@ class _HomePageState extends State<HomePage> {
                                   nomor: surahNumber,
                                   nama: 'Surah',
                                   fontSize: widget.fontSize,
+                                  ayatTujuan: ayatNumber,
                                 ),
                               ),
-                            );
+                            ).then((_) {
+                              // Reload data when user returns from navigation
+                              if (mounted) {
+                                setState(() {
+                                  _loadData();
+                                });
+                              }
+                            });
                           }
                         },
                       );

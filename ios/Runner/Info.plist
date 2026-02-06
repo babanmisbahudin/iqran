@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- LOCATION PERMISSIONS UNTUK FITUR ADZAN & KIBLAT -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan jadwal sholat dan arah kiblat yang akurat sesuai lokasi Anda.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan jadwal sholat dan arah kiblat yang akurat sesuai lokasi Anda.</string>
 </dict>
 </plist>

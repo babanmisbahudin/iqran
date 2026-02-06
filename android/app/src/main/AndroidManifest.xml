@@ -4,6 +4,10 @@
     <!-- WAJIB: IZIN INTERNET UNTUK API EQURAN -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- LOCATION PERMISSIONS UNTUK FITUR ADZAN & KIBLAT -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:label="iqran"
         android:name="${applicationName}"

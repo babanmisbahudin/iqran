@@ -6,7 +6,18 @@
       "Bash(flutter pub get:*)",
       "Bash(flutter analyze:*)",
       "Bash(flutter build:*)",
-      "Bash(flutter clean:*)"
+      "Bash(flutter clean:*)",
+      "WebFetch(domain:api.puasa-sunnah.granitebps.com)",
+      "WebFetch(domain:doa-doa-api-ahmadramadhan.fly.dev)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd elegant homepage redesign with feature cards and navigation restructuring\n\n- Created beautiful home page \\(HomePage\\) with 4 main sections:\n  * Header with greeting and current date\n  * \"Lanjutkan Membaca\" section showing last read surah with progress\n  * \"Jadwal Sholat\" section with prayer times display and quick access\n  * \"Progres Hari Ini\" stats section showing ayat read and sessions\n  * Quick Access Grid with 4 colorful feature cards:\n    - Bookmark: Ayat Favorit\n    - Doa: Kumpulan Doa Penting\n    - Puasa: Puasa Sunnah Tracker\n    - Kiblat: Arah Kiblat Compass\n\n- Restructured bottom navigation from 7 tabs to 4 clean tabs:\n  * Beranda \\(Home\\) - main homepage\n  * Progress - reading progress tracking\n  * Pengaturan \\(Settings\\) - app settings\n  * Qur''an - quran reading\n\n- Created reusable widget components:\n  * FeatureCard: Colorful cards with icons, tap animations, gradient backgrounds\n  * LastReadSection: Display last surah with progress indicator\n  * NextPrayerCard: Show prayer times for the day\n  * StatsSection: Display today''s reading statistics\n\n- Integrated prayer time services to display real prayer schedules\n\n- Maintained all previous features \\(Adzan, Kiblat, Ibadah, Bookmark, etc.\\)\n  accessible via navigation stack from homepage feature cards\n\n- Consistent Material Design 3 theming with purple color scheme\n- Smooth animations and transitions between pages\n- Responsive layout that works on mobile, tablet, and web\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(flutter compile dart:*)",
+      "Bash(dart pub get:*)",
+      "Bash(flutter compile kernel:*)",
+      "Bash(find:*)",
+      "Bash(git config:*)"
     ]
   }
 }
