@@ -24,18 +24,21 @@ class TutorialService {
   }
 
   // Start tutorial - navigates through pages showing showcase
-  static Future<void> startTutorial(BuildContext context) async {
-    final completed = await hasTutorialCompleted();
-    if (completed) return;
-
-    // Start with HomePage tour
-    _startHomePageTour(context);
+  static void startTutorial(BuildContext context) {
+    hasTutorialCompleted().then((completed) {
+      if (completed) return;
+      // Start with HomePage tour
+      // ignore: use_build_context_synchronously
+      _startHomePageTour(context);
+    });
   }
 
   // Replay tutorial
-  static Future<void> replayTutorial(BuildContext context) async {
-    await resetTutorial();
-    startTutorial(context);
+  static void replayTutorial(BuildContext context) {
+    resetTutorial().then((_) {
+      // ignore: use_build_context_synchronously
+      startTutorial(context);
+    });
   }
 
   // Start HomePage tour (4 targets)
@@ -51,6 +54,7 @@ class TutorialService {
   }
 
   // Start ProgressPage tour (5 targets)
+  // ignore: unused_element
   static void _startProgressPageTour(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(context).startShowCase([
@@ -64,6 +68,7 @@ class TutorialService {
   }
 
   // Start SettingsPage tour (1 target)
+  // ignore: unused_element
   static void _startSettingsPageTour(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(context).startShowCase([
