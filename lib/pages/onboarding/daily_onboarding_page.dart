@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../services/onboarding_service.dart';
 import '../../utils/hadith_data.dart';
 import 'widgets/animated_character_card.dart';
@@ -72,6 +73,11 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final dayName = DateFormat('EEEE', 'id_ID').format(now);
+    final timeStr = DateFormat('HH:mm').format(now);
+    final dateStr = DateFormat('d MMMM yyyy', 'id_ID').format(now);
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -95,7 +101,8 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
                       child: Column(
                         children: [
                           Text(
-                            'Motivasi Hari Ini',
+                            'Assalamu\'alaikum wa Rahmatullahi wa Barakatuh',
+                            textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -103,9 +110,36 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
+                          Text(
+                            '$dayName, $dateStr',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Pukul $timeStr',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
+                          ),
+                          const SizedBox(height: 12),
                           Text(
                             'Muhasabah diri sebelum memulai murajaah',
+                            textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
