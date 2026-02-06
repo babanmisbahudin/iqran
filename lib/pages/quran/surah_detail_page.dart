@@ -5,11 +5,11 @@ import '../../services/quran_service.dart';
 import '../../services/progress_service.dart';
 import '../../services/surah_bookmark_service.dart';
 import '../../services/tajweed_service.dart';
+import '../../services/audio_player_service.dart';
 
 import '../../models/ayat.dart';
 import '../../widgets/tajweed_text.dart';
 import '../../widgets/tajweed_legend.dart';
-import '../../widgets/surah_audio_panel.dart';
 
 class SurahDetailPage extends StatefulWidget {
   final int nomor;
@@ -260,15 +260,68 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                 _showTajweedLegendModal(context);
               },
               icon: const Icon(Icons.info_outline),
-              label: const Text('Tajweed Legend'),
+              label: const Text('Hukum Tajweed'),
             )
-          : null,
+          : ValueListenableBuilder<PlayerStateStatus>(
+              valueListenable: AudioPlayerService.status,
+              builder: (context, status, _) {
+                return FloatingActionButton(
+                  heroTag: 'audio_fab_${widget.nomor}',
+                  onPressed: () {
+                    if (status == PlayerStateStatus.playing) {
+                      AudioPlayerService.pause();
+                    } else if (status == PlayerStateStatus.paused) {
+                      AudioPlayerService.resume();
+                    } else {
+                      // Play audio
+                      try {
+                        AudioPlayerService.playSurahWithMetadata(
+                          widget.nomor,
+                          surahName: widget.nama,
+                          surahNameLatin: widget.nama,
+                          ayatCount: _ayatKeys.isNotEmpty ? _ayatKeys.length : 114, // Fallback to 114 ayat
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error: $e')),
+                        );
+                      }
+                    }
+                  },
+                  tooltip: status == PlayerStateStatus.playing
+                      ? 'Pause Murottal'
+                      : 'Play Murottal',
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: status == PlayerStateStatus.loading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : Icon(
+                            status == PlayerStateStatus.playing
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                            key: ValueKey(status),
+                          ),
+                  ),
+                );
+              },
+            ),
       appBar: AppBar(
         title: Text(widget.nama),
         actions: [
           /// TAJWEED TOGGLE
           IconButton(
-            tooltip: 'Tajweed Rules',
+            tooltip: 'Hukum Tajweed',
             icon: Icon(
               Icons.language,
               color: _showTajweed ? cs.primary : cs.onSurface,
@@ -365,19 +418,9 @@ class _SurahDetailPageState extends State<SurahDetailPage>
           return ListView.builder(
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
-            itemCount: ayatList.length + 1,
+            itemCount: ayatList.length,
             itemBuilder: (context, index) {
-              if (index == 0) {
-                // Audio playback control panel
-                return SurahAudioPanel(
-                  surahNumber: widget.nomor,
-                  surahName: widget.nama,
-                  surahNameLatin: widget.nama, // Using nama as fallback
-                  ayatCount: ayatList.length,
-                );
-              }
-
-              final ayat = ayatList[index - 1];
+              final ayat = ayatList[index];
               final isLastRead = _lastReadAyat == ayat.nomor;
 
               // Create GlobalKey untuk ayat ini jika belum ada

@@ -32,11 +32,15 @@ class TajweedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseStyle = style ??
-        Theme.of(context).textTheme.bodyLarge?.copyWith(
-          height: 1.8,
-        ) ??
-        const TextStyle();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final themeTextColor = theme.textTheme.bodyLarge?.color;
+
+    // Merge provided style with theme colors
+    final baseStyle = (style ?? const TextStyle()).copyWith(
+      color: style?.color ?? themeTextColor,
+      height: style?.height ?? 1.8,
+    );
 
     // Detect tajweed jika belum ada segments
     final detectedSegments = segments ?? TajweedService.detectTajweed(arabicText);
@@ -67,12 +71,18 @@ class TajweedText extends StatelessWidget {
       }
 
       // Add highlighted segment dengan GestureRecognizer
+      // Adjust colors based on theme brightness for better contrast
+      final Color textColor = isDark
+          ? segment.rule.color // Keep original bright color for dark mode
+          : Color.lerp(segment.rule.color, Colors.black, 0.4) ??
+              segment.rule.color; // Darken for light mode
+
       spans.add(
         TextSpan(
           text: segment.text,
           style: baseStyle.copyWith(
-            backgroundColor: segment.rule.color.withValues(alpha: 0.3),
-            color: segment.rule.color,
+            backgroundColor: segment.rule.color.withValues(alpha: 0.2),
+            color: textColor,
             fontWeight: FontWeight.bold,
           ),
           recognizer: TapGestureRecognizer()
@@ -109,83 +119,192 @@ class TajweedText extends StatelessWidget {
 
   void _showRuleDialog(BuildContext context, TajweedSegment segment) {
     final rule = segment.rule;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     showModalBottomSheet(
       context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, controller) => Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            controller: controller,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: rule.color.withValues(alpha: 0.2),
-                    ),
-                    child: Center(
-                      child: Text(
-                        segment.text,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textDirection: TextDirection.rtl,
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: colorScheme.outline.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                  // Hero Section - Colored Header
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          rule.color.withValues(alpha: 0.1),
+                          rule.color.withValues(alpha: 0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: rule.color.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Row(
                       children: [
-                        Text(
-                          rule.name,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: rule.color.withValues(alpha: 0.2),
+                            border: Border.all(
+                              color: rule.color.withValues(alpha: 0.4),
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              segment.text,
+                              style: TextStyle(
+                                fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        Text(
-                          rule.arabicName,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: rule.color,
-                                fontWeight: FontWeight.bold,
                               ),
-                          textDirection: TextDirection.rtl,
+                              textDirection: TextDirection.rtl,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                rule.name,
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                rule.arabicName,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: rule.color,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textDirection: TextDirection.rtl,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Description
-              Text(
-                rule.fullDescription,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 16),
-              // Examples
-              Text(
-                'Contoh:',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+
+                  const SizedBox(height: 24),
+
+                  // Description Section
+                  Text(
+                    'Penjelasan',
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-              ),
-              const SizedBox(height: 8),
-              ...rule.examples.map((example) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      '• $example',
-                      style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    rule.fullDescription,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      height: 1.6,
+                      color: colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
-                  )),
-            ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Examples Section
+                  Text(
+                    'Contoh Penerapan',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...rule.examples.asMap().entries.map((entry) {
+                    int idx = entry.key + 1;
+                    String example = entry.value;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: rule.color.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: rule.color.withValues(alpha: 0.15),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: rule.color.withValues(alpha: 0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$idx',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: rule.color,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                example,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
           ),
         ),
       ),
