@@ -95,11 +95,9 @@ class _IqranAppState extends State<IqranApp> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.build(isDark),
-        home: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: const Center(
-            child: CircularProgressIndicator(),
-          ),
+        home: const Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SizedBox.expand(),
         ),
       );
     }

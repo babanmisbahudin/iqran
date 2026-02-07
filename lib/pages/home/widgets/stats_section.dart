@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/animated_card_wrapper.dart';
 
 class StatsSection extends StatelessWidget {
   final int versesReadToday;
@@ -18,7 +19,10 @@ class StatsSection extends StatelessWidget {
         ? ((versesReadToday / 50.0) * 100).toInt()
         : 0;
 
-    return Container(
+    return AnimatedCardWrapper(
+      entranceDelay: const Duration(milliseconds: 150),
+      enteranceDuration: const Duration(milliseconds: 600),
+      child: Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -119,6 +123,7 @@ class StatsSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

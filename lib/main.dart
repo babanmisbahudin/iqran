@@ -7,9 +7,13 @@ import 'pages/splash_screen.dart';
 import 'pages/quran/surah_detail_page.dart';
 import 'services/onboarding_service.dart';
 import 'services/background_audio_service.dart';
+import 'config/device_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize device configuration for performance optimization
+  await DeviceConfig.initialize();
 
   // Initialize intl locale data for Indonesian (skip for web)
   if (!kIsWeb) {

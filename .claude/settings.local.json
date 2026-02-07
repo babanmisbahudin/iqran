@@ -18,7 +18,10 @@
       "Bash(flutter compile kernel:*)",
       "Bash(find:*)",
       "Bash(git config:*)",
-      "Bash(timeout 30 flutter run:*)"
+      "Bash(timeout 30 flutter run:*)",
+      "Bash(flutter run:*)",
+      "Bash(grep:*)",
+      "Bash(findstr:*)"
     ]
   }
 }

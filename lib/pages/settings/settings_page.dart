@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'audio_settings_card.dart';
 import '../../widgets/developer_info_card.dart';
+import '../../widgets/animated_card_wrapper.dart';
 
 import '../../services/quran_preload_service.dart';
 import '../../services/offline_status_service.dart';
@@ -108,47 +109,50 @@ class _SettingsPageState extends State<SettingsPage> {
                       // =========================
                       // TAMPILAN
                       // =========================
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Tampilan',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              const SizedBox(height: 12),
-                              SwitchListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: const Text('Light/Dark Mode'),
-                                subtitle: const Text(
-                                  'Aktifkan mode terang atau gelap',
+                      AnimatedCardWrapper(
+                        entranceDelay: const Duration(milliseconds: 100),
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Tampilan',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
-                                value: widget.isDark,
-                                onChanged: widget.onTheme,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Ukuran Font Arab: ${widget.fontSize.toInt()}',
-                              ),
-                              Slider(
-                                min: 20,
-                                max: 50,
-                                divisions: 10,
-                                value: widget.fontSize,
-                                onChanged: widget.onFont,
-                              ),
-                            ],
+                                const SizedBox(height: 12),
+                                SwitchListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: const Text('Light/Dark Mode'),
+                                  subtitle: const Text(
+                                    'Aktifkan mode terang atau gelap',
+                                  ),
+                                  value: widget.isDark,
+                                  onChanged: widget.onTheme,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Ukuran Font Arab: ${widget.fontSize.toInt()}',
+                                ),
+                                Slider(
+                                  min: 20,
+                                  max: 50,
+                                  divisions: 10,
+                                  value: widget.fontSize,
+                                  onChanged: widget.onFont,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -158,52 +162,55 @@ class _SettingsPageState extends State<SettingsPage> {
                       // =========================
                       // OFFLINE MODE (UX FIX)
                       // =========================
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Offline',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              const SizedBox(height: 8),
-                              if (_offlineReady) ...[
-                                const Text(
-                                  '✅ Al-Qur’an sudah siap digunakan secara offline.',
-                                ),
-                              ] else if (_isDownloading) ...[
-                                LinearProgressIndicator(
-                                  value: _total == 0 ? null : _current / _total,
+                      AnimatedCardWrapper(
+                        entranceDelay: const Duration(milliseconds: 200),
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Offline',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const SizedBox(height: 8),
-                                Text('Mengunduh $_current / $_total surah'),
-                              ] else ...[
-                                const Text(
-                                  'Unduh seluruh surah agar aplikasi tetap bisa '
-                                  'digunakan tanpa koneksi internet.',
-                                ),
-                                const SizedBox(height: 16),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton.icon(
-                                    icon: const Icon(Icons.download),
-                                    label: const Text('Download semua surah'),
-                                    onPressed: _startOfflineDownload,
+                                if (_offlineReady) ...[
+                                  const Text(
+                                    '✅ Al-Qur\'an sudah siap digunakan secara offline.',
                                   ),
-                                ),
+                                ] else if (_isDownloading) ...[
+                                  LinearProgressIndicator(
+                                    value: _total == 0 ? null : _current / _total,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text('Mengunduh $_current / $_total surah'),
+                                ] else ...[
+                                  const Text(
+                                    'Unduh seluruh surah agar aplikasi tetap bisa '
+                                    'digunakan tanpa koneksi internet.',
+                                  ),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton.icon(
+                                      icon: const Icon(Icons.download),
+                                      label: const Text('Download semua surah'),
+                                      onPressed: _startOfflineDownload,
+                                    ),
+                                  ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -213,14 +220,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       // =========================
                       // AUDIO MUROTTAL
                       // =========================
-                      const AudioSettingsCard(),
+                      const AnimatedCardWrapper(
+                        entranceDelay: Duration(milliseconds: 300),
+                        child: AudioSettingsCard(),
+                      ),
 
                       const SizedBox(height: 20),
 
                       // =========================
                       // DEVELOPER & COPYRIGHT
                       // =========================
-                      const DeveloperInfoCard(),
+                      const AnimatedCardWrapper(
+                        entranceDelay: Duration(milliseconds: 400),
+                        child: DeveloperInfoCard(),
+                      ),
 
                       const SizedBox(height: 32),
                     ],

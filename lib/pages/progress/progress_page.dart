@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iqran/models/dashboard_metrics.dart';
 import 'package:iqran/services/progress_service.dart';
 import 'package:iqran/services/stats_service.dart';
+import '../../widgets/animated_card_wrapper.dart';
 import 'widgets/overall_progress_card.dart';
 import 'widgets/progress_chart_widget.dart';
 import 'widgets/metrics_summary_card.dart';
@@ -85,68 +86,85 @@ class _ProgressPageState extends State<ProgressPage> {
               child: Column(
                 children: [
                   // a. DailyTargetCard (top priority)
-                  DailyTargetCard(
-                    versesReadToday: metrics.versesReadToday,
-                    dailyTarget: metrics.dailyTarget,
-                    progressPercentage: metrics.todayProgressPercentage,
+                  AnimatedCardWrapper(
+                    entranceDelay: const Duration(milliseconds: 100),
+                    child: DailyTargetCard(
+                      versesReadToday: metrics.versesReadToday,
+                      dailyTarget: metrics.dailyTarget,
+                      progressPercentage: metrics.todayProgressPercentage,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // b. ProgressChartWidget (7-day chart)
-                  ProgressChartWidget(
-                    dailyVerses: metrics.last7DaysVerses,
-                    maxDaily: 150,
+                  AnimatedCardWrapper(
+                    entranceDelay: const Duration(milliseconds: 200),
+                    child: ProgressChartWidget(
+                      dailyVerses: metrics.last7DaysVerses,
+                      maxDaily: 150,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // c. MetricsSummaryCard (4 metrics dalam grid)
-                  MetricsSummaryCard(
-                    totalVersesRead: metrics.totalVersesRead,
-                    totalSurahCompleted: metrics.totalSurahCompleted,
-                    currentStreak: metrics.streak.currentStreak,
-                    monthlyAverageVerses: metrics.monthlyAverageVerses,
+                  AnimatedCardWrapper(
+                    entranceDelay: const Duration(milliseconds: 300),
+                    child: MetricsSummaryCard(
+                      totalVersesRead: metrics.totalVersesRead,
+                      totalSurahCompleted: metrics.totalSurahCompleted,
+                      currentStreak: metrics.streak.currentStreak,
+                      monthlyAverageVerses: metrics.monthlyAverageVerses,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // d. Keeping existing widgets
                   // Overall progress card
-                  FutureBuilder<Map<String, int>?>(
-                    future: _progressFuture,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData || snapshot.data == null) {
-                        return const Card(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Center(
-                              child: Text('Belum ada progress murajaah'),
+                  AnimatedCardWrapper(
+                    entranceDelay: const Duration(milliseconds: 400),
+                    child: FutureBuilder<Map<String, int>?>(
+                      future: _progressFuture,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return const Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(16)),
                             ),
-                          ),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Center(
+                                child: Text('Belum ada progress murajaah'),
+                              ),
+                            ),
+                          );
+                        }
+
+                        final surah = snapshot.data!['surah']!;
+                        final ayat = snapshot.data!['ayat']!;
+
+                        return OverallProgressCard(
+                          surah: surah,
+                          ayat: ayat,
                         );
-                      }
-
-                      final surah = snapshot.data!['surah']!;
-                      final ayat = snapshot.data!['ayat']!;
-
-                      return OverallProgressCard(
-                        surah: surah,
-                        ayat: ayat,
-                      );
-                    },
+                      },
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // Estimation card
-                  const EstimationCard(),
+                  const AnimatedCardWrapper(
+                    entranceDelay: Duration(milliseconds: 500),
+                    child: EstimationCard(),
+                  ),
                   const SizedBox(height: 16),
 
                   // e. Reset button di bottom
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
+                  AnimatedCardWrapper(
+                    entranceDelay: const Duration(milliseconds: 600),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
                       icon: const Icon(Icons.restart_alt),
                       label: const Text('Reset Progress'),
                       style: OutlinedButton.styleFrom(
@@ -189,6 +207,7 @@ class _ProgressPageState extends State<ProgressPage> {
                           }
                         }
                       },
+                    ),
                     ),
                   ),
                   const SizedBox(height: 32),
