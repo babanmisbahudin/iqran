@@ -38,7 +38,7 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
       title: 'Mulai Perjalanan Murajaah',
       description:
           'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.',
-      lottieAsset: 'assets/lottie/Reading Quran.json',
+      lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
       isLast: true,
     ),
   ];

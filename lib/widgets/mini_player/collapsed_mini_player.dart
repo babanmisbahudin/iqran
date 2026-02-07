@@ -43,84 +43,90 @@ class CollapsedMiniPlayer extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                // Album art
-                AudioArtwork(
-                  text: metadata.surahNameLatin,
-                  size: 56,
-                  primaryColor: colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-
-                // Metadata
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              // Clickable area: Album art + Metadata
+              Expanded(
+                child: InkWell(
+                  onTap: onTap,
+                  child: Row(
                     children: [
-                      Text(
-                        metadata.surahName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      // Album art
+                      AudioArtwork(
+                        text: metadata.surahNameLatin,
+                        size: 56,
+                        primaryColor: colorScheme.primary,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        metadata.qariName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      const SizedBox(width: 12),
+
+                      // Metadata
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              metadata.surahName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              metadata.qariName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+              ),
 
-                // Play/pause button
-                IconButton(
-                  icon: status == PlayerStateStatus.playing
-                      ? const Icon(Icons.pause_rounded)
-                      : status == PlayerStateStatus.loading
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Icon(Icons.play_arrow_rounded),
-                  onPressed: () {
-                    if (status == PlayerStateStatus.playing) {
-                      AudioPlayerService.pause();
-                    } else if (status == PlayerStateStatus.paused ||
-                        status == PlayerStateStatus.idle) {
-                      AudioPlayerService.resume();
-                    }
-                  },
-                  tooltip: status == PlayerStateStatus.playing
-                      ? 'Pause'
-                      : 'Resume',
-                ),
+              // Play/pause button (outside InkWell)
+              IconButton(
+                icon: status == PlayerStateStatus.playing
+                    ? const Icon(Icons.pause_rounded)
+                    : status == PlayerStateStatus.loading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(Icons.play_arrow_rounded),
+                onPressed: () {
+                  if (status == PlayerStateStatus.playing) {
+                    AudioPlayerService.pause();
+                  } else if (status == PlayerStateStatus.paused ||
+                      status == PlayerStateStatus.idle) {
+                    AudioPlayerService.resume();
+                  }
+                },
+                tooltip: status == PlayerStateStatus.playing
+                    ? 'Pause'
+                    : 'Resume',
+              ),
 
-                // Close button
-                IconButton(
-                  icon: const Icon(Icons.close_rounded),
-                  onPressed: onClose,
-                  tooltip: 'Stop',
-                  iconSize: 20,
-                ),
-              ],
-            ),
+              // Close button (outside InkWell)
+              IconButton(
+                icon: const Icon(Icons.close_rounded),
+                onPressed: onClose,
+                tooltip: 'Stop',
+                iconSize: 20,
+              ),
+            ],
           ),
         ),
       ),

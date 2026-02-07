@@ -61,13 +61,8 @@ class _MainNavigationState extends State<MainNavigation> {
               child: pages[index],
             ),
           ),
-          // Mini-player overlay (positioned at top)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: MiniPlayerOverlay(),
-          ),
+          // Mini-player overlay (draggable within MiniPlayerOverlay)
+          const MiniPlayerOverlay(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -76,8 +71,10 @@ class _MainNavigationState extends State<MainNavigation> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.insights), label: 'Progress'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Pengaturan'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.insights), label: 'Progress'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Pengaturan'),
         ],
       ),
     );

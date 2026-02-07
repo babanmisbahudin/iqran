@@ -70,81 +70,86 @@ class _AudioProgressBarState extends State<AudioProgressBar> {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Slider
-        GestureDetector(
-          onHorizontalDragStart: (_) {
-            setState(() => _isDragging = true);
-          },
-          onHorizontalDragUpdate: (details) {
-            final box = context.findRenderObject() as RenderBox;
-            final width = box.size.width;
-            final dx = details.globalPosition.dx - box.localToGlobal(Offset.zero).dx;
-            final newProgress = (dx / width).clamp(0.0, 1.0);
-            final newPosition = Duration(
-              milliseconds:
-                  (newProgress * widget.duration.inMilliseconds).toInt(),
-            );
-            setState(() => _draggedPosition = newPosition);
-          },
-          onHorizontalDragEnd: (_) {
-            setState(() => _isDragging = false);
-            widget.onSeek(_draggedPosition);
-          },
-          child: Stack(
-            children: [
-              // Background track
-              Container(
-                height: widget.height,
-                decoration: BoxDecoration(
-                  color: inactiveColor,
-                  borderRadius: BorderRadius.circular(widget.height / 2),
-                ),
-              ),
-              // Buffered progress (optional)
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: activeColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(widget.height / 2),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final thumbPosition = (progress * width) - 6;
+
+            return GestureDetector(
+              onHorizontalDragStart: (_) {
+                setState(() => _isDragging = true);
+              },
+              onHorizontalDragUpdate: (details) {
+                final dx = details.localPosition.dx;
+                final newProgress = (dx / width).clamp(0.0, 1.0);
+                final newPosition = Duration(
+                  milliseconds:
+                      (newProgress * widget.duration.inMilliseconds).toInt(),
+                );
+                setState(() => _draggedPosition = newPosition);
+              },
+              onHorizontalDragEnd: (_) {
+                setState(() => _isDragging = false);
+                widget.onSeek(_draggedPosition);
+              },
+              child: Stack(
+                children: [
+                  // Background track
+                  Container(
+                    height: widget.height,
+                    decoration: BoxDecoration(
+                      color: inactiveColor,
+                      borderRadius: BorderRadius.circular(widget.height / 2),
+                    ),
                   ),
-                  width: progress * 100 + 1,
-                ),
-              ),
-              // Active progress
-              FractionallySizedBox(
-                widthFactor: progress,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: activeColor,
-                    borderRadius: BorderRadius.circular(widget.height / 2),
-                  ),
-                ),
-              ),
-              // Thumb handle
-              Positioned(
-                left: (progress * (context.size?.width ?? 0)) - 6,
-                top: -6,
-                child: Container(
-                  width: widget.height + 8,
-                  height: widget.height + 8,
-                  decoration: BoxDecoration(
-                    color: activeColor,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
+                  // Buffered progress (optional)
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: activeColor.withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        spreadRadius: 2,
+                        borderRadius: BorderRadius.circular(widget.height / 2),
                       ),
-                    ],
+                      width: progress * 100 + 1,
+                    ),
                   ),
-                ),
+                  // Active progress
+                  FractionallySizedBox(
+                    widthFactor: progress,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: activeColor,
+                        borderRadius: BorderRadius.circular(widget.height / 2),
+                      ),
+                    ),
+                  ),
+                  // Thumb handle
+                  Positioned(
+                    left: thumbPosition,
+                    top: -6,
+                    child: Container(
+                      width: widget.height + 8,
+                      height: widget.height + 8,
+                      decoration: BoxDecoration(
+                        color: activeColor,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: activeColor.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
         const SizedBox(height: 8),
         // Time display

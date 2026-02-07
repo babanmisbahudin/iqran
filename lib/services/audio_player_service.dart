@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart' as audio_service_pkg;
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
@@ -34,6 +36,11 @@ class AudioPlayerService {
   // Playlist support
   static List<int>? _playlist;
   static int _playlistIndex = 0;
+
+  // Sleep timer support
+  static Timer? _sleepTimer;
+  static final ValueNotifier<Duration?> sleepTimerRemaining =
+      ValueNotifier<Duration?>(null);
 
   static bool _initialized = false;
 
@@ -282,9 +289,47 @@ class AudioPlayerService {
     _playlistIndex = 0;
   }
 
+  /// Set sleep timer (duration dalam menit)
+  static void setSleepTimer(int minutes) {
+    // Cancel existing timer
+    _sleepTimer?.cancel();
+
+    if (minutes <= 0) {
+      sleepTimerRemaining.value = null;
+      return;
+    }
+
+    final duration = Duration(minutes: minutes);
+    sleepTimerRemaining.value = duration;
+
+    _sleepTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final remaining = sleepTimerRemaining.value;
+      if (remaining != null) {
+        final newRemaining = remaining - const Duration(seconds: 1);
+        if (newRemaining.isNegative || newRemaining.inSeconds <= 0) {
+          // Time's up, pause audio
+          pause();
+          sleepTimerRemaining.value = null;
+          timer.cancel();
+          _sleepTimer = null;
+        } else {
+          sleepTimerRemaining.value = newRemaining;
+        }
+      }
+    });
+  }
+
+  /// Cancel sleep timer
+  static void cancelSleepTimer() {
+    _sleepTimer?.cancel();
+    _sleepTimer = null;
+    sleepTimerRemaining.value = null;
+  }
+
   /// Dispose semua resources
   static Future<void> dispose() async {
     await stop();
+    _sleepTimer?.cancel();
     await _player.dispose();
   }
 }

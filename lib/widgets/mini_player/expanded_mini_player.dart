@@ -39,6 +39,12 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    // Animate in when player is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _collapseAnimController.forward();
+      }
+    });
   }
 
   @override
@@ -53,18 +59,79 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
     });
   }
 
+  void _showSleepTimerDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sleep Timer'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ValueListenableBuilder<Duration?>(
+              valueListenable: AudioPlayerService.sleepTimerRemaining,
+              builder: (context, remaining, _) {
+                if (remaining != null) {
+                  final minutes = remaining.inMinutes;
+                  final seconds = remaining.inSeconds % 60;
+                  return Text(
+                    'Active: ${minutes}:${seconds.toString().padLeft(2, '0')}',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  );
+                }
+                return const Text('No timer set');
+              },
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [5, 10, 15, 30, 45, 60].map((minutes) {
+                return ElevatedButton(
+                  onPressed: () {
+                    AudioPlayerService.setSleepTimer(minutes);
+                    Navigator.pop(context);
+                  },
+                  child: Text('$minutes min'),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              AudioPlayerService.cancelSleepTimer();
+              Navigator.pop(context);
+            },
+            child: const Text('Cancel Timer'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return ScaleTransition(
-      scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-        CurvedAnimation(parent: _collapseAnimController, curve: Curves.easeOut),
-      ),
-      child: Scaffold(
-        backgroundColor: colorScheme.surface,
-        appBar: AppBar(
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: ScaleTransition(
+        scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+          CurvedAnimation(parent: _collapseAnimController, curve: Curves.easeOut),
+        ),
+        child: Scaffold(
+          backgroundColor: colorScheme.surface,
+          appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -73,21 +140,30 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
             tooltip: 'Collapse',
           ),
           actions: [
+            ValueListenableBuilder<Duration?>(
+              valueListenable: AudioPlayerService.sleepTimerRemaining,
+              builder: (context, remaining, _) {
+                return IconButton(
+                  icon: Icon(
+                    remaining != null ? Icons.timer : Icons.timer_outlined,
+                  ),
+                  onPressed: _showSleepTimerDialog,
+                  tooltip: 'Sleep Timer',
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.close_rounded),
               onPressed: widget.onClose,
               tooltip: 'Stop',
             ),
           ],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
+          ),
+          body: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const SizedBox(height: 24),
-
                 // Large artwork
                 Hero(
                   tag: 'audio_artwork_${widget.metadata.surahNumber}',
@@ -104,13 +180,11 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                     ),
                     child: AudioArtwork(
                       text: widget.metadata.surahNameLatin,
-                      size: 280,
+                      size: 200,
                       primaryColor: colorScheme.primary,
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 48),
 
                 // Metadata
                 Column(
@@ -134,8 +208,6 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                   ],
                 ),
 
-                const SizedBox(height: 40),
-
                 // Progress bar
                 AudioProgressBar(
                   position: widget.position,
@@ -144,8 +216,6 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                     AudioPlayerService.seek(position);
                   },
                 ),
-
-                const SizedBox(height: 32),
 
                 // Control buttons
                 Row(
@@ -219,8 +289,6 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                     ),
                   ],
                 ),
-
-                const SizedBox(height: 24),
               ],
             ),
           ),
