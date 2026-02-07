@@ -3,6 +3,7 @@ import '../quran/surah_list_page.dart';
 import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
 import '../../services/progress_service.dart';
+import '../../widgets/animated_page_route.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
 import 'widgets/stats_section.dart';
@@ -49,31 +50,19 @@ class _HomePageState extends State<HomePage> {
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.of(context)
         .push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => page,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOutCubic;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    )
+          AnimatedPageRoute(
+            page: page,
+            animationType: AnimationType.slideFromRight,
+          ),
+        )
         .then((_) {
-      // Reload data when user returns from navigation
-      if (mounted) {
-        setState(() {
-          _loadData();
+          // Reload data when user returns from navigation
+          if (mounted) {
+            setState(() {
+              _loadData();
+            });
+          }
         });
-      }
-    });
   }
 
   String _formatDateIndo(DateTime date) {
