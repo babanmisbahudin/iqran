@@ -8,6 +8,7 @@ import 'expanded_mini_player.dart';
 /// Main mini-player overlay widget yang expand/collapse
 class MiniPlayerOverlay extends StatefulWidget {
   final double bottomOffset;
+  // ignore: library_private_types_in_public_api
   static final GlobalKey<_MiniPlayerOverlayState> globalKey =
       GlobalKey<_MiniPlayerOverlayState>();
 

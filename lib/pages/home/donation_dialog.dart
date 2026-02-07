@@ -186,16 +186,32 @@ class _DonationDialogState extends State<DonationDialog> {
                         ),
                         child: Row(
                           children: [
-                            Radio<String>(
-                              value: entry.key,
-                              groupValue: _selectedMethod,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _selectedMethod = value;
-                                  });
-                                }
-                              },
+                            SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? cs.primary
+                                        : cs.outline,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: isSelected
+                                    ? Center(
+                                        child: Container(
+                                          width: 12,
+                                          height: 12,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: cs.primary,
+                                          ),
+                                        ),
+                                      )
+                                    : null,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(

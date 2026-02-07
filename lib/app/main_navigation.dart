@@ -89,11 +89,11 @@ class _MainNavigationState extends State<MainNavigation> {
       builder: (context, metadata, _) {
         // Only show FAB if audio is playing and mini player is hidden
         if (metadata != null && MiniPlayerOverlay.isHidden()) {
-          return FloatingActionButton(
+          return const FloatingActionButton(
             onPressed: MiniPlayerOverlay.show,
             tooltip: 'Show player',
             mini: true,
-            child: const Icon(Icons.expand_more_rounded),
+            child: Icon(Icons.expand_more_rounded),
           );
         }
         return const SizedBox.shrink();

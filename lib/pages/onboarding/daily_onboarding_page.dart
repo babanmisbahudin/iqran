@@ -160,7 +160,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
                       alignment: Alignment.center,
                       children: [
                         // Lottie animation background
-                        SizedBox(
+                        const SizedBox(
                           width: 280,
                           height: 280,
                           child: AnimatedCharacterCard(

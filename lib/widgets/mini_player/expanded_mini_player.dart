@@ -74,7 +74,7 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                   final minutes = remaining.inMinutes;
                   final seconds = remaining.inSeconds % 60;
                   return Text(
-                    'Active: ${minutes}:${seconds.toString().padLeft(2, '0')}',
+                    'Active: $minutes:${seconds.toString().padLeft(2, '0')}',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
