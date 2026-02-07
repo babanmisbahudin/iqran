@@ -209,6 +209,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       FeatureCard(
                         icon: Icons.menu_book,
+                        lottieAsset: 'assets/lottie/book.json',
                         title: 'Al-Qur\'an',
                         description: 'Baca Qur\'an',
                         gradientColor: Color.lerp(
@@ -220,9 +221,12 @@ class _HomePageState extends State<HomePage> {
                           context,
                           SurahListPage(fontSize: widget.fontSize),
                         ),
+                        animationIndex: 0,
+                        entranceDelay: const Duration(milliseconds: 100),
                       ),
                       FeatureCard(
                         icon: Icons.bookmark,
+                        lottieAsset: 'assets/lottie/bookmark.json',
                         title: 'Bookmark',
                         description: 'Surah Favorit',
                         gradientColor: Color.lerp(
@@ -234,9 +238,12 @@ class _HomePageState extends State<HomePage> {
                           context,
                           BookmarkPage(fontSize: widget.fontSize),
                         ),
+                        animationIndex: 1,
+                        entranceDelay: const Duration(milliseconds: 200),
                       ),
                       FeatureCard(
                         icon: Icons.help_outline,
+                        lottieAsset: 'assets/lottie/help.json',
                         title: 'Tutorial',
                         description: 'Panduan Aplikasi',
                         gradientColor: Color.lerp(
@@ -248,9 +255,12 @@ class _HomePageState extends State<HomePage> {
                           context,
                           const TutorialPage(),
                         ),
+                        animationIndex: 2,
+                        entranceDelay: const Duration(milliseconds: 300),
                       ),
                       FeatureCard(
                         icon: Icons.favorite,
+                        lottieAsset: 'assets/lottie/heart.json',
                         title: 'Donasi',
                         description: 'Dukung Developer',
                         gradientColor: Color.lerp(
@@ -259,6 +269,8 @@ class _HomePageState extends State<HomePage> {
                           0.3,
                         )!,
                         onTap: () => _showDonationDialog(context),
+                        animationIndex: 3,
+                        entranceDelay: const Duration(milliseconds: 400),
                       ),
                     ],
                   ),
