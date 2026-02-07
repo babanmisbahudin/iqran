@@ -6,6 +6,8 @@ import '../../services/progress_service.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
 import 'widgets/stats_section.dart';
+import 'tutorial_page.dart';
+import 'donation_dialog.dart';
 
 class HomePage extends StatefulWidget {
   final double fontSize;
@@ -45,7 +47,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -53,8 +56,8 @@ class _HomePageState extends State<HomePage> {
           const end = Offset.zero;
           const curve = Curves.easeInOutCubic;
 
-          var tween = Tween(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -62,7 +65,8 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-    ).then((_) {
+    )
+        .then((_) {
       // Reload data when user returns from navigation
       if (mounted) {
         setState(() {
@@ -74,10 +78,28 @@ class _HomePageState extends State<HomePage> {
 
   String _formatDateIndo(DateTime date) {
     const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember'
     ];
-    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const days = [
+      'Minggu',
+      'Senin',
+      'Selasa',
+      'Rabu',
+      'Kamis',
+      'Jumat',
+      'Sabtu'
+    ];
 
     final dayName = days[date.weekday % 7];
     final monthName = months[date.month - 1];
@@ -96,7 +118,8 @@ class _HomePageState extends State<HomePage> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 520),
               child: Column(
@@ -109,10 +132,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         'Assalamu\'alaikum',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: cs.onSurface,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: cs.onSurface,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -207,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                       FeatureCard(
                         icon: Icons.bookmark,
                         title: 'Bookmark',
-                        description: 'Ayat Favorit',
+                        description: 'Surah Favorit',
                         gradientColor: Color.lerp(
                           cs.primary,
                           cs.surfaceContainer,
@@ -220,6 +244,51 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 32),
+
+                  // Additional Features Section
+                  Text(
+                    'Lainnya',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.0,
+                    children: [
+                      FeatureCard(
+                        icon: Icons.help_outline,
+                        title: 'Tutorial',
+                        description: 'Panduan Aplikasi',
+                        gradientColor: Color.lerp(
+                          Colors.blue,
+                          cs.surfaceContainer,
+                          0.3,
+                        )!,
+                        onTap: () => _navigateToPage(
+                          context,
+                          const TutorialPage(),
+                        ),
+                      ),
+                      FeatureCard(
+                        icon: Icons.favorite,
+                        title: 'Donasi',
+                        description: 'Dukung Developer',
+                        gradientColor: Color.lerp(
+                          Colors.red,
+                          cs.surfaceContainer,
+                          0.3,
+                        )!,
+                        onTap: () => _showDonationDialog(context),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -227,6 +296,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDonationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const DonationDialog(),
     );
   }
 }
