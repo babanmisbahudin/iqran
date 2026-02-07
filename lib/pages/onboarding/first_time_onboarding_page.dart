@@ -25,19 +25,20 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
       title: 'Assalamu\'alaikum! 👋',
       description:
           'Selamat datang di IQRAN. Aplikasi untuk mempermudah murajaah Al-Qur\'an harian Anda.',
-      lottieAsset: 'assets/lottie/greeting.json',
+      lottieAsset: 'assets/lottie/Reading Quran.json',
     ),
     OnboardingSlideData(
       title: 'Fitur Unggulan',
       description:
           'Baca Al-Qur\'an dengan tajweed, simpan ayat favorit, pantau progress murajaah, dan dengarkan murottal berkualitas.',
-      lottieAsset: 'assets/lottie/reading.json',
+      lottieAsset:
+          'assets/lottie/Muslim Father and Daughter Reading Koran.json',
     ),
     OnboardingSlideData(
       title: 'Mulai Perjalanan Murajaah',
       description:
           'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.',
-      lottieAsset: 'assets/lottie/praying.json',
+      lottieAsset: 'assets/lottie/Reading Quran.json',
       isLast: true,
     ),
   ];
@@ -158,7 +159,9 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
                 ),
               ),
               child: Text(
-                _currentPage == _slides.length - 1 ? 'Mulai Sekarang' : 'Lanjutkan',
+                _currentPage == _slides.length - 1
+                    ? 'Mulai Sekarang'
+                    : 'Lanjutkan',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Colors.white,
                     ),

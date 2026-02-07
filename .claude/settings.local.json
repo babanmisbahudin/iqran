@@ -17,7 +17,8 @@
       "Bash(dart pub get:*)",
       "Bash(flutter compile kernel:*)",
       "Bash(find:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(timeout 30 flutter run:*)"
     ]
   }
 }

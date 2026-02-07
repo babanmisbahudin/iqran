@@ -155,19 +155,34 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
 
                     const SizedBox(height: 32),
 
-                    // Animated character
-                    const AnimatedCharacterCard(
-                      lottieAsset: 'assets/lottie/praying.json',
-                      fallbackImage:
-                          'assets/images/onboarding/fallback_prayer.png',
+                    // Animated character - reading quran with hadith
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Lottie animation background
+                        SizedBox(
+                          width: 280,
+                          height: 280,
+                          child: AnimatedCharacterCard(
+                            lottieAsset: 'assets/lottie/Reading in Quran.json',
+                            fallbackImage:
+                                'assets/images/onboarding/fallback_prayer.png',
+                          ),
+                        ),
+                        // Hadith quote overlay on animation
+                        Positioned(
+                          bottom: 20,
+                          left: 16,
+                          right: 16,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: HadithQuoteCard(hadith: _hadith),
+                          ),
+                        ),
+                      ],
                     ),
 
-                    const SizedBox(height: 32),
-
-                    // Hadith quote
-                    HadithQuoteCard(hadith: _hadith),
-
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
 
                     // Continue button
                     Padding(

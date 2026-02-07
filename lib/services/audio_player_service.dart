@@ -229,7 +229,8 @@ class AudioPlayerService {
             'https://via.placeholder.com/512?text=${metadata.surahNameLatin}',
           ),
         );
-        handler.mediaItem.add(mediaItem);
+        // Use setMediaItem method instead of direct add
+        handler.setMediaItem(mediaItem);
       }
     } catch (e) {
       debugPrint('⚠️ Error updating notification: $e');

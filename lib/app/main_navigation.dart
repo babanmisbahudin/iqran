@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/home/home_page.dart';
 import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
+import '../widgets/mini_player/mini_player_overlay.dart';
 
 class MainNavigation extends StatefulWidget {
   final bool isDark;
@@ -38,24 +39,36 @@ class _MainNavigationState extends State<MainNavigation> {
     ];
 
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.05),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
+      body: Stack(
+        children: [
+          // Main content
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, 0.05),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                ),
+              );
+            },
+            child: PageStorage(
+              bucket: PageStorageBucket(),
+              child: pages[index],
             ),
-          );
-        },
-        child: PageStorage(
-          bucket: PageStorageBucket(),
-          child: pages[index],
-        ),
+          ),
+          // Mini-player overlay (positioned at top)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: MiniPlayerOverlay(),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,

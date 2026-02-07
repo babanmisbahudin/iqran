@@ -5,16 +5,30 @@ import 'package:rxdart/rxdart.dart';
 /// Custom AudioHandler untuk mengelola background audio playback
 class IqranAudioHandler extends BaseAudioHandler with SeekHandler {
   final AudioPlayer _player;
-  final BehaviorSubject<PlaybackState> _playbackState =
-      BehaviorSubject<PlaybackState>();
-  final BehaviorSubject<List<MediaItem>> _queue =
-      BehaviorSubject<List<MediaItem>>();
+  late final BehaviorSubject<PlaybackState> _playbackState;
+  late final BehaviorSubject<List<MediaItem>> _queue;
+  late final BehaviorSubject<MediaItem?> _currentMediaItem;
 
   IqranAudioHandler(this._player) {
+    // Initialize BehaviorSubjects dengan default values
+    _playbackState = BehaviorSubject<PlaybackState>.seeded(
+      PlaybackState(
+        controls: const [MediaControl.play],
+        systemActions: const {MediaAction.seek},
+        processingState: AudioProcessingState.idle,
+        playing: false,
+      ),
+    );
+    _queue = BehaviorSubject<List<MediaItem>>.seeded([]);
+    _currentMediaItem = BehaviorSubject<MediaItem?>.seeded(null);
     _init();
   }
 
   Future<void> _init() async {
+    // Initialize queue and mediaItem streams
+    queue.addStream(_queue.stream);
+    mediaItem.addStream(_currentMediaItem.stream);
+
     // Listen to player state dan broadcast ke system
     _player.playerStateStream.listen(_broadcastState);
     _player.positionStream.listen((_) => _broadcastState(_player.playerState));
@@ -111,7 +125,7 @@ class IqranAudioHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> updateMediaItem(MediaItem mediaItem) async {
-    mediaItem = mediaItem;
+    _currentMediaItem.add(mediaItem);
     playbackState.add(playbackState.value.copyWith(
       controls: [
         MediaControl.skipToPrevious,
@@ -125,6 +139,11 @@ class IqranAudioHandler extends BaseAudioHandler with SeekHandler {
     ));
   }
 
+  /// Update media item untuk notification
+  void setMediaItem(MediaItem mediaItem) {
+    _currentMediaItem.add(mediaItem);
+  }
+
   /// Dispose resources
   @override
   Future<void> onTaskRemoved() async {
@@ -135,5 +154,6 @@ class IqranAudioHandler extends BaseAudioHandler with SeekHandler {
   void dispose() {
     _playbackState.close();
     _queue.close();
+    _currentMediaItem.close();
   }
 }
