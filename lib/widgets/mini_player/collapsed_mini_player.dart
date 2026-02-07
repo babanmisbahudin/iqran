@@ -10,6 +10,7 @@ class CollapsedMiniPlayer extends StatelessWidget {
   final PlayerStateStatus status;
   final VoidCallback onTap;
   final VoidCallback onClose;
+  final VoidCallback onHide;
 
   const CollapsedMiniPlayer({
     super.key,
@@ -17,6 +18,7 @@ class CollapsedMiniPlayer extends StatelessWidget {
     required this.status,
     required this.onTap,
     required this.onClose,
+    required this.onHide,
   });
 
   @override
@@ -124,6 +126,14 @@ class CollapsedMiniPlayer extends StatelessWidget {
                 icon: const Icon(Icons.close_rounded),
                 onPressed: onClose,
                 tooltip: 'Stop',
+                iconSize: 20,
+              ),
+
+              // Hide button (outside InkWell)
+              IconButton(
+                icon: const Icon(Icons.expand_less_rounded),
+                onPressed: onHide,
+                tooltip: 'Hide',
                 iconSize: 20,
               ),
             ],

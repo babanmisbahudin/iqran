@@ -8,6 +8,8 @@ import 'expanded_mini_player.dart';
 /// Main mini-player overlay widget yang expand/collapse
 class MiniPlayerOverlay extends StatefulWidget {
   final double bottomOffset;
+  static final GlobalKey<_MiniPlayerOverlayState> globalKey =
+      GlobalKey<_MiniPlayerOverlayState>();
 
   const MiniPlayerOverlay({
     super.key,
@@ -16,10 +18,21 @@ class MiniPlayerOverlay extends StatefulWidget {
 
   @override
   State<MiniPlayerOverlay> createState() => _MiniPlayerOverlayState();
+
+  // Public method to show mini player from outside
+  static void show() {
+    globalKey.currentState?._show();
+  }
+
+  // Public method to check if mini player is hidden
+  static bool isHidden() {
+    return globalKey.currentState?._isHidden ?? false;
+  }
 }
 
 class _MiniPlayerOverlayState extends State<MiniPlayerOverlay> {
   bool _isExpanded = false;
+  bool _isHidden = false;
   late double _offsetTop;
   late double _offsetLeft;
 
@@ -45,6 +58,24 @@ class _MiniPlayerOverlayState extends State<MiniPlayerOverlay> {
     });
   }
 
+  /// Hide/show mini player
+  void _toggleHidden() {
+    debugPrint('🎵 Toggle hidden: $_isHidden -> ${!_isHidden}');
+    setState(() {
+      _isHidden = !_isHidden;
+      if (_isHidden) {
+        _isExpanded = false; // Collapse when hiding
+      }
+    });
+  }
+
+  void _show() {
+    debugPrint('🎵 Show mini player');
+    setState(() {
+      _isHidden = false;
+    });
+  }
+
   /// Handle dragging untuk mini player (hanya saat collapsed)
   void _handleDragUpdate(DragUpdateDetails details) {
     if (_isExpanded) return; // Don't allow drag when expanded
@@ -62,6 +93,11 @@ class _MiniPlayerOverlayState extends State<MiniPlayerOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    // Don't show mini player if hidden
+    if (_isHidden) {
+      return const SizedBox.shrink();
+    }
+
     // When expanded, show fullscreen without position constraints
     if (_isExpanded) {
       return _buildMiniPlayer();
@@ -146,6 +182,7 @@ class _MiniPlayerOverlayState extends State<MiniPlayerOverlay> {
                       debugPrint('❌ Error stopping audio: $e');
                     }
                   },
+                  onHide: _toggleHidden,
                 ),
               );
             } catch (e) {

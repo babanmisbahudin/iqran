@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../models/audio_metadata.dart';
 import '../pages/home/home_page.dart';
 import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
+import '../services/audio_player_service.dart';
 import '../widgets/mini_player/mini_player_overlay.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -62,9 +64,10 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
           ),
           // Mini-player overlay (draggable within MiniPlayerOverlay)
-          const MiniPlayerOverlay(),
+          MiniPlayerOverlay(key: MiniPlayerOverlay.globalKey),
         ],
       ),
+      floatingActionButton: _buildShowMiniPlayerFab(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (i) => setState(() => index = i),
@@ -77,6 +80,24 @@ class _MainNavigationState extends State<MainNavigation> {
               icon: Icon(Icons.settings), label: 'Pengaturan'),
         ],
       ),
+    );
+  }
+
+  Widget _buildShowMiniPlayerFab() {
+    return ValueListenableBuilder<AudioMetadata?>(
+      valueListenable: AudioPlayerService.currentMetadata,
+      builder: (context, metadata, _) {
+        // Only show FAB if audio is playing and mini player is hidden
+        if (metadata != null && MiniPlayerOverlay.isHidden()) {
+          return FloatingActionButton(
+            onPressed: MiniPlayerOverlay.show,
+            tooltip: 'Show player',
+            mini: true,
+            child: const Icon(Icons.expand_more_rounded),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }
