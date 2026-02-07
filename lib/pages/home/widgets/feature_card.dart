@@ -42,7 +42,7 @@ class _FeatureCardState extends State<FeatureCard> {
           duration: const Duration(milliseconds: 150),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(18),
               gradient: LinearGradient(
                 colors: [
                   widget.gradientColor.withValues(alpha: 0.15),
@@ -52,41 +52,50 @@ class _FeatureCardState extends State<FeatureCard> {
                 end: Alignment.bottomRight,
               ),
               border: Border.all(
-                color: cs.outlineVariant,
-                width: 1,
+                color: widget.gradientColor.withValues(alpha: 0.3),
+                width: 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.gradientColor.withValues(alpha: 0.1),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: widget.gradientColor.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
+                      color: widget.gradientColor.withValues(alpha: 0.25),
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     child: Icon(
                       widget.icon,
                       color: widget.gradientColor,
-                      size: 24,
+                      size: 28,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   Text(
                     widget.title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: cs.onSurface,
+                          fontSize: 15,
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     widget.description,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: cs.onSurfaceVariant,
+                          fontSize: 12,
                         ),
                     textAlign: TextAlign.center,
                     maxLines: 2,

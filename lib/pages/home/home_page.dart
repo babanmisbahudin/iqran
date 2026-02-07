@@ -196,23 +196,16 @@ class _HomePageState extends State<HomePage> {
                       return StatsSection(versesReadToday: versesReadToday);
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 28),
 
-                  // Quick Access Grid
-                  Text(
-                    'Fitur Utama',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 12),
+                  // Quick Features Grid
                   GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.0,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: 0.92,
                     children: [
                       FeatureCard(
                         icon: Icons.menu_book,
@@ -242,26 +235,6 @@ class _HomePageState extends State<HomePage> {
                           BookmarkPage(fontSize: widget.fontSize),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Additional Features Section
-                  Text(
-                    'Lainnya',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 12),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.0,
-                    children: [
                       FeatureCard(
                         icon: Icons.help_outline,
                         title: 'Tutorial',
