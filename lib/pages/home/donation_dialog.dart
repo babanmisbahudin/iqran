@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DonationDialog extends StatefulWidget {
   const DonationDialog({super.key});
@@ -8,16 +9,8 @@ class DonationDialog extends StatefulWidget {
 }
 
 class _DonationDialogState extends State<DonationDialog> {
-  int? _selectedAmount;
-  String _selectedMethod = 'gopay';
-
+  final String _saweriaLink = 'https://saweria.co/himisbah';
   final List<int> _donationAmounts = [10000, 25000, 50000, 100000];
-  final Map<String, String> _paymentMethods = {
-    'gopay': 'GoPay',
-    'ovo': 'OVO',
-    'dana': 'DANA',
-    'bank': 'Transfer Bank',
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -70,167 +63,54 @@ class _DonationDialogState extends State<DonationDialog> {
               ),
               const SizedBox(height: 24),
 
-              // Donation Amount Selection
+              // Donation Amount Suggestions
               Text(
-                'Pilih Nominal Donasi',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                'Saran Nominal Donasi:',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
                     ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Wrap(
-                spacing: 12,
-                runSpacing: 12,
+                spacing: 8,
+                runSpacing: 8,
                 children: _donationAmounts.map((amount) {
-                  final isSelected = _selectedAmount == amount;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedAmount = amount;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? cs.primary
-                            : cs.surfaceContainer,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: cs.outline,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        'Rp${amount ~/ 1000}K',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: isSelected
-                                  ? cs.onPrimary
-                                  : cs.onSurface,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
+                  return Chip(
+                    label: Text('Rp${amount ~/ 1000}K'),
+                    backgroundColor: cs.surfaceContainer,
                   );
                 }).toList(),
               ),
               const SizedBox(height: 24),
 
-              // Custom Amount
-              Text(
-                'Atau Masukkan Nominal Custom',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Rp 0',
-                  prefixText: 'Rp ',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
+              // Payment Methods Info
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: cs.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    setState(() {
-                      _selectedAmount = int.tryParse(value) ?? _selectedAmount;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: 24),
-
-              // Payment Method Selection
-              Text(
-                'Metode Pembayaran',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              Column(
-                children: _paymentMethods.entries.map((entry) {
-                  final isSelected = _selectedMethod == entry.key;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedMethod = entry.key;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? cs.primaryContainer
-                              : cs.surfaceContainer,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: cs.outline,
-                            width: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Metode Pembayaran Tersedia:',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: cs.onPrimaryContainer,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? cs.primary
-                                        : cs.outline,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: isSelected
-                                    ? Center(
-                                        child: Container(
-                                          width: 12,
-                                          height: 12,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: cs.primary,
-                                          ),
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                entry.value,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
-                  );
-                }).toList(),
+                    const SizedBox(height: 8),
+                    Text(
+                      '💳 Transfer Bank • 📲 QRIS • 💰 E-wallet (GoPay, OVO, DANA)',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: cs.onPrimaryContainer,
+                          ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
 
@@ -238,18 +118,22 @@ class _DonationDialogState extends State<DonationDialog> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _selectedAmount != null && _selectedAmount! > 0
-                      ? () => _processDonation(context)
-                      : null,
+                  onPressed: () => _openSaweria(),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: Text(
-                    _selectedAmount != null && _selectedAmount! > 0
-                        ? 'Donasi Rp${_selectedAmount! ~/ 1000}K'
-                        : 'Pilih Nominal Terlebih Dahulu',
-                  ),
+                  child: const Text('🎁 Buka Halaman Donasi Saweria'),
                 ),
+              ),
+              const SizedBox(height: 8),
+
+              // Info Text
+              Text(
+                'Pilih nominal donasi di halaman Saweria, kemudian pilih metode pembayaran yang Anda inginkan.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
               ),
               const SizedBox(height: 12),
 
@@ -268,39 +152,28 @@ class _DonationDialogState extends State<DonationDialog> {
     );
   }
 
-  void _processDonation(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Terima Kasih!'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Donasi Anda sebesar Rp${_selectedAmount! ~/ 1000}K melalui $_selectedMethod telah diterima.',
-              style: Theme.of(context).textTheme.bodyMedium,
+  Future<void> _openSaweria() async {
+    try {
+      final Uri url = Uri.parse(_saweriaLink);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Tidak dapat membuka link donasi. Silakan coba lagi.'),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Dukungan Anda sangat berarti bagi pengembangan aplikasi iQran. '
-              'Semoga Anda mendapatkan berkah dan manfaat dari Al-Qur\'an.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontStyle: FontStyle.italic,
-                  ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close thank you dialog
-              Navigator.pop(context); // Close donation dialog
-            },
-            child: const Text('Tutup'),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
           ),
-        ],
-      ),
-    );
+        );
+      }
+    }
   }
 }
