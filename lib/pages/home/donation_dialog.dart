@@ -156,9 +156,16 @@ class _DonationDialogState extends State<DonationDialog> {
     try {
       final Uri url = Uri.parse(_saweriaLink);
       if (await canLaunchUrl(url)) {
+        // Launch URL in external browser
         await launchUrl(url, mode: LaunchMode.externalApplication);
+
+        // Close dialog after a brief delay
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (mounted && context.mounted) {
+          Navigator.of(context).pop();
+        }
       } else {
-        if (mounted) {
+        if (mounted && context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Tidak dapat membuka link donasi. Silakan coba lagi.'),
@@ -167,7 +174,7 @@ class _DonationDialogState extends State<DonationDialog> {
         }
       }
     } catch (e) {
-      if (mounted) {
+      if (mounted && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: ${e.toString()}'),
