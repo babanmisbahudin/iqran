@@ -95,176 +95,207 @@ class _HomePageState extends State<HomePage> {
     return '$dayName, ${date.day} $monthName ${date.year}';
   }
 
+  int _getGridColumns(double width) {
+    if (width > 1200) return 4; // Landscape tablet / desktop
+    if (width > 900) return 3; // Tablet
+    if (width > 600) return 2; // Large phone
+    return 2; // Mobile
+  }
+
+  double _getHorizontalPadding(double width) {
+    if (width > 1200) return 32.0;
+    if (width > 900) return 24.0;
+    if (width > 600) return 20.0;
+    return 16.0;
+  }
+
+  double _getGridSpacing(double width) {
+    if (width > 1200) return 20.0;
+    if (width > 900) return 16.0;
+    return 14.0;
+  }
+
+  double _getCardAspectRatio(int columns) {
+    if (columns >= 4) return 0.85;
+    if (columns == 3) return 0.88;
+    return 0.92;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-
     final dateStr = _formatDateIndo(now);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final horizontalPadding = _getHorizontalPadding(screenWidth);
+    final gridColumns = _getGridColumns(screenWidth);
+    final gridSpacing = _getGridSpacing(screenWidth);
+    final cardAspectRatio = _getCardAspectRatio(gridColumns);
 
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
-                  // Header with greeting
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Assalamu\'alaikum',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: cs.onSurface,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        dateStr,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Continue Reading Section
-                  FutureBuilder<Map<String, int>?>(
-                    future: _progressFuture,
-                    builder: (context, snapshot) {
-                      final progress = snapshot.data;
-                      final surahNumber = progress?['surah'];
-                      final ayatNumber = progress?['ayat'];
-
-                      return LastReadSection(
-                        surah: surahNumber,
-                        ayat: ayatNumber,
-                        onTap: () {
-                          // Navigate to the last read surah if data exists
-                          if (surahNumber != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => SurahDetailPage.fromBookmark(
-                                  nomor: surahNumber,
-                                  nama: 'Surah',
-                                  fontSize: widget.fontSize,
-                                  ayatTujuan: ayatNumber,
-                                ),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1400),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40),
+                    // Header with greeting
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Assalamu\'alaikum',
+                          style:
+                              Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: cs.onSurface,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          dateStr,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: cs.onSurfaceVariant,
                               ),
-                            ).then((_) {
-                              // Reload data when user returns from navigation
-                              if (mounted) {
-                                setState(() {
-                                  _loadData();
-                                });
-                              }
-                            });
-                          }
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
 
-                  // Today's Stats Section
-                  FutureBuilder<int>(
-                    future: _todayVersesFuture,
-                    builder: (context, snapshot) {
-                      final versesReadToday = snapshot.data ?? 0;
-                      return StatsSection(versesReadToday: versesReadToday);
-                    },
-                  ),
-                  const SizedBox(height: 28),
+                    // Continue Reading Section
+                    FutureBuilder<Map<String, int>?>(
+                      future: _progressFuture,
+                      builder: (context, snapshot) {
+                        final progress = snapshot.data;
+                        final surahNumber = progress?['surah'];
+                        final ayatNumber = progress?['ayat'];
 
-                  // Quick Features Grid
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 14,
-                    mainAxisSpacing: 14,
-                    childAspectRatio: 0.92,
-                    children: [
-                      FeatureCard(
-                        icon: Icons.menu_book,
-                        lottieAsset: 'assets/lottie/book.json',
-                        title: 'Al-Qur\'an',
-                        description: 'Baca Qur\'an',
-                        gradientColor: Color.lerp(
-                          Colors.green,
-                          cs.surfaceContainer,
-                          0.3,
-                        )!,
-                        onTap: () => _navigateToPage(
-                          context,
-                          SurahListPage(fontSize: widget.fontSize),
+                        return LastReadSection(
+                          surah: surahNumber,
+                          ayat: ayatNumber,
+                          onTap: () {
+                            // Navigate to the last read surah if data exists
+                            if (surahNumber != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SurahDetailPage.fromBookmark(
+                                    nomor: surahNumber,
+                                    nama: 'Surah',
+                                    fontSize: widget.fontSize,
+                                    ayatTujuan: ayatNumber,
+                                  ),
+                                ),
+                              ).then((_) {
+                                // Reload data when user returns from navigation
+                                if (mounted) {
+                                  setState(() {
+                                    _loadData();
+                                  });
+                                }
+                              });
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Today's Stats Section
+                    FutureBuilder<int>(
+                      future: _todayVersesFuture,
+                      builder: (context, snapshot) {
+                        final versesReadToday = snapshot.data ?? 0;
+                        return StatsSection(versesReadToday: versesReadToday);
+                      },
+                    ),
+                    const SizedBox(height: 28),
+
+                    // Quick Features Grid
+                    GridView.count(
+                      crossAxisCount: gridColumns,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: gridSpacing,
+                      mainAxisSpacing: gridSpacing,
+                      childAspectRatio: cardAspectRatio,
+                      children: [
+                        FeatureCard(
+                          icon: Icons.menu_book,
+                          lottieAsset: 'assets/lottie/book.json',
+                          title: 'Al-Qur\'an',
+                          description: 'Baca Qur\'an',
+                          gradientColor: Color.lerp(
+                            Colors.green,
+                            cs.surfaceContainer,
+                            0.3,
+                          )!,
+                          onTap: () => _navigateToPage(
+                            context,
+                            SurahListPage(fontSize: widget.fontSize),
+                          ),
+                          animationIndex: 0,
+                          entranceDelay: const Duration(milliseconds: 100),
                         ),
-                        animationIndex: 0,
-                        entranceDelay: const Duration(milliseconds: 100),
-                      ),
-                      FeatureCard(
-                        icon: Icons.bookmark,
-                        lottieAsset: 'assets/lottie/bookmark.json',
-                        title: 'Bookmark',
-                        description: 'Surah Favorit',
-                        gradientColor: Color.lerp(
-                          cs.primary,
-                          cs.surfaceContainer,
-                          0.3,
-                        )!,
-                        onTap: () => _navigateToPage(
-                          context,
-                          BookmarkPage(fontSize: widget.fontSize),
+                        FeatureCard(
+                          icon: Icons.bookmark,
+                          lottieAsset: 'assets/lottie/bookmark.json',
+                          title: 'Bookmark',
+                          description: 'Surah Favorit',
+                          gradientColor: Color.lerp(
+                            cs.primary,
+                            cs.surfaceContainer,
+                            0.3,
+                          )!,
+                          onTap: () => _navigateToPage(
+                            context,
+                            BookmarkPage(fontSize: widget.fontSize),
+                          ),
+                          animationIndex: 1,
+                          entranceDelay: const Duration(milliseconds: 200),
                         ),
-                        animationIndex: 1,
-                        entranceDelay: const Duration(milliseconds: 200),
-                      ),
-                      FeatureCard(
-                        icon: Icons.help_outline,
-                        lottieAsset: 'assets/lottie/help.json',
-                        title: 'Tutorial',
-                        description: 'Panduan Aplikasi',
-                        gradientColor: Color.lerp(
-                          Colors.blue,
-                          cs.surfaceContainer,
-                          0.3,
-                        )!,
-                        onTap: () => _navigateToPage(
-                          context,
-                          const TutorialPage(),
+                        FeatureCard(
+                          icon: Icons.help_outline,
+                          lottieAsset: 'assets/lottie/help.json',
+                          title: 'Tutorial',
+                          description: 'Panduan Aplikasi',
+                          gradientColor: Color.lerp(
+                            Colors.blue,
+                            cs.surfaceContainer,
+                            0.3,
+                          )!,
+                          onTap: () => _navigateToPage(
+                            context,
+                            const TutorialPage(),
+                          ),
+                          animationIndex: 2,
+                          entranceDelay: const Duration(milliseconds: 300),
                         ),
-                        animationIndex: 2,
-                        entranceDelay: const Duration(milliseconds: 300),
-                      ),
-                      FeatureCard(
-                        icon: Icons.favorite,
-                        lottieAsset: 'assets/lottie/heart.json',
-                        title: 'Donasi',
-                        description: 'Dukung Developer',
-                        gradientColor: Color.lerp(
-                          Colors.red,
-                          cs.surfaceContainer,
-                          0.3,
-                        )!,
-                        onTap: () => _showDonationDialog(context),
-                        animationIndex: 3,
-                        entranceDelay: const Duration(milliseconds: 400),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                ],
+                        FeatureCard(
+                          icon: Icons.favorite,
+                          lottieAsset: 'assets/lottie/heart.json',
+                          title: 'Donasi',
+                          description: 'Dukung Developer',
+                          gradientColor: Color.lerp(
+                            Colors.red,
+                            cs.surfaceContainer,
+                            0.3,
+                          )!,
+                          onTap: () => _showDonationDialog(context),
+                          animationIndex: 3,
+                          entranceDelay: const Duration(milliseconds: 400),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
             ),
           ),

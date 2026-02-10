@@ -66,9 +66,31 @@ class _FeatureCardState extends State<FeatureCard>
     super.dispose();
   }
 
+  double _getIconSize(double width) {
+    if (width > 1200) return 64;
+    if (width > 900) return 60;
+    return 56;
+  }
+
+  double _getIconPadding(double width) {
+    if (width > 900) return 16;
+    return 14;
+  }
+
+  double _getTitleFontSize(double width) {
+    if (width > 900) return 16;
+    return 15;
+  }
+
+  double _getDescriptionFontSize(double width) {
+    if (width > 900) return 13;
+    return 12;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return SlideTransition(
       position: _slideAnimation,
@@ -120,8 +142,8 @@ class _FeatureCardState extends State<FeatureCard>
                           color: widget.gradientColor.withValues(alpha: 0.25),
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        padding: const EdgeInsets.all(14),
-                        child: _buildIconWidget(),
+                        padding: EdgeInsets.all(_getIconPadding(screenWidth)),
+                        child: _buildIconWidget(screenWidth),
                       ),
                       const SizedBox(height: 14),
                       Text(
@@ -130,7 +152,7 @@ class _FeatureCardState extends State<FeatureCard>
                             Theme.of(context).textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: cs.onSurface,
-                                  fontSize: 15,
+                                  fontSize: _getTitleFontSize(screenWidth),
                                 ),
                         textAlign: TextAlign.center,
                       ),
@@ -140,7 +162,7 @@ class _FeatureCardState extends State<FeatureCard>
                         style:
                             Theme.of(context).textTheme.labelSmall?.copyWith(
                                   color: cs.onSurfaceVariant,
-                                  fontSize: 12,
+                                  fontSize: _getDescriptionFontSize(screenWidth),
                                 ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -157,11 +179,12 @@ class _FeatureCardState extends State<FeatureCard>
     );
   }
 
-  Widget _buildIconWidget() {
+  Widget _buildIconWidget(double screenWidth) {
+    final iconSize = _getIconSize(screenWidth);
     if (widget.lottieAsset != null) {
       return SizedBox(
-        width: 56,
-        height: 56,
+        width: iconSize,
+        height: iconSize,
         child: Lottie.asset(
           widget.lottieAsset!,
           fit: BoxFit.contain,
@@ -169,7 +192,7 @@ class _FeatureCardState extends State<FeatureCard>
             return Icon(
               widget.icon ?? Icons.star,
               color: widget.gradientColor,
-              size: 28,
+              size: iconSize * 0.45,
             );
           },
         ),
@@ -178,7 +201,7 @@ class _FeatureCardState extends State<FeatureCard>
     return Icon(
       widget.icon ?? Icons.star,
       color: widget.gradientColor,
-      size: 28,
+      size: iconSize * 0.45,
     );
   }
 }
