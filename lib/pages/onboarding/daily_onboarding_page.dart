@@ -21,13 +21,12 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _fadeController;
   late HadithData _hadith;
-  late int _autoCloseDuration;
+  bool _isDismissing = false;
 
   @override
   void initState() {
     super.initState();
     _hadith = getRandomHadith();
-    _autoCloseDuration = 5; // seconds
 
     _fadeController = AnimationController(
       vsync: this,
@@ -36,32 +35,32 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
 
     // Fade in animation
     _fadeController.forward();
-
-    // Auto-dismiss after duration
-    _scheduleAutoDismiss();
-  }
-
-  void _scheduleAutoDismiss() {
-    Future.delayed(Duration(seconds: _autoCloseDuration), () {
-      if (mounted) {
-        _dismiss();
-      }
-    });
   }
 
   Future<void> _dismiss() async {
-    // Fade out
-    await _fadeController.reverse();
+    // Prevent multiple dismissals
+    if (_isDismissing) return;
+    _isDismissing = true;
 
-    if (!mounted) return;
+    try {
+      // Fade out
+      await _fadeController.reverse();
 
-    // Mark as shown today
-    await OnboardingService.markOnboardingShown();
+      if (!mounted) return;
 
-    // Dismiss page
-    if (mounted) {
-      Navigator.of(context).pop();
-      widget.onDismiss?.call();
+      // Mark as shown today
+      await OnboardingService.markOnboardingShown();
+
+      // Dismiss page
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+        widget.onDismiss?.call();
+      }
+    } catch (e) {
+      print('Error dismissing onboarding: $e');
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -197,18 +196,6 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
                               ),
                         ),
                       ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Auto-close timer info
-                    Text(
-                      'Akan menutup otomatis dalam $_autoCloseDuration detik',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
                     ),
 
                     const SizedBox(height: 20),
