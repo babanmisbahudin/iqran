@@ -17,9 +17,7 @@ class DailyOnboardingPage extends StatefulWidget {
   State<DailyOnboardingPage> createState() => _DailyOnboardingPageState();
 }
 
-class _DailyOnboardingPageState extends State<DailyOnboardingPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _fadeController;
+class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
   late HadithData _hadith;
   bool _isDismissing = false;
 
@@ -27,47 +25,24 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
   void initState() {
     super.initState();
     _hadith = getRandomHadith();
-
-    _fadeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-
-    // Fade in animation
-    _fadeController.forward();
   }
 
-  Future<void> _dismiss() async {
+  void _dismiss() {
     // Prevent multiple dismissals
     if (_isDismissing) return;
     _isDismissing = true;
 
+    // Call callback immediately to dismiss
     try {
-      // Fade out
-      await _fadeController.reverse();
-
-      if (!mounted) return;
-
-      // Mark as shown today
-      await OnboardingService.markOnboardingShown();
-
-      // Dismiss page
-      if (mounted && Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-        widget.onDismiss?.call();
-      }
+      widget.onDismiss?.call();
     } catch (e) {
-      print('Error dismissing onboarding: $e');
-      if (mounted && Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
+      // Silent error handling
     }
-  }
 
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    super.dispose();
+    // Mark as shown today in background (fire and forget)
+    OnboardingService.markOnboardingShown().catchError((_) {
+      // Silent error handling
+    });
   }
 
   @override
@@ -77,131 +52,113 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage>
     final timeStr = DateFormat('HH:mm').format(now);
     final dateStr = DateFormat('d MMMM yyyy', 'id_ID').format(now);
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          _dismiss();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: FadeTransition(
-          opacity: _fadeController,
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    // Header
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Assalamu\'alaikum wa Rahmatullahi wa Barakatuh',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            '$dayName, $dateStr',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Pukul $timeStr',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Muhasabah diri sebelum memulai murajaah',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                ),
-                          ),
-                        ],
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Assalamu\'alaikum wa Rahmatullahi wa Barakatuh',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Animated character - reading quran
-                    const SizedBox(
-                      width: 280,
-                      height: 280,
-                      child: AnimatedCharacterCard(
-                        lottieAsset: 'assets/lottie/Reading in Quran.json',
-                        fallbackImage:
-                            'assets/images/onboarding/fallback_prayer.png',
+                      const SizedBox(height: 12),
+                      Text(
+                        '$dayName, $dateStr',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
                       ),
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Hadith quote card
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: HadithQuoteCard(hadith: _hadith),
-                    ),
-
-                    const SizedBox(height: 48),
-
-                    // Continue button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ElevatedButton(
-                        onPressed: _dismiss,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          'Lanjutkan Bacaan',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(
-                                color: Colors.white,
-                              ),
-                        ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Pukul $timeStr',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
                       ),
-                    ),
-
-                    const SizedBox(height: 20),
-                  ],
+                      const SizedBox(height: 12),
+                      Text(
+                        'Muhasabah diri sebelum memulai murajaah',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 32),
+                // Animated character - reading quran
+                const SizedBox(
+                  width: 280,
+                  height: 280,
+                  child: AnimatedCharacterCard(
+                    lottieAsset: 'assets/lottie/Reading in Quran.json',
+                    fallbackImage:
+                        'assets/images/onboarding/fallback_prayer.png',
+                  ),
+                ),
+                const SizedBox(height: 32),
+                // Hadith quote card
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: HadithQuoteCard(hadith: _hadith),
+                ),
+                const SizedBox(height: 48),
+                // Continue button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ElevatedButton(
+                    onPressed: _dismiss,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Lanjutkan Bacaan',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge
+                          ?.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
         ),

@@ -27,6 +27,19 @@ class _IqranAppState extends State<IqranApp> {
     _determineInitialRoute();
   }
 
+  void _handleDailyOnboardingDismiss() {
+    if (!mounted) return;
+
+    // Use addPostFrameCallback to ensure state change happens after current frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _initialRoute = null;
+        });
+      }
+    });
+  }
+
   // Determine which screen to show on app startup
   Future<void> _determineInitialRoute() async {
     // Check if first launch
@@ -48,11 +61,7 @@ class _IqranAppState extends State<IqranApp> {
     if (await OnboardingService.shouldShowDailyOnboarding()) {
       setState(() {
         _initialRoute = DailyOnboardingPage(
-          onDismiss: () {
-            setState(() {
-              _initialRoute = null;
-            });
-          },
+          onDismiss: _handleDailyOnboardingDismiss,
         );
         _isLoadingRoute = false;
       });
