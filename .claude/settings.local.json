@@ -30,7 +30,8 @@
       "Bash(/tmp/fetch_quran.sh:*)",
       "Bash(__NEW_LINE_7ad8f4c3bd9dcc65__ chmod +x /tmp/fetch_quran.sh)",
       "Bash(/tmp/fetch_quran.sh)",
-      "Bash(python tools/generate_quran_data.py:*)"
+      "Bash(python tools/generate_quran_data.py:*)",
+      "Bash(/tmp/cerita_31_50.txt:*)"
     ],
     "additionalDirectories": [
       "\\tmp"

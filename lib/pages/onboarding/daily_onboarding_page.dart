@@ -126,7 +126,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                   width: 280,
                   height: 280,
                   child: AnimatedCharacterCard(
-                    lottieAsset: 'assets/lottie/Reading in Quran.json',
+                    lottieAsset: 'assets/lottie/Hadist.json',
                     fallbackImage:
                         'assets/images/onboarding/fallback_prayer.png',
                   ),
