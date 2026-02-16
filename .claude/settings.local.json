@@ -21,7 +21,19 @@
       "Bash(timeout 30 flutter run:*)",
       "Bash(flutter run:*)",
       "Bash(grep:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "WebFetch(domain:pub.dev)",
+      "WebFetch(domain:phrase.com)",
+      "WebFetch(domain:baseprogrammer.com)",
+      "WebFetch(domain:flutterlocalisation.com)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(/tmp/fetch_quran.sh:*)",
+      "Bash(__NEW_LINE_7ad8f4c3bd9dcc65__ chmod +x /tmp/fetch_quran.sh)",
+      "Bash(/tmp/fetch_quran.sh)",
+      "Bash(python tools/generate_quran_data.py:*)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }

@@ -6,12 +6,14 @@ import '../../widgets/animated_card_wrapper.dart';
 
 import '../../services/quran_preload_service.dart';
 import '../../services/offline_status_service.dart';
+import '../../services/localization_service.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool isDark;
   final double fontSize;
   final ValueChanged<bool> onTheme;
   final ValueChanged<double> onFont;
+  final ValueChanged<Locale> onLocale;
 
   const SettingsPage({
     super.key,
@@ -19,6 +21,7 @@ class SettingsPage extends StatefulWidget {
     required this.fontSize,
     required this.onTheme,
     required this.onFont,
+    required this.onLocale,
   });
 
   @override
@@ -160,6 +163,60 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(height: 20),
 
                       // =========================
+                      // LANGUAGE
+                      // =========================
+                      AnimatedCardWrapper(
+                        entranceDelay: const Duration(milliseconds: 150),
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Language',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _LanguageOption(
+                                        flag: '🇬🇧',
+                                        name: 'English',
+                                        locale: const Locale('en'),
+                                        onSelect: widget.onLocale,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: _LanguageOption(
+                                        flag: '🇮🇩',
+                                        name: 'Indonesia',
+                                        locale: const Locale('id'),
+                                        onSelect: widget.onLocale,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // =========================
                       // OFFLINE MODE (UX FIX)
                       // =========================
                       AnimatedCardWrapper(
@@ -244,6 +301,66 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         );
       },
+    );
+  }
+}
+
+// Language selection button widget
+class _LanguageOption extends StatefulWidget {
+  final String flag;
+  final String name;
+  final Locale locale;
+  final ValueChanged<Locale> onSelect;
+
+  const _LanguageOption({
+    required this.flag,
+    required this.name,
+    required this.locale,
+    required this.onSelect,
+  });
+
+  @override
+  State<_LanguageOption> createState() => _LanguageOptionState();
+}
+
+class _LanguageOptionState extends State<_LanguageOption> {
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = Localizations.localeOf(context);
+    final isSelected = currentLocale.languageCode == widget.locale.languageCode;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(
+          color: isSelected ? colorScheme.primary : colorScheme.outline,
+          width: isSelected ? 2.5 : 1.5,
+        ),
+        backgroundColor: isSelected
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+            : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+      ),
+      onPressed: () {
+        widget.onSelect(widget.locale);
+        LocalizationService.saveLocale(widget.locale);
+      },
+      child: Column(
+        children: [
+          Text(
+            widget.flag,
+            style: const TextStyle(fontSize: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            widget.name,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+        ],
+      ),
     );
   }
 }

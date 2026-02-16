@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -86,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
 
               // Subtitle
               Text(
-                'Aplikasi Murottal Al-Qur\'an',
+                AppLocalizations.of(context).splashSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       letterSpacing: 0.5,

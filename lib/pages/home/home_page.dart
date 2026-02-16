@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../quran/surah_list_page.dart';
 import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
 import '../../services/progress_service.dart';
 import '../../widgets/animated_page_route.dart';
+import '../../l10n/app_localizations.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
 import 'widgets/stats_section.dart';
@@ -65,36 +67,6 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  String _formatDateIndo(DateTime date) {
-    const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember'
-    ];
-    const days = [
-      'Minggu',
-      'Senin',
-      'Selasa',
-      'Rabu',
-      'Kamis',
-      'Jumat',
-      'Sabtu'
-    ];
-
-    final dayName = days[date.weekday % 7];
-    final monthName = months[date.month - 1];
-    return '$dayName, ${date.day} $monthName ${date.year}';
-  }
-
   int _getGridColumns(double width) {
     if (width > 1200) return 4; // Landscape tablet / desktop
     if (width > 900) return 3; // Tablet
@@ -125,7 +97,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-    final dateStr = _formatDateIndo(now);
+    final currentLocale = Localizations.localeOf(context);
+    final dateStr = DateFormat('EEEE, d MMMM yyyy', currentLocale.languageCode == 'en' ? 'en_US' : 'id_ID').format(now);
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = _getHorizontalPadding(screenWidth);
     final gridColumns = _getGridColumns(screenWidth);
@@ -150,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Assalamu\'alaikum',
+                          AppLocalizations.of(context).greeting,
                           style:
                               Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -229,8 +202,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.menu_book,
                           lottieAsset: 'assets/lottie/book.json',
-                          title: 'Al-Qur\'an',
-                          description: 'Baca Qur\'an',
+                          title: AppLocalizations.of(context).featQuran,
+                          description: AppLocalizations.of(context).featQuranDesc,
                           gradientColor: Color.lerp(
                             Colors.green,
                             cs.surfaceContainer,
@@ -246,8 +219,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.bookmark,
                           lottieAsset: 'assets/lottie/bookmark.json',
-                          title: 'Bookmark',
-                          description: 'Surah Favorit',
+                          title: AppLocalizations.of(context).featBookmark,
+                          description: AppLocalizations.of(context).featBookmarkDesc,
                           gradientColor: Color.lerp(
                             cs.primary,
                             cs.surfaceContainer,
@@ -263,8 +236,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.help_outline,
                           lottieAsset: 'assets/lottie/help.json',
-                          title: 'Tutorial',
-                          description: 'Panduan Aplikasi',
+                          title: AppLocalizations.of(context).featTutorial,
+                          description: AppLocalizations.of(context).featTutorialDesc,
                           gradientColor: Color.lerp(
                             Colors.blue,
                             cs.surfaceContainer,
@@ -280,8 +253,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.favorite,
                           lottieAsset: 'assets/lottie/heart.json',
-                          title: 'Donasi',
-                          description: 'Dukung Developer',
+                          title: AppLocalizations.of(context).featDonation,
+                          description: AppLocalizations.of(context).featDonationDesc,
                           gradientColor: Color.lerp(
                             Colors.red,
                             cs.surfaceContainer,

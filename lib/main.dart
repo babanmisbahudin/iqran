@@ -7,6 +7,7 @@ import 'pages/splash_screen.dart';
 import 'pages/quran/surah_detail_page.dart';
 import 'services/onboarding_service.dart';
 import 'services/background_audio_service.dart';
+import 'services/localization_service.dart';
 import 'config/device_config.dart';
 
 void main() async {
@@ -15,11 +16,16 @@ void main() async {
   // Initialize device configuration for performance optimization
   await DeviceConfig.initialize();
 
-  // Initialize intl locale data for Indonesian (skip for web)
+  // Load saved locale preference
+  final savedLocale = await LocalizationService.loadLocale();
+  final localeCode = savedLocale.languageCode == 'en' ? 'en_US' : 'id_ID';
+
+  // Initialize intl locale data for both English and Indonesian (skip for web)
   if (!kIsWeb) {
+    await initializeDateFormatting('en_US', null);
     await initializeDateFormatting('id_ID', null);
   }
-  Intl.defaultLocale = 'id_ID';
+  Intl.defaultLocale = localeCode;
 
   // Initialize onboarding service
   await OnboardingService.initialize();

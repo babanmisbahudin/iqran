@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/onboarding_service.dart';
+import '../../l10n/app_localizations.dart';
 import 'widgets/onboarding_slide.dart';
 import 'widgets/skip_button.dart';
 
@@ -20,28 +21,28 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
   late PageController _pageController;
   int _currentPage = 0;
 
-  final List<OnboardingSlideData> _slides = [
-    OnboardingSlideData(
-      title: 'Assalamu\'alaikum! 👋',
-      description:
-          'Selamat datang di IQRAN. Aplikasi untuk mempermudah murajaah Al-Qur\'an harian Anda.',
-      lottieAsset: 'assets/lottie/Reading Quran.json',
-    ),
-    OnboardingSlideData(
-      title: 'Fitur Unggulan',
-      description:
-          'Baca Al-Qur\'an dengan tajweed, simpan ayat favorit, pantau progress murajaah, dan dengarkan murottal berkualitas.',
-      lottieAsset:
-          'assets/lottie/Muslim Father and Daughter Reading Koran.json',
-    ),
-    OnboardingSlideData(
-      title: 'Mulai Perjalanan Murajaah',
-      description:
-          'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.',
-      lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
-      isLast: true,
-    ),
-  ];
+  List<OnboardingSlideData> _buildSlides(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return [
+      OnboardingSlideData(
+        title: l10n.onb1Title,
+        description: l10n.onb1Desc,
+        lottieAsset: 'assets/lottie/Reading Quran.json',
+      ),
+      OnboardingSlideData(
+        title: l10n.onb2Title,
+        description: l10n.onb2Desc,
+        lottieAsset:
+            'assets/lottie/Muslim Father and Daughter Reading Koran.json',
+      ),
+      OnboardingSlideData(
+        title: l10n.onb3Title,
+        description: l10n.onb3Desc,
+        lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
+        isLast: true,
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -63,6 +64,8 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
     }
   }
 
+  late List<OnboardingSlideData> _slides;
+
   Future<void> _onContinue() async {
     if (_currentPage < _slides.length - 1) {
       _pageController.nextPage(
@@ -83,6 +86,7 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    _slides = _buildSlides(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -160,8 +164,8 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
               ),
               child: Text(
                 _currentPage == _slides.length - 1
-                    ? 'Mulai Sekarang'
-                    : 'Lanjutkan',
+                    ? AppLocalizations.of(context).btnStartNow
+                    : AppLocalizations.of(context).btnContinue,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Colors.white,
                     ),

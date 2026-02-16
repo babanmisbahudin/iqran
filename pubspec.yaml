@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   http: ^1.2.0
   sqflite: ^2.3.3
   path: ^1.9.0
@@ -23,7 +25,7 @@ dependencies:
   rxdart: ^0.27.7
   url_launcher: ^6.2.6
   font_awesome_flutter: ^10.7.0
-  intl: ^0.18.0
+  intl: ^0.20.2
   flutter_compass: ^0.8.0
   geolocator: ^13.0.2
   permission_handler: ^11.3.1
@@ -43,6 +45,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:

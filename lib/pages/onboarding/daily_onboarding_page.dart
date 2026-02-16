@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../services/onboarding_service.dart';
 import '../../utils/hadith_data.dart';
+import '../../l10n/app_localizations.dart';
 import 'widgets/animated_character_card.dart';
 import 'widgets/hadith_quote_card.dart';
 
@@ -48,9 +49,11 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final dayName = DateFormat('EEEE', 'id_ID').format(now);
+    final currentLocale = Localizations.localeOf(context);
+    final localeCode = currentLocale.languageCode == 'en' ? 'en_US' : 'id_ID';
+    final dayName = DateFormat('EEEE', localeCode).format(now);
     final timeStr = DateFormat('HH:mm').format(now);
-    final dateStr = DateFormat('d MMMM yyyy', 'id_ID').format(now);
+    final dateStr = DateFormat('d MMMM yyyy', localeCode).format(now);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -66,7 +69,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                   child: Column(
                     children: [
                       Text(
-                        'Assalamu\'alaikum wa Rahmatullahi wa Barakatuh',
+                        AppLocalizations.of(context).dailyGreeting,
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
@@ -147,7 +150,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                       ),
                     ),
                     child: Text(
-                      'Lanjutkan Bacaan',
+                      AppLocalizations.of(context).dailyBtn,
                       style: Theme.of(context)
                           .textTheme
                           .labelLarge
