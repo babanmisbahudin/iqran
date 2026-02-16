@@ -4,6 +4,7 @@ import '../models/audio_metadata.dart';
 import '../pages/home/home_page.dart';
 import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
+import '../pages/tadabur/tadabur_page.dart';
 import '../services/audio_player_service.dart';
 import '../widgets/mini_player/mini_player_overlay.dart';
 import '../l10n/app_localizations.dart';
@@ -39,6 +40,7 @@ class _MainNavigationState extends State<MainNavigation> {
         key: ValueKey('${widget.fontSize}_${currentLocale.languageCode}'),
         fontSize: widget.fontSize,
       ),
+      const TadabourPage(),
       const ProgressPage(),
       SettingsPage(
         isDark: widget.isDark,
@@ -120,17 +122,24 @@ class _MainNavigationState extends State<MainNavigation> {
                     cs: cs,
                   ),
                   _buildNavbarItem(
-                    icon: Icons.insights_rounded,
-                    label: l10n.navProgress,
+                    icon: Icons.menu_book_rounded,
+                    label: l10n.navTadabur,
                     isActive: index == 1,
                     onTap: () => setState(() => index = 1),
                     cs: cs,
                   ),
                   _buildNavbarItem(
-                    icon: Icons.settings_rounded,
-                    label: l10n.navSettings,
+                    icon: Icons.insights_rounded,
+                    label: l10n.navProgress,
                     isActive: index == 2,
                     onTap: () => setState(() => index = 2),
+                    cs: cs,
+                  ),
+                  _buildNavbarItem(
+                    icon: Icons.settings_rounded,
+                    label: l10n.navSettings,
+                    isActive: index == 3,
+                    onTap: () => setState(() => index = 3),
                     cs: cs,
                   ),
                 ],

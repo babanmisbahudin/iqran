@@ -19,6 +19,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navTadabur => 'Tadabur';
+
+  @override
   String get navProgress => 'Progress';
 
   @override

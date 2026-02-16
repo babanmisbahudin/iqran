@@ -18,6 +18,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get navHome => 'Beranda';
 
   @override
+  String get navTadabur => 'Tadabur';
+
+  @override
   String get navProgress => 'Kemajuan';
 
   @override

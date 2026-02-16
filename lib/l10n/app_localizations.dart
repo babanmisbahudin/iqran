@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get navHome;
 
+  /// No description provided for @navTadabur.
+  ///
+  /// In en, this message translates to:
+  /// **'Tadabur'**
+  String get navTadabur;
+
   /// No description provided for @navProgress.
   ///
   /// In en, this message translates to:
