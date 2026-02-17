@@ -73,6 +73,16 @@ class TutorialPage extends StatelessWidget {
                     'Pilih mode yang paling nyaman untuk mata Anda saat membaca.',
                 color: Color.lerp(Colors.grey, cs.surfaceContainer, 0.3)!,
               ),
+              const SizedBox(height: 16),
+              _buildTutorialCard(
+                context,
+                icon: Icons.lightbulb_outline,
+                title: 'Tadabur - Renungan Al-Qur\'an',
+                description: 'Fitur Tadabur menyediakan koleksi cerita-cerita islami dan pelajaran mendalam. '
+                    'Baca cerita-cerita inspiratif dari Al-Qur\'an, refleksikan makna di balik setiap cerita, dan pahami pelajaran spiritualnya. '
+                    'Setiap cerita dilengkapi dengan doa dari Quran atau Hadis Nabi untuk merenungkan makna lebih dalam.',
+                color: Color.lerp(Colors.amber, cs.surfaceContainer, 0.3)!,
+              ),
               const SizedBox(height: 24),
               Container(
                 width: double.infinity,
