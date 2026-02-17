@@ -71,7 +71,6 @@ class _TadabourPageState extends State<TadabourPage> {
             pinned: true,
             elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Tadabur'),
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
