@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/tadabur_story.dart';
 import '../../services/tadabur_service.dart';
 
@@ -81,7 +82,7 @@ class _TadabourPageState extends State<TadabourPage> {
                   controller: _searchController,
                   onChanged: _handleSearch,
                   decoration: InputDecoration(
-                    hintText: 'Cari cerita...',
+                    hintText: AppLocalizations.of(context).tadabur_searchPlaceholder,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -128,7 +129,7 @@ class _TadabourPageState extends State<TadabourPage> {
                       children: [
                         const Icon(Icons.error_outline, size: 64),
                         const SizedBox(height: 16),
-                        const Text('Gagal memuat cerita'),
+                        Text(AppLocalizations.of(context).tadabur_loadError),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
@@ -137,7 +138,7 @@ class _TadabourPageState extends State<TadabourPage> {
                                   TadabourService.getAllStories();
                             });
                           },
-                          child: const Text('Coba Lagi'),
+                          child: Text(AppLocalizations.of(context).tadabur_retryBtn),
                         ),
                       ],
                     ),
@@ -167,8 +168,8 @@ class _TadabourPageState extends State<TadabourPage> {
                         const SizedBox(height: 16),
                         Text(
                           _isSearching
-                              ? 'Cerita tidak ditemukan'
-                              : 'Belum ada cerita',
+                              ? AppLocalizations.of(context).tadabur_searchEmpty
+                              : AppLocalizations.of(context).tadabur_emptyStories,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -238,7 +239,7 @@ class _TadabourPageState extends State<TadabourPage> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'PANDUAN TADABUR',
+                    AppLocalizations.of(context).tadabur_guideTitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
@@ -264,39 +265,45 @@ class _TadabourPageState extends State<TadabourPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildGuideStep(
+                  context,
                   '1',
-                  'PERSIAPAN HATI',
-                  'Mulai dengan niat yang ikhlas untuk memperbaiki diri dan mencari hikmah dari cerita-cerita Al-Quran. Bersihkan hati dari prasangka dan kebisingan pikiran.',
+                  AppLocalizations.of(context).tadabur_step1Title,
+                  AppLocalizations.of(context).tadabur_step1Desc,
                 ),
                 const SizedBox(height: 12),
                 _buildGuideStep(
+                  context,
                   '2',
-                  'MEMBACA CERITA',
-                  'Baca cerita dengan penuh perhatian. Jika memungkinkan, baca langsung dari Al-Quran pada surah-surah yang disebutkan untuk menambah kekhusyukan.',
+                  AppLocalizations.of(context).tadabur_step2Title,
+                  AppLocalizations.of(context).tadabur_step2Desc,
                 ),
                 const SizedBox(height: 12),
                 _buildGuideStep(
+                  context,
                   '3',
-                  'MERENUNGKAN',
-                  'Luangkan waktu untuk merenungkan makna cerita. Hubungkan dengan kehidupan pribadi Anda. Apa pesan yang ingin Allah sampaikan melalui cerita ini?',
+                  AppLocalizations.of(context).tadabur_step3Title,
+                  AppLocalizations.of(context).tadabur_step3Desc,
                 ),
                 const SizedBox(height: 12),
                 _buildGuideStep(
+                  context,
                   '4',
-                  'MENJAWAB PERTANYAAN',
-                  'Jawab pertanyaan-pertanyaan dengan jujur dan mendalam. Jangan sekadar menjawab di permukaan, tapi gali lebih dalam.',
+                  AppLocalizations.of(context).tadabur_step4Title,
+                  AppLocalizations.of(context).tadabur_step4Desc,
                 ),
                 const SizedBox(height: 12),
                 _buildGuideStep(
+                  context,
                   '5',
-                  'MENGAMALKAN',
-                  'Pilihlah satu pelajaran dari cerita yang paling menyentuh hati Anda dan niatkan untuk mengamalkannya dalam kehidupan sehari-hari.',
+                  AppLocalizations.of(context).tadabur_step5Title,
+                  AppLocalizations.of(context).tadabur_step5Desc,
                 ),
                 const SizedBox(height: 12),
                 _buildGuideStep(
+                  context,
                   '6',
-                  'BERDOA',
-                  'Tutup sesi tadabur dengan doa memohon kepada Allah untuk memberi pemahaman, kebijaksanaan, dan kemampuan untuk mengamalkan pelajaran.',
+                  AppLocalizations.of(context).tadabur_step6Title,
+                  AppLocalizations.of(context).tadabur_step6Desc,
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -313,19 +320,19 @@ class _TadabourPageState extends State<TadabourPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Penutup',
+                        AppLocalizations.of(context).tadabur_closing,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Tadabur bukan sekadar membaca cerita, tetapi adalah proses transformasi diri melalui pemahaman dan renungan mendalam terhadap firman Allah. Semoga cerita-cerita ini membawa Anda lebih dekat kepada Allah.',
+                        AppLocalizations.of(context).tadabur_closingDesc,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        '"Dan mereka beriman kepada (Al-Quran) yang diturunkan kepadamu dan yang telah diturunkan sebelummu, dan mereka yakin akan adanya (kehidupan) akhirat." — Surah Al-Baqarah: 4',
+                        AppLocalizations.of(context).tadabur_closingQuote,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontStyle: FontStyle.italic,
                               color: Theme.of(context)
@@ -346,7 +353,7 @@ class _TadabourPageState extends State<TadabourPage> {
     );
   }
 
-  Widget _buildGuideStep(String number, String title, String description) {
+  Widget _buildGuideStep(BuildContext context, String number, String title, String description) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -421,7 +428,7 @@ class _TadabourPageState extends State<TadabourPage> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  'Surah ${story.surah} : ${story.ayat}',
+                  AppLocalizations.of(context).tadabur_surahAyah(story.surah, story.ayat),
                   style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).primaryColor,
@@ -463,7 +470,7 @@ class _TadabourPageState extends State<TadabourPage> {
                       ),
                     );
                   },
-                  child: const Text('Baca Selengkapnya'),
+                  child: Text(AppLocalizations.of(context).tadabur_readMore),
                 ),
               ),
             ],
@@ -503,7 +510,7 @@ class TadabourDetailPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Surah ${story.surah} : ${story.ayat}',
+                AppLocalizations.of(context).tadabur_surahAyah(story.surah, story.ayat),
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
@@ -543,7 +550,7 @@ class TadabourDetailPage extends StatelessWidget {
 
             // Cerita heading
             Text(
-              'Cerita',
+              AppLocalizations.of(context).tadabur_storyHeading,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -567,7 +574,7 @@ class TadabourDetailPage extends StatelessWidget {
 
             // Pelajaran heading
             Text(
-              'Pelajaran',
+              AppLocalizations.of(context).tadabur_lessonHeading,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

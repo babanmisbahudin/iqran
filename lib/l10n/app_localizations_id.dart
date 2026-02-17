@@ -109,7 +109,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get settingsDarkModeDesc => 'Aktifkan mode terang atau gelap';
 
   @override
-  String settingsFontSize(int size) {
+  String settingsFontSize(Object size) {
     return 'Ukuran Font Arab: $size';
   }
 
@@ -127,7 +127,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Al-Qur\'an sudah siap digunakan secara offline';
 
   @override
-  String settingsOfflineDownloading(int current, int total) {
+  String settingsOfflineDownloading(Object current, Object total) {
     return 'Mengunduh $current / $total surah';
   }
 
@@ -150,4 +150,89 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get dailyBtn => 'Lanjutkan Bacaan';
+
+  @override
+  String get tadabur_searchPlaceholder => 'Cari cerita...';
+
+  @override
+  String get tadabur_guideTitle => 'PANDUAN TADABUR';
+
+  @override
+  String get tadabur_step1Title => 'PERSIAPAN HATI';
+
+  @override
+  String get tadabur_step1Desc =>
+      'Mulai dengan niat yang ikhlas untuk memperbaiki diri dan mencari hikmah dari cerita-cerita Al-Quran. Bersihkan hati dari prasangka dan kebisingan pikiran.';
+
+  @override
+  String get tadabur_step2Title => 'MEMBACA CERITA';
+
+  @override
+  String get tadabur_step2Desc =>
+      'Baca cerita dengan penuh perhatian. Jika memungkinkan, baca langsung dari Al-Quran pada surah-surah yang disebutkan untuk menambah kekhusyukan.';
+
+  @override
+  String get tadabur_step3Title => 'MERENUNGKAN';
+
+  @override
+  String get tadabur_step3Desc =>
+      'Luangkan waktu untuk merenungkan makna cerita. Hubungkan dengan kehidupan pribadi Anda. Apa pesan yang ingin Allah sampaikan melalui cerita ini?';
+
+  @override
+  String get tadabur_step4Title => 'MENJAWAB PERTANYAAN';
+
+  @override
+  String get tadabur_step4Desc =>
+      'Jawab pertanyaan-pertanyaan dengan jujur dan mendalam. Jangan sekadar menjawab di permukaan, tapi gali lebih dalam.';
+
+  @override
+  String get tadabur_step5Title => 'MENGAMALKAN';
+
+  @override
+  String get tadabur_step5Desc =>
+      'Pilihlah satu pelajaran dari cerita yang paling menyentuh hati Anda dan niatkan untuk mengamalkannya dalam kehidupan sehari-hari.';
+
+  @override
+  String get tadabur_step6Title => 'BERDOA';
+
+  @override
+  String get tadabur_step6Desc =>
+      'Tutup sesi tadabur dengan doa memohon kepada Allah untuk memberi pemahaman, kebijaksanaan, dan kemampuan untuk mengamalkan pelajaran.';
+
+  @override
+  String get tadabur_closing => 'Penutup';
+
+  @override
+  String get tadabur_closingDesc =>
+      'Tadabur bukan sekadar membaca cerita, tetapi adalah proses transformasi diri melalui pemahaman dan renungan mendalam terhadap firman Allah. Semoga cerita-cerita ini membawa Anda lebih dekat kepada Allah.';
+
+  @override
+  String get tadabur_closingQuote =>
+      '\"Dan mereka beriman kepada (Al-Quran) yang diturunkan kepadamu dan yang telah diturunkan sebelummu, dan mereka yakin akan adanya (kehidupan) akhirat.\" — Surah Al-Baqarah: 4';
+
+  @override
+  String tadabur_surahAyah(Object ayah, Object surah) {
+    return 'Surah $surah : $ayah';
+  }
+
+  @override
+  String get tadabur_readMore => 'Baca Selengkapnya';
+
+  @override
+  String get tadabur_storyHeading => 'Cerita';
+
+  @override
+  String get tadabur_lessonHeading => 'Pelajaran';
+
+  @override
+  String get tadabur_loadError => 'Gagal memuat cerita';
+
+  @override
+  String get tadabur_retryBtn => 'Coba Lagi';
+
+  @override
+  String get tadabur_emptyStories => 'Belum ada cerita';
+
+  @override
+  String get tadabur_searchEmpty => 'Cerita tidak ditemukan';
 }

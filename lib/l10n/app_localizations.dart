@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'app_localizations_en.dart';
 import 'app_localizations_id.dart';
 
 // ignore_for_file: type=lint
@@ -93,274 +92,421 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en'),
-    Locale('id')
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('id')];
 
   /// No description provided for @appName.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'iQran'**
   String get appName;
 
   /// No description provided for @splashSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Be productive in dunya and akhirah, starting from the Qur\'an'**
+  /// In id, this message translates to:
+  /// **'Produktif dunia-akhirat, mulai dari Al-Qur\'an'**
   String get splashSubtitle;
 
   /// No description provided for @navHome.
   ///
-  /// In en, this message translates to:
-  /// **'Home'**
+  /// In id, this message translates to:
+  /// **'Beranda'**
   String get navHome;
 
   /// No description provided for @navTadabur.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Tadabur'**
   String get navTadabur;
 
   /// No description provided for @navProgress.
   ///
-  /// In en, this message translates to:
-  /// **'Progress'**
+  /// In id, this message translates to:
+  /// **'Kemajuan'**
   String get navProgress;
 
   /// No description provided for @navSettings.
   ///
-  /// In en, this message translates to:
-  /// **'Settings'**
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
   String get navSettings;
 
   /// No description provided for @selectLanguageTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Choose Your Language'**
+  /// In id, this message translates to:
+  /// **'Pilih Bahasa'**
   String get selectLanguageTitle;
 
   /// No description provided for @selectLanguageSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'You can change this anytime in Settings'**
+  /// In id, this message translates to:
+  /// **'Anda dapat mengubahnya kapan saja di Pengaturan'**
   String get selectLanguageSubtitle;
 
   /// No description provided for @languageEnglish.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'English'**
   String get languageEnglish;
 
   /// No description provided for @languageIndonesian.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Indonesia'**
   String get languageIndonesian;
 
   /// No description provided for @btnContinue.
   ///
-  /// In en, this message translates to:
-  /// **'Continue'**
+  /// In id, this message translates to:
+  /// **'Lanjutkan'**
   String get btnContinue;
 
   /// No description provided for @btnSkip.
   ///
-  /// In en, this message translates to:
-  /// **'Skip'**
+  /// In id, this message translates to:
+  /// **'Lewati'**
   String get btnSkip;
 
   /// No description provided for @btnStartNow.
   ///
-  /// In en, this message translates to:
-  /// **'Start Now'**
+  /// In id, this message translates to:
+  /// **'Mulai Sekarang'**
   String get btnStartNow;
 
   /// No description provided for @onb1Title.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Assalamu\'alaikum! 👋'**
   String get onb1Title;
 
   /// No description provided for @onb1Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Welcome to IQRAN. An app to simplify your daily Qur\'an recitation review.'**
+  /// In id, this message translates to:
+  /// **'Selamat datang di IQRAN. Aplikasi untuk mempermudah murajaah Al-Qur\'an harian Anda.'**
   String get onb1Desc;
 
   /// No description provided for @onb2Title.
   ///
-  /// In en, this message translates to:
-  /// **'Key Features'**
+  /// In id, this message translates to:
+  /// **'Fitur Unggulan'**
   String get onb2Title;
 
   /// No description provided for @onb2Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Read the Qur\'an with tajweed, save favorite verses, track your reading progress, and listen to high-quality Qur\'an recitations.'**
+  /// In id, this message translates to:
+  /// **'Baca Al-Qur\'an dengan tajweed, simpan ayat favorit, pantau progress murajaah, dan dengarkan murottal berkualitas.'**
   String get onb2Desc;
 
   /// No description provided for @onb3Title.
   ///
-  /// In en, this message translates to:
-  /// **'Begin Your Review Journey'**
+  /// In id, this message translates to:
+  /// **'Mulai Perjalanan Murajaah'**
   String get onb3Title;
 
   /// No description provided for @onb3Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Let\'s be consistent in reading and understanding the Qur\'an. Every day is an opportunity to be closer to the Book of Allah.'**
+  /// In id, this message translates to:
+  /// **'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.'**
   String get onb3Desc;
 
   /// No description provided for @greeting.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Assalamu\'alaikum'**
   String get greeting;
 
   /// No description provided for @featQuran.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Al-Qur\'an'**
   String get featQuran;
 
   /// No description provided for @featQuranDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Read Qur\'an'**
+  /// In id, this message translates to:
+  /// **'Baca Qur\'an'**
   String get featQuranDesc;
 
   /// No description provided for @featBookmark.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Bookmark'**
   String get featBookmark;
 
   /// No description provided for @featBookmarkDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Favorite Surahs'**
+  /// In id, this message translates to:
+  /// **'Surah Favorit'**
   String get featBookmarkDesc;
 
   /// No description provided for @featTutorial.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Tutorial'**
   String get featTutorial;
 
   /// No description provided for @featTutorialDesc.
   ///
-  /// In en, this message translates to:
-  /// **'App Guide'**
+  /// In id, this message translates to:
+  /// **'Panduan Aplikasi'**
   String get featTutorialDesc;
 
   /// No description provided for @featDonation.
   ///
-  /// In en, this message translates to:
-  /// **'Donate'**
+  /// In id, this message translates to:
+  /// **'Donasi'**
   String get featDonation;
 
   /// No description provided for @featDonationDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Support Developer'**
+  /// In id, this message translates to:
+  /// **'Dukung Developer'**
   String get featDonationDesc;
 
   /// No description provided for @settingsTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Settings'**
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
   String get settingsTitle;
 
   /// No description provided for @settingsDisplay.
   ///
-  /// In en, this message translates to:
-  /// **'Display'**
+  /// In id, this message translates to:
+  /// **'Tampilan'**
   String get settingsDisplay;
 
   /// No description provided for @settingsDarkMode.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Light/Dark Mode'**
   String get settingsDarkMode;
 
   /// No description provided for @settingsDarkModeDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Toggle light or dark mode'**
+  /// In id, this message translates to:
+  /// **'Aktifkan mode terang atau gelap'**
   String get settingsDarkModeDesc;
 
   /// No description provided for @settingsFontSize.
   ///
-  /// In en, this message translates to:
-  /// **'Arabic Font Size: {size}'**
-  String settingsFontSize(int size);
+  /// In id, this message translates to:
+  /// **'Ukuran Font Arab: {size}'**
+  String settingsFontSize(Object size);
 
   /// No description provided for @settingsLanguage.
   ///
-  /// In en, this message translates to:
-  /// **'Language'**
+  /// In id, this message translates to:
+  /// **'Bahasa'**
   String get settingsLanguage;
 
   /// No description provided for @settingsLanguageDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Change app language'**
+  /// In id, this message translates to:
+  /// **'Ganti bahasa aplikasi'**
   String get settingsLanguageDesc;
 
   /// No description provided for @settingsOffline.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Offline'**
   String get settingsOffline;
 
   /// No description provided for @settingsOfflineReady.
   ///
-  /// In en, this message translates to:
-  /// **'Al-Qur\'an is ready for offline use'**
+  /// In id, this message translates to:
+  /// **'Al-Qur\'an sudah siap digunakan secara offline'**
   String get settingsOfflineReady;
 
   /// No description provided for @settingsOfflineDownloading.
   ///
-  /// In en, this message translates to:
-  /// **'Downloading {current} / {total} surahs'**
-  String settingsOfflineDownloading(int current, int total);
+  /// In id, this message translates to:
+  /// **'Mengunduh {current} / {total} surah'**
+  String settingsOfflineDownloading(Object current, Object total);
 
   /// No description provided for @settingsOfflinePrompt.
   ///
-  /// In en, this message translates to:
-  /// **'Download all surahs so the app can still be used without an internet connection.'**
+  /// In id, this message translates to:
+  /// **'Unduh seluruh surah agar aplikasi tetap bisa digunakan tanpa koneksi internet.'**
   String get settingsOfflinePrompt;
 
   /// No description provided for @settingsOfflineBtn.
   ///
-  /// In en, this message translates to:
-  /// **'Download all surahs'**
+  /// In id, this message translates to:
+  /// **'Download semua surah'**
   String get settingsOfflineBtn;
 
   /// No description provided for @settingsOfflineSuccess.
   ///
-  /// In en, this message translates to:
-  /// **'Al-Qur\'an is ready for offline use'**
+  /// In id, this message translates to:
+  /// **'Al-Qur\'an sudah siap digunakan secara offline'**
   String get settingsOfflineSuccess;
 
   /// No description provided for @settingsOfflineError.
   ///
-  /// In en, this message translates to:
-  /// **'Failed to download offline data'**
+  /// In id, this message translates to:
+  /// **'Gagal mengunduh data offline'**
   String get settingsOfflineError;
 
   /// No description provided for @dailyGreeting.
   ///
-  /// In en, this message translates to:
+  /// In id, this message translates to:
   /// **'Assalamu\'alaikum wa Rahmatullahi wa Barakatuh'**
   String get dailyGreeting;
 
   /// No description provided for @dailyBtn.
   ///
-  /// In en, this message translates to:
-  /// **'Continue Reading'**
+  /// In id, this message translates to:
+  /// **'Lanjutkan Bacaan'**
   String get dailyBtn;
+
+  /// No description provided for @tadabur_searchPlaceholder.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari cerita...'**
+  String get tadabur_searchPlaceholder;
+
+  /// No description provided for @tadabur_guideTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'PANDUAN TADABUR'**
+  String get tadabur_guideTitle;
+
+  /// No description provided for @tadabur_step1Title.
+  ///
+  /// In id, this message translates to:
+  /// **'PERSIAPAN HATI'**
+  String get tadabur_step1Title;
+
+  /// No description provided for @tadabur_step1Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai dengan niat yang ikhlas untuk memperbaiki diri dan mencari hikmah dari cerita-cerita Al-Quran. Bersihkan hati dari prasangka dan kebisingan pikiran.'**
+  String get tadabur_step1Desc;
+
+  /// No description provided for @tadabur_step2Title.
+  ///
+  /// In id, this message translates to:
+  /// **'MEMBACA CERITA'**
+  String get tadabur_step2Title;
+
+  /// No description provided for @tadabur_step2Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Baca cerita dengan penuh perhatian. Jika memungkinkan, baca langsung dari Al-Quran pada surah-surah yang disebutkan untuk menambah kekhusyukan.'**
+  String get tadabur_step2Desc;
+
+  /// No description provided for @tadabur_step3Title.
+  ///
+  /// In id, this message translates to:
+  /// **'MERENUNGKAN'**
+  String get tadabur_step3Title;
+
+  /// No description provided for @tadabur_step3Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Luangkan waktu untuk merenungkan makna cerita. Hubungkan dengan kehidupan pribadi Anda. Apa pesan yang ingin Allah sampaikan melalui cerita ini?'**
+  String get tadabur_step3Desc;
+
+  /// No description provided for @tadabur_step4Title.
+  ///
+  /// In id, this message translates to:
+  /// **'MENJAWAB PERTANYAAN'**
+  String get tadabur_step4Title;
+
+  /// No description provided for @tadabur_step4Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Jawab pertanyaan-pertanyaan dengan jujur dan mendalam. Jangan sekadar menjawab di permukaan, tapi gali lebih dalam.'**
+  String get tadabur_step4Desc;
+
+  /// No description provided for @tadabur_step5Title.
+  ///
+  /// In id, this message translates to:
+  /// **'MENGAMALKAN'**
+  String get tadabur_step5Title;
+
+  /// No description provided for @tadabur_step5Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilihlah satu pelajaran dari cerita yang paling menyentuh hati Anda dan niatkan untuk mengamalkannya dalam kehidupan sehari-hari.'**
+  String get tadabur_step5Desc;
+
+  /// No description provided for @tadabur_step6Title.
+  ///
+  /// In id, this message translates to:
+  /// **'BERDOA'**
+  String get tadabur_step6Title;
+
+  /// No description provided for @tadabur_step6Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Tutup sesi tadabur dengan doa memohon kepada Allah untuk memberi pemahaman, kebijaksanaan, dan kemampuan untuk mengamalkan pelajaran.'**
+  String get tadabur_step6Desc;
+
+  /// No description provided for @tadabur_closing.
+  ///
+  /// In id, this message translates to:
+  /// **'Penutup'**
+  String get tadabur_closing;
+
+  /// No description provided for @tadabur_closingDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Tadabur bukan sekadar membaca cerita, tetapi adalah proses transformasi diri melalui pemahaman dan renungan mendalam terhadap firman Allah. Semoga cerita-cerita ini membawa Anda lebih dekat kepada Allah.'**
+  String get tadabur_closingDesc;
+
+  /// No description provided for @tadabur_closingQuote.
+  ///
+  /// In id, this message translates to:
+  /// **'\"Dan mereka beriman kepada (Al-Quran) yang diturunkan kepadamu dan yang telah diturunkan sebelummu, dan mereka yakin akan adanya (kehidupan) akhirat.\" — Surah Al-Baqarah: 4'**
+  String get tadabur_closingQuote;
+
+  /// No description provided for @tadabur_surahAyah.
+  ///
+  /// In id, this message translates to:
+  /// **'Surah {surah} : {ayah}'**
+  String tadabur_surahAyah(Object ayah, Object surah);
+
+  /// No description provided for @tadabur_readMore.
+  ///
+  /// In id, this message translates to:
+  /// **'Baca Selengkapnya'**
+  String get tadabur_readMore;
+
+  /// No description provided for @tadabur_storyHeading.
+  ///
+  /// In id, this message translates to:
+  /// **'Cerita'**
+  String get tadabur_storyHeading;
+
+  /// No description provided for @tadabur_lessonHeading.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelajaran'**
+  String get tadabur_lessonHeading;
+
+  /// No description provided for @tadabur_loadError.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal memuat cerita'**
+  String get tadabur_loadError;
+
+  /// No description provided for @tadabur_retryBtn.
+  ///
+  /// In id, this message translates to:
+  /// **'Coba Lagi'**
+  String get tadabur_retryBtn;
+
+  /// No description provided for @tadabur_emptyStories.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada cerita'**
+  String get tadabur_emptyStories;
+
+  /// No description provided for @tadabur_searchEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Cerita tidak ditemukan'**
+  String get tadabur_searchEmpty;
 }
 
 class _AppLocalizationsDelegate
@@ -374,7 +520,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'id'].contains(locale.languageCode);
+      <String>['id'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -383,8 +529,6 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
     case 'id':
       return AppLocalizationsId();
   }

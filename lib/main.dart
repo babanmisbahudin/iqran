@@ -16,13 +16,12 @@ void main() async {
   // Initialize device configuration for performance optimization
   await DeviceConfig.initialize();
 
-  // Load saved locale preference
-  final savedLocale = await LocalizationService.loadLocale();
-  final localeCode = savedLocale.languageCode == 'en' ? 'en_US' : 'id_ID';
+  // Load saved locale preference (Indonesian only)
+  await LocalizationService.loadLocale();
+  const localeCode = 'id_ID';
 
-  // Initialize intl locale data for both English and Indonesian (skip for web)
+  // Initialize intl locale data for Indonesian (skip for web)
   if (!kIsWeb) {
-    await initializeDateFormatting('en_US', null);
     await initializeDateFormatting('id_ID', null);
   }
   Intl.defaultLocale = localeCode;

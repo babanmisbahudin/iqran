@@ -75,30 +75,13 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                 const SizedBox(height: 48),
 
                 // Language Options
-                Column(
-                  children: [
-                    _LanguageCard(
-                      flag: '🇬🇧',
-                      languageName: 'English',
-                      isSelected: _selectedLocale.languageCode == 'en',
-                      onTap: () {
-                        setState(() {
-                          _selectedLocale = const Locale('en');
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    _LanguageCard(
-                      flag: '🇮🇩',
-                      languageName: 'Indonesia',
-                      isSelected: _selectedLocale.languageCode == 'id',
-                      onTap: () {
-                        setState(() {
-                          _selectedLocale = const Locale('id');
-                        });
-                      },
-                    ),
-                  ],
+                _LanguageCard(
+                  flag: '🇮🇩',
+                  languageName: 'Indonesia',
+                  isSelected: true,
+                  onTap: () {
+                    // Already selected (only option)
+                  },
                 ),
 
                 const SizedBox(height: 48),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -58,15 +57,16 @@ class _SplashScreenState extends State<SplashScreen>
                 width: 250,
                 height: 250,
                 child: Lottie.asset(
-                  'assets/lottie/Reading in Quran.json',
+                  'assets/lottie/Reading Quran.json',
                   repeat: true,
                   reverse: false,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
-                      child: Image.asset(
-                        'assets/images/Logo.png',
-                        width: 150,
+                      child: Icon(
+                        Icons.menu_book,
+                        size: 150,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     );
                   },
@@ -76,21 +76,10 @@ class _SplashScreenState extends State<SplashScreen>
 
               // App Title
               Text(
-                'Iqran',
+                'iQran',
                 style: Theme.of(context).textTheme.displayMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
-                    ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Subtitle
-              Text(
-                AppLocalizations.of(context).splashSubtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      letterSpacing: 0.5,
                     ),
               ),
             ],

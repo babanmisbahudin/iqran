@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme/app_theme.dart';
@@ -9,7 +8,6 @@ import '../services/onboarding_service.dart';
 import '../services/localization_service.dart';
 import '../pages/onboarding/first_time_onboarding_page.dart';
 import '../pages/onboarding/daily_onboarding_page.dart';
-import '../pages/onboarding/language_selection_page.dart';
 import '../l10n/app_localizations.dart';
 
 class IqranApp extends StatefulWidget {
@@ -47,36 +45,14 @@ class _IqranAppState extends State<IqranApp> {
     });
   }
 
-  // Change locale and update Intl default locale
-  void _changeLocale(Locale locale) {
-    setState(() => _currentLocale = locale);
-    LocalizationService.saveLocale(locale);
-
-    // Update intl default locale for date formatting
-    final localeCode = locale.languageCode == 'en' ? 'en_US' : 'id_ID';
-    Intl.defaultLocale = localeCode;
-  }
-
   // Determine which screen to show on app startup
   Future<void> _determineInitialRoute() async {
-    // Check if language has been selected (shows on very first launch)
+    // Set default locale to Indonesian (only supported language)
     if (!await LocalizationService.isLanguageSelected()) {
-      setState(() {
-        _initialRoute = LanguageSelectionPage(
-          onComplete: (locale) {
-            _changeLocale(locale);
-            // Mark language as selected and continue to next check
-            LocalizationService.markLanguageSelected().then((_) {
-              if (mounted) {
-                setState(() => _initialRoute = null);
-                _determineInitialRoute(); // Continue checking for onboarding
-              }
-            });
-          },
-        );
-        _isLoadingRoute = false;
-      });
-      return;
+      const locale = Locale('id');
+      setState(() => _currentLocale = locale);
+      await LocalizationService.saveLocale(locale);
+      await LocalizationService.markLanguageSelected();
     }
 
     // Check if first launch
@@ -215,9 +191,6 @@ class _IqranAppState extends State<IqranApp> {
           setState(() => arabFont = value);
           _savePreferences();
         },
-
-        // Change locale
-        onLocale: _changeLocale,
       ),
     );
   }

@@ -53,6 +53,7 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/images/onboarding/
+    - assets/data/
 
   fonts:
     - family: QuranFont

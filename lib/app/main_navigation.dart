@@ -14,7 +14,6 @@ class MainNavigation extends StatefulWidget {
   final double fontSize;
   final ValueChanged<bool> onTheme;
   final ValueChanged<double> onFont;
-  final ValueChanged<Locale> onLocale;
 
   const MainNavigation({
     super.key,
@@ -22,7 +21,6 @@ class MainNavigation extends StatefulWidget {
     required this.fontSize,
     required this.onTheme,
     required this.onFont,
-    required this.onLocale,
   });
 
   @override
@@ -47,7 +45,6 @@ class _MainNavigationState extends State<MainNavigation> {
         fontSize: widget.fontSize,
         onTheme: widget.onTheme,
         onFont: widget.onFont,
-        onLocale: widget.onLocale,
       ),
     ];
 
