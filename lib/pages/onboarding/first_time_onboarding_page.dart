@@ -39,6 +39,11 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
         title: l10n.onb3Title,
         description: l10n.onb3Desc,
         lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
+      ),
+      OnboardingSlideData(
+        title: l10n.onb4Title,
+        description: l10n.onb4Desc,
+        lottieAsset: 'assets/lottie/Reading in Quran.json',
         isLast: true,
       ),
     ];

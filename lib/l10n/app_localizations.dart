@@ -208,6 +208,18 @@ abstract class AppLocalizations {
   /// **'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.'**
   String get onb3Desc;
 
+  /// No description provided for @onb4Title.
+  ///
+  /// In id, this message translates to:
+  /// **'Fitur Tadabur - Renungan Mendalam'**
+  String get onb4Title;
+
+  /// No description provided for @onb4Desc.
+  ///
+  /// In id, this message translates to:
+  /// **'Eksplorasi 129+ cerita islami yang menginspirasi. Setiap cerita dilengkapi dengan doa dan pelajaran spiritual untuk memperdalam pemahaman dan iman Anda.'**
+  String get onb4Desc;
+
   /// No description provided for @greeting.
   ///
   /// In id, this message translates to:

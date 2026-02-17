@@ -70,6 +70,13 @@ class AppLocalizationsId extends AppLocalizations {
       'Mari konsisten membaca dan memahami Al-Qur\'an. Setiap hari adalah kesempatan untuk lebih dekat pada Kitab Allah.';
 
   @override
+  String get onb4Title => 'Fitur Tadabur - Renungan Mendalam';
+
+  @override
+  String get onb4Desc =>
+      'Eksplorasi 129+ cerita islami yang menginspirasi. Setiap cerita dilengkapi dengan doa dan pelajaran spiritual untuk memperdalam pemahaman dan iman Anda.';
+
+  @override
   String get greeting => 'Assalamu\'alaikum';
 
   @override
