@@ -4,7 +4,14 @@ import '../../models/tadabur_story.dart';
 import '../../services/tadabur_service.dart';
 
 class TadabourPage extends StatefulWidget {
-  const TadabourPage({Key? key}) : super(key: key);
+  final double fontSize;
+  final double latinFontSize;
+
+  const TadabourPage({
+    Key? key,
+    this.fontSize = 28.0,
+    this.latinFontSize = 16.0,
+  }) : super(key: key);
 
   @override
   State<TadabourPage> createState() => _TadabourPageState();
@@ -51,14 +58,18 @@ class _TadabourPageState extends State<TadabourPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // App Bar dengan search
+          // Modern App Bar with search
           SliverAppBar(
-            expandedHeight: 140.0,
+            expandedHeight: 160.0,
             floating: true,
             pinned: true,
+            elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text('Tadabur'),
               background: Container(
@@ -67,23 +78,23 @@ class _TadabourPageState extends State<TadabourPage> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                      Theme.of(context).primaryColor.withValues(alpha: 0.4),
+                      primaryColor.withValues(alpha: 0.8),
+                      primaryColor.withValues(alpha: 0.4),
                     ],
                   ),
                 ),
               ),
             ),
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(60),
+              preferredSize: const Size.fromHeight(70),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: TextField(
                   controller: _searchController,
                   onChanged: _handleSearch,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context).tadabur_searchPlaceholder,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search, color: primaryColor),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear),
@@ -98,7 +109,9 @@ class _TadabourPageState extends State<TadabourPage> {
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: Theme.of(context).scaffoldBackgroundColor,
+                    fillColor: isDark
+                        ? Colors.black26
+                        : Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
@@ -127,18 +140,19 @@ class _TadabourPageState extends State<TadabourPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 64),
+                        Icon(Icons.error_outline, size: 64, color: primaryColor),
                         const SizedBox(height: 16),
                         Text(AppLocalizations.of(context).tadabur_loadError),
                         const SizedBox(height: 16),
-                        ElevatedButton(
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.refresh),
+                          label: Text(AppLocalizations.of(context).tadabur_retryBtn),
                           onPressed: () {
                             setState(() {
                               _storiesFuture =
                                   TadabourService.getAllStories();
                             });
                           },
-                          child: Text(AppLocalizations.of(context).tadabur_retryBtn),
                         ),
                       ],
                     ),
@@ -159,11 +173,7 @@ class _TadabourPageState extends State<TadabourPage> {
                         Icon(
                           _isSearching ? Icons.search_off : Icons.menu_book,
                           size: 64,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.color
-                              ?.withValues(alpha:0.5),
+                          color: primaryColor.withValues(alpha: 0.5),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -179,13 +189,16 @@ class _TadabourPageState extends State<TadabourPage> {
               }
 
               return SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       // Show guide card first
                       if (index == 0 && _showGuide) {
-                        return _buildGuideCard();
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: _buildGuideCard(),
+                        );
                       }
 
                       final storyIndex = _showGuide ? index - 1 : index;
@@ -194,7 +207,10 @@ class _TadabourPageState extends State<TadabourPage> {
                       }
 
                       final story = displayedStories[storyIndex];
-                      return _buildStoryCard(context, story);
+                      return Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: _buildStoryCard(context, story),
+                      );
                     },
                     childCount:
                         displayedStories.length + (_showGuide ? 1 : 0),
@@ -214,27 +230,37 @@ class _TadabourPageState extends State<TadabourPage> {
   }
 
   Widget _buildGuideCard() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: isDark ? Colors.grey[900] : Colors.white,
       child: Column(
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               border: Border(
                 bottom: BorderSide(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                  width: 1,
+                  color: primaryColor.withValues(alpha: 0.2),
+                  width: 2,
                 ),
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
               ),
             ),
             child: Row(
               children: [
                 Icon(
-                  Icons.info_rounded,
-                  color: Theme.of(context).primaryColor,
+                  Icons.lightbulb_outline,
+                  color: primaryColor,
+                  size: 24,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -242,7 +268,7 @@ class _TadabourPageState extends State<TadabourPage> {
                     AppLocalizations.of(context).tadabur_guideTitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                          color: primaryColor,
                         ),
                   ),
                 ),
@@ -270,35 +296,35 @@ class _TadabourPageState extends State<TadabourPage> {
                   AppLocalizations.of(context).tadabur_step1Title,
                   AppLocalizations.of(context).tadabur_step1Desc,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '2',
                   AppLocalizations.of(context).tadabur_step2Title,
                   AppLocalizations.of(context).tadabur_step2Desc,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '3',
                   AppLocalizations.of(context).tadabur_step3Title,
                   AppLocalizations.of(context).tadabur_step3Desc,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '4',
                   AppLocalizations.of(context).tadabur_step4Title,
                   AppLocalizations.of(context).tadabur_step4Desc,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '5',
                   AppLocalizations.of(context).tadabur_step5Title,
                   AppLocalizations.of(context).tadabur_step5Desc,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '6',
@@ -307,13 +333,13 @@ class _TadabourPageState extends State<TadabourPage> {
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-                      width: 1,
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                      width: 1.5,
                     ),
                   ),
                   child: Column(
@@ -328,7 +354,9 @@ class _TadabourPageState extends State<TadabourPage> {
                       const SizedBox(height: 8),
                       Text(
                         AppLocalizations.of(context).tadabur_closingDesc,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              height: 1.5,
+                            ),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -340,6 +368,7 @@ class _TadabourPageState extends State<TadabourPage> {
                                   .bodySmall
                                   ?.color
                                   ?.withValues(alpha: 0.7),
+                              height: 1.6,
                             ),
                       ),
                     ],
@@ -354,14 +383,16 @@ class _TadabourPageState extends State<TadabourPage> {
   }
 
   Widget _buildGuideStep(BuildContext context, String number, String title, String description) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 28,
-          height: 28,
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: primaryColor,
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -370,12 +401,12 @@ class _TadabourPageState extends State<TadabourPage> {
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 13,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,13 +415,15 @@ class _TadabourPageState extends State<TadabourPage> {
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: widget.latinFontSize,
                     ),
               ),
               const SizedBox(height: 4),
               Text(
                 description,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      height: 1.5,
+                      height: 1.6,
+                      fontSize: widget.latinFontSize - 1,
                     ),
               ),
             ],
@@ -401,76 +434,102 @@ class _TadabourPageState extends State<TadabourPage> {
   }
 
   Widget _buildStoryCard(BuildContext context, TadabourStory story) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: isDark ? Colors.grey[900] : Colors.white,
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TadabourDetailPage(story: story),
+              builder: (context) => TadabourDetailPage(
+                story: story,
+                fontSize: widget.fontSize,
+                latinFontSize: widget.latinFontSize,
+              ),
             ),
           );
         },
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Surah & Ayat
+              // Surah & Ayat badge
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
+                  horizontal: 10,
+                  vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha:0.1),
-                  borderRadius: BorderRadius.circular(6),
+                  color: primaryColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: primaryColor.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
                 child: Text(
-                  AppLocalizations.of(context).tadabur_surahAyah(story.surah, story.ayat),
+                  AppLocalizations.of(context)
+                      .tadabur_surahAyah(story.surah, story.ayat),
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500,
+                    fontSize: widget.latinFontSize,
+                    color: primaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               const SizedBox(height: 12),
 
-              // Judul
+              // Judul (Title)
               Text(
                 story.judul,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: widget.fontSize - 2,
                     ),
               ),
               const SizedBox(height: 8),
 
-              // Deskripsi
+              // Deskripsi (Description)
               Text(
                 story.deskripsi,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: widget.latinFontSize,
+                      height: 1.5,
+                    ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
 
               // Read more button
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
+                child: TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward_ios, size: 14),
+                  label: Text(
+                    AppLocalizations.of(context).tadabur_readMore,
+                    style: TextStyle(fontSize: widget.latinFontSize),
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            TadabourDetailPage(story: story),
+                        builder: (context) => TadabourDetailPage(
+                          story: story,
+                          fontSize: widget.fontSize,
+                          latinFontSize: widget.latinFontSize,
+                        ),
                       ),
                     );
                   },
-                  child: Text(AppLocalizations.of(context).tadabur_readMore),
                 ),
               ),
             ],
@@ -484,129 +543,163 @@ class _TadabourPageState extends State<TadabourPage> {
 /// Detail page untuk satu cerita
 class TadabourDetailPage extends StatelessWidget {
   final TadabourStory story;
+  final double fontSize;
+  final double latinFontSize;
 
   const TadabourDetailPage({
     Key? key,
     required this.story,
+    this.fontSize = 28.0,
+    this.latinFontSize = 16.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tadabur'),
         elevation: 0,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Surah & Ayat badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withValues(alpha:0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                AppLocalizations.of(context).tadabur_surahAyah(story.surah, story.ayat),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Judul
-            Text(
-              story.judul,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Surah & Ayat badge
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
                   ),
-            ),
-            const SizedBox(height: 16),
-
-            // Deskripsi
-            Text(
-              story.deskripsi,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.color
-                        ?.withValues(alpha:0.7),
-                  ),
-            ),
-            const SizedBox(height: 24),
-
-            // Divider
-            Divider(
-              height: 32,
-              color: Theme.of(context).dividerColor,
-            ),
-
-            // Cerita heading
-            Text(
-              AppLocalizations.of(context).tadabur_storyHeading,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-
-            // Cerita content
-            Text(
-              story.cerita,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.6,
-                  ),
-            ),
-            const SizedBox(height: 24),
-
-            // Divider
-            Divider(
-              height: 32,
-              color: Theme.of(context).dividerColor,
-            ),
-
-            // Pelajaran heading
-            Text(
-              AppLocalizations.of(context).tadabur_lessonHeading,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-
-            // Pelajaran content
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.08),
-                border: Border(
-                  left: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 4,
-                  ),
-                ),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-              ),
-              child: Text(
-                story.pelajaran,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      height: 1.6,
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: primaryColor.withValues(alpha: 0.2),
+                      width: 1.5,
                     ),
-              ),
-            ),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .tadabur_surahAyah(story.surah, story.ayat),
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: latinFontSize,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
 
-            const SizedBox(height: 32),
-          ],
+                // Judul (Title)
+                Text(
+                  story.judul,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize,
+                      ),
+                ),
+                const SizedBox(height: 16),
+
+                // Deskripsi (Description)
+                Text(
+                  story.deskripsi,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        fontSize: latinFontSize,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.color
+                            ?.withValues(alpha: 0.75),
+                        height: 1.6,
+                      ),
+                ),
+                const SizedBox(height: 28),
+
+                // Divider
+                Divider(
+                  height: 32,
+                  thickness: 2,
+                  color: primaryColor.withValues(alpha: 0.1),
+                ),
+
+                // Cerita heading
+                Text(
+                  AppLocalizations.of(context).tadabur_storyHeading,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: latinFontSize + 2,
+                        color: primaryColor,
+                      ),
+                ),
+                const SizedBox(height: 14),
+
+                // Cerita content
+                Text(
+                  story.cerita,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        height: 1.8,
+                        fontSize: latinFontSize,
+                      ),
+                  textAlign: TextAlign.justify,
+                ),
+                const SizedBox(height: 28),
+
+                // Divider
+                Divider(
+                  height: 32,
+                  thickness: 2,
+                  color: primaryColor.withValues(alpha: 0.1),
+                ),
+
+                // Pelajaran heading
+                Text(
+                  AppLocalizations.of(context).tadabur_lessonHeading,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: latinFontSize + 2,
+                        color: primaryColor,
+                      ),
+                ),
+                const SizedBox(height: 14),
+
+                // Pelajaran content
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.08),
+                    border: Border(
+                      left: BorderSide(
+                        color: primaryColor,
+                        width: 5,
+                      ),
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    story.pelajaran,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          height: 1.8,
+                          fontSize: latinFontSize,
+                        ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
         ),
       ),
     );

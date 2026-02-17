@@ -20,6 +20,7 @@ class IqranApp extends StatefulWidget {
 class _IqranAppState extends State<IqranApp> {
   bool isDark = true;
   double arabFont = 28;
+  double latinFont = 16;
   late Locale _currentLocale;
   bool _isLoadingRoute = true;
   Widget? _initialRoute;
@@ -100,6 +101,7 @@ class _IqranAppState extends State<IqranApp> {
     setState(() {
       isDark = prefs.getBool('dark') ?? true;
       arabFont = prefs.getDouble('font') ?? 28;
+      latinFont = prefs.getDouble('latinFont') ?? 16;
       _currentLocale = locale;
     });
   }
@@ -111,6 +113,7 @@ class _IqranAppState extends State<IqranApp> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('dark', isDark);
     await prefs.setDouble('font', arabFont);
+    await prefs.setDouble('latinFont', latinFont);
   }
 
   @override
@@ -179,6 +182,7 @@ class _IqranAppState extends State<IqranApp> {
       home: MainNavigation(
         isDark: isDark,
         fontSize: arabFont,
+        latinFontSize: latinFont,
 
         // Toggle theme
         onTheme: (value) {
@@ -189,6 +193,12 @@ class _IqranAppState extends State<IqranApp> {
         // Change arab font size
         onFont: (value) {
           setState(() => arabFont = value);
+          _savePreferences();
+        },
+
+        // Change latin font size
+        onLatinFont: (value) {
+          setState(() => latinFont = value);
           _savePreferences();
         },
       ),

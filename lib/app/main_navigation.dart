@@ -12,15 +12,19 @@ import '../l10n/app_localizations.dart';
 class MainNavigation extends StatefulWidget {
   final bool isDark;
   final double fontSize;
+  final double latinFontSize;
   final ValueChanged<bool> onTheme;
   final ValueChanged<double> onFont;
+  final ValueChanged<double> onLatinFont;
 
   const MainNavigation({
     super.key,
     required this.isDark,
     required this.fontSize,
+    required this.latinFontSize,
     required this.onTheme,
     required this.onFont,
+    required this.onLatinFont,
   });
 
   @override
@@ -33,18 +37,24 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final currentLocale = Localizations.localeOf(context);
+
     final pages = [
       HomePage(
         key: ValueKey('${widget.fontSize}_${currentLocale.languageCode}'),
         fontSize: widget.fontSize,
       ),
-      const TadabourPage(),
+      TadabourPage(
+        fontSize: widget.fontSize,
+        latinFontSize: widget.latinFontSize,
+      ),
       const ProgressPage(),
       SettingsPage(
         isDark: widget.isDark,
         fontSize: widget.fontSize,
+        latinFontSize: widget.latinFontSize,
         onTheme: widget.onTheme,
         onFont: widget.onFont,
+        onLatinFont: widget.onLatinFont,
       ),
     ];
 

@@ -10,15 +10,19 @@ import '../../services/offline_status_service.dart';
 class SettingsPage extends StatefulWidget {
   final bool isDark;
   final double fontSize;
+  final double latinFontSize;
   final ValueChanged<bool> onTheme;
   final ValueChanged<double> onFont;
+  final ValueChanged<double> onLatinFont;
 
   const SettingsPage({
     super.key,
     required this.isDark,
     required this.fontSize,
+    required this.latinFontSize,
     required this.onTheme,
     required this.onFont,
+    required this.onLatinFont,
   });
 
   @override
@@ -140,9 +144,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                   value: widget.isDark,
                                   onChanged: widget.onTheme,
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 Text(
                                   'Ukuran Font Arab: ${widget.fontSize.toInt()}',
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                 ),
                                 Slider(
                                   min: 20,
@@ -150,6 +157,20 @@ class _SettingsPageState extends State<SettingsPage> {
                                   divisions: 10,
                                   value: widget.fontSize,
                                   onChanged: widget.onFont,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Ukuran Font Latin: ${widget.latinFontSize.toInt()}',
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                                Slider(
+                                  min: 12,
+                                  max: 24,
+                                  divisions: 12,
+                                  value: widget.latinFontSize,
+                                  onChanged: widget.onLatinFont,
                                 ),
                               ],
                             ),
