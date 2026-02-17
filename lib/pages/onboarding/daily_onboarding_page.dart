@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 import '../../services/onboarding_service.dart';
 import '../../utils/hadith_data.dart';
+import '../../utils/doa_data.dart';
 import '../../l10n/app_localizations.dart';
 import 'widgets/animated_character_card.dart';
 import 'widgets/hadith_quote_card.dart';
+import 'widgets/dua_quote_card.dart';
 
 class DailyOnboardingPage extends StatefulWidget {
   final VoidCallback? onDismiss;
@@ -20,12 +23,26 @@ class DailyOnboardingPage extends StatefulWidget {
 
 class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
   late HadithData _hadith;
+  DoaData? _doa;
   bool _isDismissing = false;
+  bool _showDoa = false;
 
   @override
   void initState() {
     super.initState();
     _hadith = getRandomHadith();
+    _loadRandomDoa();
+  }
+
+  Future<void> _loadRandomDoa() async {
+    final doa = await getRandomDoa();
+    if (doa != null && mounted) {
+      setState(() {
+        _doa = doa;
+        // Randomly decide whether to show doa or hadith
+        _showDoa = Random().nextBool();
+      });
+    }
   }
 
   void _dismiss() {
@@ -132,11 +149,17 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                // Hadith quote card
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: HadithQuoteCard(hadith: _hadith),
-                ),
+                // Hadith or Doa quote card
+                if (_showDoa && _doa != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: DuaQuoteCard(doa: _doa!),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: HadithQuoteCard(hadith: _hadith),
+                  ),
                 const SizedBox(height: 48),
                 // Continue button
                 Padding(
