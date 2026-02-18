@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'audio_settings_card.dart';
 import '../../widgets/developer_info_card.dart';
@@ -350,10 +351,26 @@ class _SettingsPageState extends State<SettingsPage> {
                                           'Bisaproduktif',
                                           style: Theme.of(context).textTheme.bodySmall,
                                         )),
-                                        DataCell(Text(
-                                          '@bisaproduktif_',
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        )),
+                                        DataCell(
+                                          GestureDetector(
+                                            onTap: () {
+                                              Clipboard.setData(const ClipboardData(text: '@bisaproduktif_'));
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('@bisaproduktif_ disalin'),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              '@bisaproduktif_',
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.primary,
+                                                decoration: TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     DataRow(
@@ -366,10 +383,26 @@ class _SettingsPageState extends State<SettingsPage> {
                                           'Muh Fajar Shidik CH',
                                           style: Theme.of(context).textTheme.bodySmall,
                                         )),
-                                        DataCell(Text(
-                                          '@fajar_shidikch',
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        )),
+                                        DataCell(
+                                          GestureDetector(
+                                            onTap: () {
+                                              Clipboard.setData(const ClipboardData(text: '@fajar_shidikch'));
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('@fajar_shidikch disalin'),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              '@fajar_shidikch',
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.primary,
+                                                decoration: TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],
