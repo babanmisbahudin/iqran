@@ -330,6 +330,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                         ),
                                       ),
                                     ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Instagram',
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                   rows: [
                                     DataRow(
@@ -342,6 +350,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                           'Bisaproduktif',
                                           style: Theme.of(context).textTheme.bodySmall,
                                         )),
+                                        DataCell(Text(
+                                          '@bisaproduktif_',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
                                       ],
                                     ),
                                     DataRow(
@@ -352,6 +364,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                         )),
                                         DataCell(Text(
                                           'Muh Fajar Shidik CH',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
+                                        DataCell(Text(
+                                          '@fajar_shidikch',
                                           style: Theme.of(context).textTheme.bodySmall,
                                         )),
                                       ],
