@@ -63,7 +63,7 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sleep Timer'),
+        title: const Text('Timer Tidur'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -74,14 +74,14 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                   final minutes = remaining.inMinutes;
                   final seconds = remaining.inSeconds % 60;
                   return Text(
-                    'Active: $minutes:${seconds.toString().padLeft(2, '0')}',
+                    'Aktif: $minutes:${seconds.toString().padLeft(2, '0')}',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                   );
                 }
-                return const Text('No timer set');
+                return const Text('Tidak ada timer yang ditetapkan');
               },
             ),
             const SizedBox(height: 16),
@@ -106,11 +106,11 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
               AudioPlayerService.cancelSleepTimer();
               Navigator.pop(context);
             },
-            child: const Text('Cancel Timer'),
+            child: const Text('Batalkan Timer'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: const Text('Tutup'),
           ),
         ],
       ),
@@ -137,7 +137,7 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_down_rounded),
             onPressed: _handleCollapse,
-            tooltip: 'Collapse',
+            tooltip: 'Tutup',
           ),
           actions: [
             ValueListenableBuilder<Duration?>(
@@ -148,14 +148,14 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                     remaining != null ? Icons.timer : Icons.timer_outlined,
                   ),
                   onPressed: _showSleepTimerDialog,
-                  tooltip: 'Sleep Timer',
+                  tooltip: 'Timer Tidur',
                 );
               },
             ),
             IconButton(
               icon: const Icon(Icons.close_rounded),
               onPressed: widget.onClose,
-              tooltip: 'Stop',
+              tooltip: 'Hentikan',
             ),
           ],
           ),
@@ -229,7 +229,7 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                           AudioPlayerService.canPlayPrevious
                               ? () => AudioPlayerService.playPrevious()
                               : null,
-                      tooltip: 'Previous',
+                      tooltip: 'Sebelumnya',
                     ),
 
                     // Play/pause button (large)
@@ -272,8 +272,8 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                           }
                         },
                         tooltip: widget.status == PlayerStateStatus.playing
-                            ? 'Pause'
-                            : 'Play',
+                            ? 'Jeda'
+                            : 'Putar',
                       ),
                     ),
 
@@ -285,7 +285,7 @@ class _ExpandedMiniPlayerState extends State<ExpandedMiniPlayer>
                           AudioPlayerService.canPlayNext
                               ? () => AudioPlayerService.playNext()
                               : null,
-                      tooltip: 'Next',
+                      tooltip: 'Berikutnya',
                     ),
                   ],
                 ),

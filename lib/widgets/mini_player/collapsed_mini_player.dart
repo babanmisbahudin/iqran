@@ -117,15 +117,15 @@ class CollapsedMiniPlayer extends StatelessWidget {
                   }
                 },
                 tooltip: status == PlayerStateStatus.playing
-                    ? 'Pause'
-                    : 'Resume',
+                    ? 'Jeda'
+                    : 'Lanjutkan',
               ),
 
               // Close button (outside InkWell)
               IconButton(
                 icon: const Icon(Icons.close_rounded),
                 onPressed: onClose,
-                tooltip: 'Stop',
+                tooltip: 'Hentikan',
                 iconSize: 20,
               ),
 
@@ -133,7 +133,7 @@ class CollapsedMiniPlayer extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.expand_less_rounded),
                 onPressed: onHide,
-                tooltip: 'Hide',
+                tooltip: 'Sembunyikan',
                 iconSize: 20,
               ),
             ],
