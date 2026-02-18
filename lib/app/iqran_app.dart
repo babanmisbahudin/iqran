@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme/app_theme.dart';
 import 'main_navigation.dart';
 import '../services/onboarding_service.dart';
-import '../services/localization_service.dart';
 import '../pages/onboarding/first_time_onboarding_page.dart';
 import '../pages/onboarding/daily_onboarding_page.dart';
-import '../l10n/app_localizations.dart';
 
 class IqranApp extends StatefulWidget {
   const IqranApp({super.key});
@@ -21,14 +18,12 @@ class _IqranAppState extends State<IqranApp> {
   bool isDark = true;
   double arabFont = 28;
   double latinFont = 16;
-  late Locale _currentLocale;
   bool _isLoadingRoute = true;
   Widget? _initialRoute;
 
   @override
   void initState() {
     super.initState();
-    _currentLocale = const Locale('id'); // Default
     _loadPreferences();
     _determineInitialRoute();
   }
@@ -48,14 +43,6 @@ class _IqranAppState extends State<IqranApp> {
 
   // Determine which screen to show on app startup
   Future<void> _determineInitialRoute() async {
-    // Set default locale to Indonesian (only supported language)
-    if (!await LocalizationService.isLanguageSelected()) {
-      const locale = Locale('id');
-      setState(() => _currentLocale = locale);
-      await LocalizationService.saveLocale(locale);
-      await LocalizationService.markLanguageSelected();
-    }
-
     // Check if first launch
     if (await OnboardingService.isFirstLaunch()) {
       setState(() {
@@ -94,7 +81,6 @@ class _IqranAppState extends State<IqranApp> {
   // =========================
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    final locale = await LocalizationService.loadLocale();
 
     if (!mounted) return;
 
@@ -102,7 +88,6 @@ class _IqranAppState extends State<IqranApp> {
       isDark = prefs.getBool('dark') ?? true;
       arabFont = prefs.getDouble('font') ?? 28;
       latinFont = prefs.getDouble('latinFont') ?? 16;
-      _currentLocale = locale;
     });
   }
 
@@ -122,14 +107,6 @@ class _IqranAppState extends State<IqranApp> {
     if (_isLoadingRoute) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: _currentLocale,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: LocalizationService.supportedLocales,
         theme: AppTheme.build(isDark),
         home: const Scaffold(
           backgroundColor: Colors.transparent,
@@ -142,14 +119,6 @@ class _IqranAppState extends State<IqranApp> {
     if (_initialRoute != null) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: _currentLocale,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: LocalizationService.supportedLocales,
         theme: AppTheme.build(isDark),
         home: _initialRoute,
       );
@@ -158,18 +127,6 @@ class _IqranAppState extends State<IqranApp> {
     // Show main navigation
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: _currentLocale,
-
-      // =========================
-      // LOCALIZATION
-      // =========================
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: LocalizationService.supportedLocales,
 
       // =========================
       // THEME (LIGHT / DARK)

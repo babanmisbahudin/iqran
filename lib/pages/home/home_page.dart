@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../quran/surah_list_page.dart';
 import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
 import '../../services/progress_service.dart';
 import '../../widgets/animated_page_route.dart';
-import '../../l10n/app_localizations.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
 import 'widgets/stats_section.dart';
@@ -97,8 +95,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-    final currentLocale = Localizations.localeOf(context);
-    final dateStr = DateFormat('EEEE, d MMMM yyyy', currentLocale.languageCode == 'en' ? 'en_US' : 'id_ID').format(now);
+    final dateStr = "${now.toLocal()}".split(' ')[0];
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = _getHorizontalPadding(screenWidth);
     final gridColumns = _getGridColumns(screenWidth);
@@ -123,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          AppLocalizations.of(context).greeting,
+                          'Assalamu\'alaikum',
                           style:
                               Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -202,8 +199,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.menu_book,
                           lottieAsset: 'assets/lottie/book.json',
-                          title: AppLocalizations.of(context).featQuran,
-                          description: AppLocalizations.of(context).featQuranDesc,
+                          title: 'Quran',
+                          description: 'Read and explore the Quran with beautiful recitations',
                           gradientColor: Color.lerp(
                             Colors.green,
                             cs.surfaceContainer,
@@ -219,8 +216,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.bookmark,
                           lottieAsset: 'assets/lottie/bookmark.json',
-                          title: AppLocalizations.of(context).featBookmark,
-                          description: AppLocalizations.of(context).featBookmarkDesc,
+                          title: 'Bookmarks',
+                          description: 'Save your favorite verses and surahs',
                           gradientColor: Color.lerp(
                             cs.primary,
                             cs.surfaceContainer,
@@ -236,8 +233,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.help_outline,
                           lottieAsset: 'assets/lottie/help.json',
-                          title: AppLocalizations.of(context).featTutorial,
-                          description: AppLocalizations.of(context).featTutorialDesc,
+                          title: 'Tutorial',
+                          description: 'Learn how to use the app effectively',
                           gradientColor: Color.lerp(
                             Colors.blue,
                             cs.surfaceContainer,
@@ -253,8 +250,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.favorite,
                           lottieAsset: 'assets/lottie/heart.json',
-                          title: AppLocalizations.of(context).featDonation,
-                          description: AppLocalizations.of(context).featDonationDesc,
+                          title: 'Support Us',
+                          description: 'Help support the development of iQran',
                           gradientColor: Color.lerp(
                             Colors.red,
                             cs.surfaceContainer,

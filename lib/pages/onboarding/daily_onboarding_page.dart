@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:math';
 import '../../services/onboarding_service.dart';
 import '../../utils/hadith_data.dart';
 import '../../utils/doa_data.dart';
-import '../../l10n/app_localizations.dart';
 import 'widgets/animated_character_card.dart';
 import 'widgets/hadith_quote_card.dart';
 import 'widgets/dua_quote_card.dart';
@@ -66,11 +64,9 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final currentLocale = Localizations.localeOf(context);
-    final localeCode = currentLocale.languageCode == 'en' ? 'en_US' : 'id_ID';
-    final dayName = DateFormat('EEEE', localeCode).format(now);
-    final timeStr = DateFormat('HH:mm').format(now);
-    final dateStr = DateFormat('d MMMM yyyy', localeCode).format(now);
+    final dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][now.weekday % 7];
+    final timeStr = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final dateStr = '${now.day} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][now.month - 1]} ${now.year}';
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -86,7 +82,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                   child: Column(
                     children: [
                       Text(
-                        AppLocalizations.of(context).dailyGreeting,
+                        'Selamat pagi',
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
@@ -173,7 +169,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.of(context).dailyBtn,
+                      'Continue Reading',
                       style: Theme.of(context)
                           .textTheme
                           .labelLarge

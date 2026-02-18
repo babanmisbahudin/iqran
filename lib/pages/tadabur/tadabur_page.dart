@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../l10n/app_localizations.dart';
 import '../../models/tadabur_story.dart';
 import '../../services/tadabur_service.dart';
 
@@ -92,7 +91,7 @@ class _TadabourPageState extends State<TadabourPage> {
                   controller: _searchController,
                   onChanged: _handleSearch,
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context).tadabur_searchPlaceholder,
+                    hintText: 'Search stories...',
                     prefixIcon: Icon(Icons.search, color: primaryColor),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -141,11 +140,11 @@ class _TadabourPageState extends State<TadabourPage> {
                       children: [
                         Icon(Icons.error_outline, size: 64, color: primaryColor),
                         const SizedBox(height: 16),
-                        Text(AppLocalizations.of(context).tadabur_loadError),
+                        const Text('Failed to load stories'),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           icon: const Icon(Icons.refresh),
-                          label: Text(AppLocalizations.of(context).tadabur_retryBtn),
+                          label: const Text('Retry'),
                           onPressed: () {
                             setState(() {
                               _storiesFuture =
@@ -177,8 +176,8 @@ class _TadabourPageState extends State<TadabourPage> {
                         const SizedBox(height: 16),
                         Text(
                           _isSearching
-                              ? AppLocalizations.of(context).tadabur_searchEmpty
-                              : AppLocalizations.of(context).tadabur_emptyStories,
+                              ? 'No results found'
+                              : 'No stories yet',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -264,7 +263,7 @@ class _TadabourPageState extends State<TadabourPage> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    AppLocalizations.of(context).tadabur_guideTitle,
+                    'Tadabur Guide',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: primaryColor,
@@ -292,43 +291,43 @@ class _TadabourPageState extends State<TadabourPage> {
                 _buildGuideStep(
                   context,
                   '1',
-                  AppLocalizations.of(context).tadabur_step1Title,
-                  AppLocalizations.of(context).tadabur_step1Desc,
+                  'Step 1: Read',
+                  'Read the Quranic verses carefully',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '2',
-                  AppLocalizations.of(context).tadabur_step2Title,
-                  AppLocalizations.of(context).tadabur_step2Desc,
+                  'Step 2: Understand',
+                  'Look up the meaning of difficult words',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '3',
-                  AppLocalizations.of(context).tadabur_step3Title,
-                  AppLocalizations.of(context).tadabur_step3Desc,
+                  'Step 3: Reflect',
+                  'Think about the message and lessons',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '4',
-                  AppLocalizations.of(context).tadabur_step4Title,
-                  AppLocalizations.of(context).tadabur_step4Desc,
+                  'Step 4: Connect',
+                  'Relate the verses to your life',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '5',
-                  AppLocalizations.of(context).tadabur_step5Title,
-                  AppLocalizations.of(context).tadabur_step5Desc,
+                  'Step 5: Memorize',
+                  'Remember key teachings',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '6',
-                  AppLocalizations.of(context).tadabur_step6Title,
-                  AppLocalizations.of(context).tadabur_step6Desc,
+                  'Step 6: Share',
+                  'Share what you learned with others',
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -344,22 +343,22 @@ class _TadabourPageState extends State<TadabourPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        AppLocalizations.of(context).tadabur_closing,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                      const Text(
+                        'Continue Your Journey',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        AppLocalizations.of(context).tadabur_closingDesc,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              height: 1.5,
-                            ),
+                      const Text(
+                        'Every verse has wisdom waiting to be discovered',
+                        style: TextStyle(
+                          height: 1.5,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        AppLocalizations.of(context).tadabur_closingQuote,
+                        'The best of you are those who learn the Quran and teach it',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontStyle: FontStyle.italic,
                               color: Theme.of(context)
@@ -474,8 +473,7 @@ class _TadabourPageState extends State<TadabourPage> {
                   ),
                 ),
                 child: Text(
-                  AppLocalizations.of(context)
-                      .tadabur_surahAyah(story.surah, story.ayat),
+                  'Surah ${story.surah}:${story.ayat}',
                   style: TextStyle(
                     fontSize: widget.latinFontSize,
                     color: primaryColor,
@@ -514,7 +512,7 @@ class _TadabourPageState extends State<TadabourPage> {
                 child: TextButton.icon(
                   icon: const Icon(Icons.arrow_forward_ios, size: 14),
                   label: Text(
-                    AppLocalizations.of(context).tadabur_readMore,
+                    'Read More',
                     style: TextStyle(fontSize: widget.latinFontSize),
                   ),
                   onPressed: () {
@@ -585,8 +583,7 @@ class TadabourDetailPage extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .tadabur_surahAyah(story.surah, story.ayat),
+                    'Surah ${story.surah}:${story.ayat}',
                     style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.bold,
@@ -631,7 +628,7 @@ class TadabourDetailPage extends StatelessWidget {
 
                 // Cerita heading
                 Text(
-                  AppLocalizations.of(context).tadabur_storyHeading,
+                  'Story',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: latinFontSize + 2,
@@ -660,7 +657,7 @@ class TadabourDetailPage extends StatelessWidget {
 
                 // Pelajaran heading
                 Text(
-                  AppLocalizations.of(context).tadabur_lessonHeading,
+                  'Lesson',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: latinFontSize + 2,

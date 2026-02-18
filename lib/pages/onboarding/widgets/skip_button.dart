@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../l10n/app_localizations.dart';
 
 class SkipButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -20,7 +19,7 @@ class SkipButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: Text(
-        AppLocalizations.of(context).btnSkip,
+        'Skip',
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,

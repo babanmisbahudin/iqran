@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'app/iqran_app.dart';
 import 'pages/splash_screen.dart';
 import 'pages/quran/surah_detail_page.dart';
 import 'services/onboarding_service.dart';
 import 'services/background_audio_service.dart';
-import 'services/localization_service.dart';
 import 'config/device_config.dart';
 
 void main() async {
@@ -15,16 +12,6 @@ void main() async {
 
   // Initialize device configuration for performance optimization
   await DeviceConfig.initialize();
-
-  // Load saved locale preference (Indonesian only)
-  await LocalizationService.loadLocale();
-  const localeCode = 'id_ID';
-
-  // Initialize intl locale data for Indonesian (skip for web)
-  if (!kIsWeb) {
-    await initializeDateFormatting('id_ID', null);
-  }
-  Intl.defaultLocale = localeCode;
 
   // Initialize onboarding service
   await OnboardingService.initialize();

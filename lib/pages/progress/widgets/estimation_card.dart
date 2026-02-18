@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:iqran/services/stats_service.dart';
 
 class EstimationCard extends StatefulWidget {
@@ -112,13 +111,8 @@ class _EstimationCardState extends State<EstimationCard> {
                                 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
                                 'November', 'Desember'];
 
-                try {
-                  // Try DateFormat jika tidak di web
-                  formatted = DateFormat('d MMMM yyyy', 'id_ID').format(date);
-                } catch (e) {
-                  // Fallback ke format simple
-                  formatted = '$day ${months[date.month - 1]} ${date.year}';
-                }
+                // Format simple
+                formatted = '$day ${months[date.month - 1]} ${date.year}';
 
                 final daysLeft = date.difference(DateTime.now()).inDays;
 

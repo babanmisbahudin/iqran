@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../services/onboarding_service.dart';
-import '../../l10n/app_localizations.dart';
 import 'widgets/onboarding_slide.dart';
 import 'widgets/skip_button.dart';
 
@@ -22,27 +21,26 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
   int _currentPage = 0;
 
   List<OnboardingSlideData> _buildSlides(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return [
       OnboardingSlideData(
-        title: l10n.onb1Title,
-        description: l10n.onb1Desc,
+        title: 'Read the Quran',
+        description: 'Explore the holy Quran with beautiful recitations and translations',
         lottieAsset: 'assets/lottie/Reading Quran.json',
       ),
       OnboardingSlideData(
-        title: l10n.onb2Title,
-        description: l10n.onb2Desc,
+        title: 'Share with Family',
+        description: 'Learn together with your loved ones and grow spiritually',
         lottieAsset:
             'assets/lottie/Muslim Father and Daughter Reading Koran.json',
       ),
       OnboardingSlideData(
-        title: l10n.onb3Title,
-        description: l10n.onb3Desc,
+        title: 'Daily Reminders',
+        description: 'Get inspired with daily hadith and verses',
         lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
       ),
       OnboardingSlideData(
-        title: l10n.onb4Title,
-        description: l10n.onb4Desc,
+        title: 'Begin Your Journey',
+        description: 'Start your Quranic learning journey today',
         lottieAsset: 'assets/lottie/Reading in Quran.json',
         isLast: true,
       ),
@@ -169,8 +167,8 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
               ),
               child: Text(
                 _currentPage == _slides.length - 1
-                    ? AppLocalizations.of(context).btnStartNow
-                    : AppLocalizations.of(context).btnContinue,
+                    ? 'Start Now'
+                    : 'Continue',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Colors.white,
                     ),

@@ -7,7 +7,6 @@ import '../pages/settings/settings_page.dart';
 import '../pages/tadabur/tadabur_page.dart';
 import '../services/audio_player_service.dart';
 import '../widgets/mini_player/mini_player_overlay.dart';
-import '../l10n/app_localizations.dart';
 
 class MainNavigation extends StatefulWidget {
   final bool isDark;
@@ -99,7 +98,6 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildFloatingGlassNavbar() {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -123,28 +121,28 @@ class _MainNavigationState extends State<MainNavigation> {
                 children: [
                   _buildNavbarItem(
                     icon: Icons.home_rounded,
-                    label: l10n.navHome,
+                    label: 'Home',
                     isActive: index == 0,
                     onTap: () => setState(() => index = 0),
                     cs: cs,
                   ),
                   _buildNavbarItem(
                     icon: Icons.menu_book_rounded,
-                    label: l10n.navTadabur,
+                    label: 'Tadabur',
                     isActive: index == 1,
                     onTap: () => setState(() => index = 1),
                     cs: cs,
                   ),
                   _buildNavbarItem(
                     icon: Icons.insights_rounded,
-                    label: l10n.navProgress,
+                    label: 'Progress',
                     isActive: index == 2,
                     onTap: () => setState(() => index = 2),
                     cs: cs,
                   ),
                   _buildNavbarItem(
                     icon: Icons.settings_rounded,
-                    label: l10n.navSettings,
+                    label: 'Settings',
                     isActive: index == 3,
                     onTap: () => setState(() => index = 3),
                     cs: cs,
