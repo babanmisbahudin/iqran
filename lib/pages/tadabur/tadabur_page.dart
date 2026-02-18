@@ -102,7 +102,7 @@ class _TadabourPageState extends State<TadabourPage> {
                   controller: _searchController,
                   onChanged: _handleSearch,
                   decoration: InputDecoration(
-                    hintText: 'Search stories...',
+                    hintText: 'Cari cerita...',
                     prefixIcon: Icon(Icons.search, color: primaryColor),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(

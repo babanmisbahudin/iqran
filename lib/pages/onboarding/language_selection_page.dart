@@ -54,7 +54,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
                 // Title
                 Text(
-                  'Choose Your Language',
+                  'Pilih Bahasa Anda',
                   style: textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -65,7 +65,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
                 // Subtitle
                 Text(
-                  'You can change this anytime in Settings',
+                  'Anda dapat mengubah ini kapan saja di Pengaturan',
                   style: textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -102,7 +102,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                       ),
                     ),
                     child: Text(
-                      'Continue',
+                      'Lanjutkan',
                       style: textTheme.labelLarge?.copyWith(
                         color: colorScheme.onPrimary,
                       ),
