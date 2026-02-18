@@ -93,11 +93,24 @@ class _HomePageState extends State<HomePage> {
     return 0.92;
   }
 
+  String _getIndonesianDayName(int weekday) {
+    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+    return days[weekday - 1];
+  }
+
+  String _formatDateWithDay(DateTime date) {
+    final dayName = _getIndonesianDayName(date.weekday);
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year;
+    return '$dayName, $day/$month/$year';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-    final dateStr = "${now.toLocal()}".split(' ')[0];
+    final dateStr = _formatDateWithDay(now);
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = _getHorizontalPadding(screenWidth);
     final gridColumns = _getGridColumns(screenWidth);
