@@ -98,18 +98,27 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<void> _launchInstagram(String username) async {
-    final url = 'https://www.instagram.com/$username';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
+  Future<void> _launchInstagram(String url) async {
+    try {
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(
+          Uri.parse(url),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Tidak dapat membuka Instagram'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Tidak dapat membuka Instagram'),
+            content: Text('Gagal membuka link Instagram'),
           ),
         );
       }
@@ -331,7 +340,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InkWell(
-                                      onTap: () => _launchInstagram('@bisaproduktif_'),
+                                      onTap: () => _launchInstagram('https://www.instagram.com/bisaproduktif_?igsh=ajNpZ3ZiZWIxMzM='),
                                       child: Text(
                                         '• Bisaproduktif',
                                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -342,7 +351,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: () => _launchInstagram('@fajar_shidikch'),
+                                      onTap: () => _launchInstagram('https://www.instagram.com/fajar_shidikch?igsh=MW01ZnBwNHBqa2Juag=='),
                                       child: Text(
                                         '• Muh Fajar Shidik CH',
                                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
