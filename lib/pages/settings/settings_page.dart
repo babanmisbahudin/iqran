@@ -300,9 +300,32 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'Terima kasih kepada para pendukung aplikasi iQran',
+                                'Terima kasih kepada para pendukung aplikasi iQran:',
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '• Bisaproduktif',
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                        height: 1.6,
+                                      ),
+                                    ),
+                                    Text(
+                                      '• Muh Fajar Shidik CH',
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                        height: 1.6,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
