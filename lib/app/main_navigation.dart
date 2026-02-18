@@ -90,9 +90,14 @@ class _MainNavigationState extends State<MainNavigation> {
             right: 0,
             child: _buildFloatingGlassNavbar(),
           ),
+          // Show mini-player FAB (positioned at top-right to avoid navbar overlap)
+          Positioned(
+            top: 16,
+            right: 16,
+            child: _buildShowMiniPlayerFab(),
+          ),
         ],
       ),
-      floatingActionButton: _buildShowMiniPlayerFab(),
     );
   }
 
@@ -206,7 +211,7 @@ class _MainNavigationState extends State<MainNavigation> {
         if (metadata != null && MiniPlayerOverlay.isHidden()) {
           return const FloatingActionButton(
             onPressed: MiniPlayerOverlay.show,
-            tooltip: 'Show player',
+            tooltip: 'Tampilkan Pemutar',
             mini: true,
             child: Icon(Icons.expand_more_rounded),
           );
