@@ -151,11 +151,11 @@ class _TadabourPageState extends State<TadabourPage> {
                       children: [
                         Icon(Icons.error_outline, size: 64, color: primaryColor),
                         const SizedBox(height: 16),
-                        const Text('Failed to load stories'),
+                        const Text('Gagal memuat cerita'),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           icon: const Icon(Icons.refresh),
-                          label: const Text('Retry'),
+                          label: const Text('Coba Lagi'),
                           onPressed: () {
                             setState(() {
                               _storiesFuture =
@@ -187,8 +187,8 @@ class _TadabourPageState extends State<TadabourPage> {
                         const SizedBox(height: 16),
                         Text(
                           _isSearching
-                              ? 'No results found'
-                              : 'No stories yet',
+                              ? 'Hasil tidak ditemukan'
+                              : 'Belum ada cerita',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -310,43 +310,43 @@ class _TadabourPageState extends State<TadabourPage> {
                 _buildGuideStep(
                   context,
                   '1',
-                  'Step 1: Read',
-                  'Read the Quranic verses carefully',
+                  'Langkah 1: Baca',
+                  'Baca ayat-ayat Al-Qur\'an dengan seksama',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '2',
-                  'Step 2: Understand',
-                  'Look up the meaning of difficult words',
+                  'Langkah 2: Pahami',
+                  'Cari tahu arti kata-kata yang sulit',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '3',
-                  'Step 3: Reflect',
-                  'Think about the message and lessons',
+                  'Langkah 3: Renungkan',
+                  'Pikirkan pesan dan pelajaran yang terkandung',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '4',
-                  'Step 4: Connect',
-                  'Relate the verses to your life',
+                  'Langkah 4: Hubungkan',
+                  'Kaitkan ayat dengan kehidupan Anda',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '5',
-                  'Step 5: Memorize',
-                  'Remember key teachings',
+                  'Langkah 5: Hafal',
+                  'Ingat ajaran-ajaran kunci',
                 ),
                 const SizedBox(height: 16),
                 _buildGuideStep(
                   context,
                   '6',
-                  'Step 6: Share',
-                  'Share what you learned with others',
+                  'Langkah 6: Bagikan',
+                  'Bagikan apa yang telah Anda pelajari dengan orang lain',
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -363,21 +363,21 @@ class _TadabourPageState extends State<TadabourPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Continue Your Journey',
+                        'Lanjutkan Perjalananmu',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Every verse has wisdom waiting to be discovered',
+                        'Setiap ayat memiliki kebijaksanaan yang menunggu untuk ditemukan',
                         style: TextStyle(
                           height: 1.5,
                         ),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'The best of you are those who learn the Quran and teach it',
+                        'Sebaik-baiknya kalian adalah yang mempelajari Al-Qur\'an dan mengajarkannya',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontStyle: FontStyle.italic,
                               color: Theme.of(context)
@@ -531,7 +531,7 @@ class _TadabourPageState extends State<TadabourPage> {
                 child: TextButton.icon(
                   icon: const Icon(Icons.arrow_forward_ios, size: 14),
                   label: Text(
-                    'Read More',
+                    'Baca Selengkapnya',
                     style: TextStyle(fontSize: widget.latinFontSize),
                   ),
                   onPressed: () {
@@ -647,7 +647,7 @@ class TadabourDetailPage extends StatelessWidget {
 
                 // Cerita heading
                 Text(
-                  'Story',
+                  'Cerita',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: latinFontSize + 2,
@@ -676,7 +676,7 @@ class TadabourDetailPage extends StatelessWidget {
 
                 // Pelajaran heading
                 Text(
-                  'Lesson',
+                  'Pelajaran',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: latinFontSize + 2,
