@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'audio_settings_card.dart';
 import '../../widgets/developer_info_card.dart';
@@ -94,33 +93,6 @@ class _SettingsPageState extends State<SettingsPage> {
     } finally {
       if (mounted) {
         setState(() => _isDownloading = false);
-      }
-    }
-  }
-
-  Future<void> _launchInstagram(String url) async {
-    try {
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(
-          Uri.parse(url),
-          mode: LaunchMode.externalApplication,
-        );
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Tidak dapat membuka Instagram'),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal membuka link Instagram'),
-          ),
-        );
       }
     }
   }
@@ -333,33 +305,56 @@ class _SettingsPageState extends State<SettingsPage> {
                                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      onTap: () => _launchInstagram('https://www.instagram.com/bisaproduktif_?igsh=ajNpZ3ZiZWIxMzM='),
-                                      child: Text(
-                                        '• Bisaproduktif',
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          height: 1.6,
-                                          decoration: TextDecoration.underline,
+                              const SizedBox(height: 12),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  columnSpacing: 16,
+                                  headingRowHeight: 40,
+                                  dataRowMinHeight: 40,
+                                  dataRowMaxHeight: 40,
+                                  columns: [
+                                    DataColumn(
+                                      label: Text(
+                                        'No',
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () => _launchInstagram('https://www.instagram.com/fajar_shidikch?igsh=MW01ZnBwNHBqa2Juag=='),
-                                      child: Text(
-                                        '• Muh Fajar Shidik CH',
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          height: 1.6,
-                                          decoration: TextDecoration.underline,
+                                    DataColumn(
+                                      label: Text(
+                                        'Nama Pendukung',
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                    ),
+                                  ],
+                                  rows: [
+                                    DataRow(
+                                      cells: [
+                                        DataCell(Text(
+                                          '1',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
+                                        DataCell(Text(
+                                          'Bisaproduktif',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
+                                      ],
+                                    ),
+                                    DataRow(
+                                      cells: [
+                                        DataCell(Text(
+                                          '2',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
+                                        DataCell(Text(
+                                          'Muh Fajar Shidik CH',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                        )),
+                                      ],
                                     ),
                                   ],
                                 ),
