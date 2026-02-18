@@ -6,10 +6,12 @@ import '../quran/surah_detail_page.dart';
 
 class BookmarkPage extends StatefulWidget {
   final double fontSize;
+  final double latinFontSize;
 
   const BookmarkPage({
     super.key,
     this.fontSize = 28.0,
+    this.latinFontSize = 16.0,
   });
 
   @override
@@ -87,6 +89,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
                             nomor: surah.nomor,
                             nama: surah.nama,
                             fontSize: widget.fontSize,
+                            latinFontSize: widget.latinFontSize,
                           ),
                         ),
                       ).then((_) {

@@ -55,14 +55,23 @@ class _TadabourPageState extends State<TadabourPage> {
     });
   }
 
+  Future<void> _onRefresh() async {
+    setState(() {
+      _storiesFuture = TadabourService.getAllStories();
+    });
+    await _storiesFuture;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: CustomScrollView(
+          slivers: [
           // Modern App Bar with search
           SliverAppBar(
             expandedHeight: 160.0,
@@ -223,6 +232,7 @@ class _TadabourPageState extends State<TadabourPage> {
             child: SizedBox(height: 24),
           ),
         ],
+        ),
       ),
     );
   }
@@ -692,7 +702,7 @@ class TadabourDetailPage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 100),
               ],
             ),
           ),

@@ -8,7 +8,8 @@ import 'surah_detail_page.dart';
 
 class SurahListPage extends StatefulWidget {
   final double fontSize;
-  const SurahListPage({super.key, required this.fontSize});
+  final double latinFontSize;
+  const SurahListPage({super.key, required this.fontSize, this.latinFontSize = 16.0});
 
   @override
   State<SurahListPage> createState() => _SurahListPageState();
@@ -43,6 +44,13 @@ class _SurahListPageState extends State<SurahListPage> {
 
     // 2️⃣ sync online di background (tidak blocking UI)
     QuranService.fetchSurah().then((fresh) {
+      if (!mounted) return;
+      setState(() => _surah = fresh);
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    await QuranService.fetchSurah().then((fresh) {
       if (!mounted) return;
       setState(() => _surah = fresh);
     });
@@ -104,9 +112,11 @@ class _SurahListPageState extends State<SurahListPage> {
           ),
         ],
       ),
-      body: _loading && _surah.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : FutureBuilder<Map<String, int>?>(
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: _loading && _surah.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : FutureBuilder<Map<String, int>?>(
               future: ProgressService.load(),
               builder: (_, progressSnap) {
                 final lastSurah = progressSnap.data?['surah'];
@@ -181,6 +191,7 @@ class _SurahListPageState extends State<SurahListPage> {
                                 nomor: e.nomor,
                                 nama: e.namaLatin,
                                 fontSize: widget.fontSize,
+                                latinFontSize: widget.latinFontSize,
                               ),
                             ),
                           );
@@ -191,6 +202,7 @@ class _SurahListPageState extends State<SurahListPage> {
                 );
               },
             ),
-    );
+        ),
+      );
+    }
   }
-}

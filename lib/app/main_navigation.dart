@@ -41,6 +41,7 @@ class _MainNavigationState extends State<MainNavigation> {
       HomePage(
         key: ValueKey('${widget.fontSize}_${currentLocale.languageCode}'),
         fontSize: widget.fontSize,
+        latinFontSize: widget.latinFontSize,
       ),
       TadabourPage(
         fontSize: widget.fontSize,

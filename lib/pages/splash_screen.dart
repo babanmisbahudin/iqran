@@ -53,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen>
         opacity: _fadeAnimation,
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 100),
 
                 // Reading Quran Lottie Animation
                 SizedBox(
@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
 
-                const SizedBox(height: 60),
+                const SizedBox(height: 80),
 
                 // App Title
                 Text(

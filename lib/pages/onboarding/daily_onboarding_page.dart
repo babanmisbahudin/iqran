@@ -169,7 +169,7 @@ class _DailyOnboardingPageState extends State<DailyOnboardingPage> {
                       ),
                     ),
                     child: Text(
-                      'Continue Reading',
+                      'Lanjutkan Bacaan',
                       style: Theme.of(context)
                           .textTheme
                           .labelLarge

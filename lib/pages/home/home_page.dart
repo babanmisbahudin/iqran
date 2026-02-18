@@ -12,10 +12,12 @@ import 'donation_dialog.dart';
 
 class HomePage extends StatefulWidget {
   final double fontSize;
+  final double latinFontSize;
 
   const HomePage({
     super.key,
     this.fontSize = 16.0,
+    this.latinFontSize = 16.0,
   });
 
   @override
@@ -159,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                                     nomor: surahNumber,
                                     nama: 'Surah',
                                     fontSize: widget.fontSize,
+                                    latinFontSize: widget.latinFontSize,
                                     ayatTujuan: ayatNumber,
                                   ),
                                 ),
@@ -199,8 +202,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.menu_book,
                           lottieAsset: 'assets/lottie/book.json',
-                          title: 'Quran',
-                          description: 'Read and explore the Quran with beautiful recitations',
+                          title: 'Al-Qur\'an',
+                          description: 'Baca dan jelajahi Al-Qur\'an dengan murotal yang indah',
                           gradientColor: Color.lerp(
                             Colors.green,
                             cs.surfaceContainer,
@@ -208,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                           )!,
                           onTap: () => _navigateToPage(
                             context,
-                            SurahListPage(fontSize: widget.fontSize),
+                            SurahListPage(fontSize: widget.fontSize, latinFontSize: widget.latinFontSize),
                           ),
                           animationIndex: 0,
                           entranceDelay: const Duration(milliseconds: 100),
@@ -216,8 +219,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.bookmark,
                           lottieAsset: 'assets/lottie/bookmark.json',
-                          title: 'Bookmarks',
-                          description: 'Save your favorite verses and surahs',
+                          title: 'Catatan',
+                          description: 'Simpan ayat dan surah favorit Anda',
                           gradientColor: Color.lerp(
                             cs.primary,
                             cs.surfaceContainer,
@@ -225,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                           )!,
                           onTap: () => _navigateToPage(
                             context,
-                            BookmarkPage(fontSize: widget.fontSize),
+                            BookmarkPage(fontSize: widget.fontSize, latinFontSize: widget.latinFontSize),
                           ),
                           animationIndex: 1,
                           entranceDelay: const Duration(milliseconds: 200),
@@ -233,8 +236,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.help_outline,
                           lottieAsset: 'assets/lottie/help.json',
-                          title: 'Tutorial',
-                          description: 'Learn how to use the app effectively',
+                          title: 'Panduan',
+                          description: 'Pelajari cara menggunakan aplikasi dengan efektif',
                           gradientColor: Color.lerp(
                             Colors.blue,
                             cs.surfaceContainer,
@@ -250,8 +253,8 @@ class _HomePageState extends State<HomePage> {
                         FeatureCard(
                           icon: Icons.favorite,
                           lottieAsset: 'assets/lottie/heart.json',
-                          title: 'Support Us',
-                          description: 'Help support the development of iQran',
+                          title: 'Dukung Kami',
+                          description: 'Bantu mendukung pengembangan iQran',
                           gradientColor: Color.lerp(
                             Colors.red,
                             cs.surfaceContainer,
@@ -263,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),

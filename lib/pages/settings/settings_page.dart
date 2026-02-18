@@ -49,6 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    await _loadOfflineStatus();
+  }
+
   Future<void> _startOfflineDownload() async {
     setState(() {
       _isDownloading = true;
@@ -97,8 +101,11 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
+        return RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: constraints.maxHeight,
             ),
@@ -256,17 +263,65 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: DeveloperInfoCard(),
                       ),
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 20),
+
+                      // =========================
+                      // SUPPORTERS
+                      // =========================
+                      AnimatedCardWrapper(
+                        entranceDelay: const Duration(milliseconds: 500),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceContainer,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.people,
+                                    size: 24,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Dukungan',
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Terima kasih kepada para pendukung aplikasi iQran',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 100),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
+    }
   }
-}
 
 // Language selection button widget

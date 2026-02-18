@@ -15,6 +15,7 @@ class SurahDetailPage extends StatefulWidget {
   final int nomor;
   final String nama;
   final double fontSize;
+  final double latinFontSize;
   final int? ayatTujuan;
 
   const SurahDetailPage({
@@ -22,6 +23,7 @@ class SurahDetailPage extends StatefulWidget {
     required this.nomor,
     required this.nama,
     required this.fontSize,
+    this.latinFontSize = 16.0,
     this.ayatTujuan,
   });
 
@@ -29,12 +31,14 @@ class SurahDetailPage extends StatefulWidget {
     required int nomor,
     required String nama,
     double fontSize = 28,
+    double latinFontSize = 16.0,
     int? ayatTujuan,
   }) {
     return SurahDetailPage(
       nomor: nomor,
       nama: nama,
       fontSize: fontSize,
+      latinFontSize: latinFontSize,
       ayatTujuan: ayatTujuan,
     );
   }
@@ -214,6 +218,10 @@ class _SurahDetailPageState extends State<SurahDetailPage>
     _bookmarkController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _onRefresh() async {
+    setState(() {});
   }
 
   void _showTajweedLegendModal(BuildContext context) {
@@ -402,9 +410,11 @@ class _SurahDetailPageState extends State<SurahDetailPage>
           ),
         ],
       ),
-      body: FutureBuilder<List<Ayat>>(
-        future: QuranService.fetchAyat(widget.nomor),
-        builder: (context, ayatSnap) {
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: FutureBuilder<List<Ayat>>(
+          future: QuranService.fetchAyat(widget.nomor),
+          builder: (context, ayatSnap) {
           if (ayatSnap.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -515,6 +525,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                           child: Text(
                             ayat.latin,
                             style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: widget.latinFontSize,
                               fontStyle: FontStyle.italic,
                               height: 1.6,
                             ),
@@ -524,6 +535,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                         Text(
                           ayat.indo,
                           style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: widget.latinFontSize,
                             height: 1.7,
                           ),
                         ),
@@ -534,6 +546,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
             },
           );
         },
+        ),
       ),
     );
   }

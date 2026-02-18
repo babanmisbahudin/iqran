@@ -210,7 +210,7 @@ class _ProgressPageState extends State<ProgressPage> {
                     ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 100),
                 ],
               ),
             );

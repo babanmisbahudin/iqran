@@ -23,24 +23,24 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
   List<OnboardingSlideData> _buildSlides(BuildContext context) {
     return [
       OnboardingSlideData(
-        title: 'Read the Quran',
-        description: 'Explore the holy Quran with beautiful recitations and translations',
+        title: 'Baca Al-Qur\'an',
+        description: 'Jelajahi Al-Qur\'an yang suci dengan murotal dan terjemahan yang indah',
         lottieAsset: 'assets/lottie/Reading Quran.json',
       ),
       OnboardingSlideData(
-        title: 'Share with Family',
-        description: 'Learn together with your loved ones and grow spiritually',
+        title: 'Berbagi dengan Keluarga',
+        description: 'Belajar bersama orang-orang terkasih dan berkembang secara spiritual',
         lottieAsset:
             'assets/lottie/Muslim Father and Daughter Reading Koran.json',
       ),
       OnboardingSlideData(
-        title: 'Daily Reminders',
-        description: 'Get inspired with daily hadith and verses',
+        title: 'Pengingat Harian',
+        description: 'Dapatkan inspirasi dengan hadis dan ayat-ayat setiap hari',
         lottieAsset: 'assets/lottie/Koran im Ramadan lesen.json',
       ),
       OnboardingSlideData(
-        title: 'Begin Your Journey',
-        description: 'Start your Quranic learning journey today',
+        title: 'Mulai Perjalananmu',
+        description: 'Mulai perjalanan belajar Al-Qur\'an Anda hari ini',
         lottieAsset: 'assets/lottie/Reading in Quran.json',
         isLast: true,
       ),
@@ -167,8 +167,8 @@ class _FirstTimeOnboardingPageState extends State<FirstTimeOnboardingPage> {
               ),
               child: Text(
                 _currentPage == _slides.length - 1
-                    ? 'Start Now'
-                    : 'Continue',
+                    ? 'Mulai Sekarang'
+                    : 'Lanjutkan',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Colors.white,
                     ),

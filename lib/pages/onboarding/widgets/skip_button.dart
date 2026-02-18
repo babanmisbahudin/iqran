@@ -19,7 +19,7 @@ class SkipButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: Text(
-        'Skip',
+        'Lewati',
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
