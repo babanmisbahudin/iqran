@@ -213,6 +213,7 @@ class _MainNavigationState extends State<MainNavigation> {
             onPressed: MiniPlayerOverlay.show,
             tooltip: 'Tampilkan Pemutar',
             mini: true,
+            heroTag: 'show_mini_player_fab',
             child: Icon(Icons.expand_more_rounded),
           );
         }

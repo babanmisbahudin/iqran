@@ -45,7 +45,7 @@ class AudioService {
   /// ✅ INI YANG SEBELUMNYA HILANG
   static Future<String> getAudioUrl(int surahNumber) async {
     final qari = await loadQari();
-    final folder = qariFolder[qari]!;
+    final folder = qariFolder[qari] ?? 'ahmadalsayed';
 
     final surah = surahNumber.toString().padLeft(3, '0');
 

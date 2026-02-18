@@ -93,7 +93,7 @@ class AudioPlayerService {
 
       // Get selected qari
       final qariKey = await AudioService.loadQari();
-      final qariName = AudioService.qariList[qariKey]!;
+      final qariName = AudioService.qariList[qariKey] ?? 'Unknown Qari';
 
       // Get audio URL
       final url = await AudioService.getAudioUrl(surahNumber);
@@ -192,7 +192,7 @@ class AudioPlayerService {
     try {
       final url = await AudioService.getAudioUrl(surahNumber);
       final qariKey = await AudioService.loadQari();
-      final qariName = AudioService.qariList[qariKey]!;
+      final qariName = AudioService.qariList[qariKey] ?? 'Unknown Qari';
 
       // Update metadata
       final metadata = currentMetadata.value?.copyWith(
