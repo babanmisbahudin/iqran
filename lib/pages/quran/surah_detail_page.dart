@@ -297,8 +297,8 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                     }
                   },
                   tooltip: status == PlayerStateStatus.playing
-                      ? 'Pause Murottal'
-                      : 'Play Murottal',
+                      ? 'Jeda Murottal'
+                      : 'Putar Murottal',
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     transitionBuilder: (child, animation) {

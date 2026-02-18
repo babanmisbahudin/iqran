@@ -9,7 +9,7 @@ class TutorialPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tutorial'),
+        title: const Text('Panduan'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

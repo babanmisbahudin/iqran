@@ -70,7 +70,7 @@ class _ProgressPageState extends State<ProgressPage> {
                       onPressed: () {
                         setState(() => _loadData());
                       },
-                      child: const Text('Retry'),
+                      child: const Text('Coba Lagi'),
                     ),
                   ],
                 ),
