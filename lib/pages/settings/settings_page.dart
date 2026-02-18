@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'audio_settings_card.dart';
 import '../../widgets/developer_info_card.dart';
@@ -93,6 +94,24 @@ class _SettingsPageState extends State<SettingsPage> {
     } finally {
       if (mounted) {
         setState(() => _isDownloading = false);
+      }
+    }
+  }
+
+  Future<void> _launchInstagram(String username) async {
+    final url = 'https://www.instagram.com/$username';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tidak dapat membuka Instagram'),
+          ),
+        );
       }
     }
   }
@@ -311,18 +330,26 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '• Bisaproduktif',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurface,
-                                        height: 1.6,
+                                    InkWell(
+                                      onTap: () => _launchInstagram('@bisaproduktif_'),
+                                      child: Text(
+                                        '• Bisaproduktif',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context).colorScheme.primary,
+                                          height: 1.6,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ),
-                                    Text(
-                                      '• Muh Fajar Shidik CH',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurface,
-                                        height: 1.6,
+                                    InkWell(
+                                      onTap: () => _launchInstagram('@fajar_shidikch'),
+                                      child: Text(
+                                        '• Muh Fajar Shidik CH',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context).colorScheme.primary,
+                                          height: 1.6,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ),
                                   ],
