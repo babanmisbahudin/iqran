@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/tadabur_story.dart';
 import '../../services/tadabur_service.dart';
+import '../../widgets/animated_list_item.dart';
+import '../../widgets/animated_card_wrapper.dart';
 
 class TadabourPage extends StatefulWidget {
   final double fontSize;
@@ -204,7 +206,10 @@ class _TadabourPageState extends State<TadabourPage> {
                       if (index == 0 && _showGuide) {
                         return Padding(
                           padding: const EdgeInsets.all(4),
-                          child: _buildGuideCard(),
+                          child: AnimatedCardWrapper(
+                            entranceDelay: const Duration(milliseconds: 100),
+                            child: _buildGuideCard(),
+                          ),
                         );
                       }
 
@@ -214,9 +219,13 @@ class _TadabourPageState extends State<TadabourPage> {
                       }
 
                       final story = displayedStories[storyIndex];
-                      return Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: _buildStoryCard(context, story),
+                      return AnimatedListItem(
+                        index: storyIndex,
+                        delayMultiplier: const Duration(milliseconds: 50),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: _buildStoryCard(context, story),
+                        ),
                       );
                     },
                     childCount:
