@@ -32,7 +32,8 @@
       "Bash(/tmp/fetch_quran.sh)",
       "Bash(python tools/generate_quran_data.py:*)",
       "Bash(/tmp/cerita_31_50.txt:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(dart analyze:*)"
     ],
     "additionalDirectories": [
       "\\tmp"
