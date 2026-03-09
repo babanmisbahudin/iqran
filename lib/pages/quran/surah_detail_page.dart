@@ -6,6 +6,7 @@ import '../../services/progress_service.dart';
 import '../../services/surah_bookmark_service.dart';
 import '../../services/tajweed_service.dart';
 import '../../services/audio_player_service.dart';
+import '../../utils/responsive_helper.dart';
 
 import '../../models/ayat.dart';
 import '../../widgets/tajweed_text.dart';
@@ -55,6 +56,7 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
   final ScrollController _scrollController = ScrollController();
   int? _lastReadAyat;
+  bool _initialScrollDone = false;
 
   // GlobalKey untuk setiap ayat (precise scroll)
   final Map<int, GlobalKey> _ayatKeys = {};
@@ -109,16 +111,9 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
       setState(() {
         _lastReadAyat = targetAyat;
+        _initialScrollDone = false; // Reset untuk FutureBuilder trigger scroll
       });
-
-      if (targetAyat != null) {
-        // Scroll ke target ayat setelah frame render selesai (instant jump tanpa animation)
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _scrollToAyat(targetAyat!, animate: false);
-          }
-        });
-      }
+      // TIDAK ADA _scrollToAyat di sini — FutureBuilder yang handle
     } catch (e) {
       debugPrint('Error loading last read ayat: $e');
     }
@@ -134,82 +129,37 @@ class _SurahDetailPageState extends State<SurahDetailPage>
   }
 
   void _scrollToAyat(int ayatNomor, {int retries = 0, bool animate = false}) {
-    if (retries > 20) return; // Max 20 retries
+    if (retries > 5) return; // Max 5 retries (reduced from 20)
 
-    // PHASE 1: Rough jump to force ListView to build widgets in that area
-    // (Only on first attempt, retries use callback only)
-    if (retries == 0) {
-      if (_scrollController.hasClients) {
-        try {
-          // Audio panel height + (ayat number - 1) * estimated item height
-          // Estimated item height: margin(26) + padding(36) + text(~100) = ~170px
-          const audioHeight = 80.0;
-          const avgItemHeight = 170.0;
-          final estimatedOffset = audioHeight + (ayatNomor - 1) * avgItemHeight;
+    final key = _ayatKeys[ayatNomor];
+    final ctx = key?.currentContext;
 
-          // Jump to rough position to force ListView.builder to build items
-          _scrollController.jumpTo(
-            estimatedOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-          );
-        } catch (e) {
-          // Ignore errors during jump
-        }
-      } else {
-        // ScrollController not ready yet, retry after frame
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _scrollToAyat(ayatNomor, retries: 1, animate: animate);
-          }
-        });
-        return;
-      }
+    if (ctx != null && mounted) {
+      // ALWAYS gunakan Scrollable.ensureVisible — sudah handle viewport offset dengan benar
+      Scrollable.ensureVisible(
+        ctx,
+        duration: animate ? const Duration(milliseconds: 600) : Duration.zero,
+        curve: Curves.easeOut,
+        alignment: 0.1, // 10% dari atas viewport
+      );
+      return;
     }
 
-    // PHASE 2: Fine-tune with GlobalKey after frame renders
+    // Item belum terbangun (ListView.builder lazy) — pre-jump untuk force build
+    if (retries == 0 && _scrollController.hasClients) {
+      // Gunakan 350px sebagai estimasi (overshoot aman, ensureVisible akan koreksi)
+      // 350 = ~222px minimum + buffer untuk long verses
+      const estimatedAvgHeight = 350.0;
+      final rough = (ayatNomor - 1) * estimatedAvgHeight;
+      _scrollController.jumpTo(
+        rough.clamp(0.0, _scrollController.position.maxScrollExtent),
+      );
+    }
+
+    // Tunggu satu frame untuk ListView build items di area target
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-
-      if (_ayatKeys.containsKey(ayatNomor)) {
-        final key = _ayatKeys[ayatNomor];
-        final ayatContext = key?.currentContext;
-
-        if (ayatContext != null && mounted) {
-          if (animate) {
-            // Smooth scroll with animation
-            Scrollable.ensureVisible(
-              ayatContext,
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.easeOut,
-              alignment: 0.2,
-            );
-          } else {
-            // Instant jump without animation
-            try {
-              final renderBox = ayatContext.findRenderObject() as RenderBox?;
-              if (renderBox != null) {
-                final offset = renderBox.localToGlobal(Offset.zero).dy;
-                _scrollController.jumpTo(
-                  _scrollController.offset + offset - 100,
-                );
-              }
-            } catch (e) {
-              // Fallback to ensureVisible if calculation fails
-              Scrollable.ensureVisible(
-                ayatContext,
-                alignment: 0.2,
-              );
-            }
-          }
-        } else if (mounted && retries < 20) {
-          // Widget still not built, retry with exponential backoff
-          // Delays: 100ms, 200ms, 300ms, 400ms, etc.
-          Future.delayed(Duration(milliseconds: 100 * (retries + 1)), () {
-            if (mounted) {
-              _scrollToAyat(ayatNomor, retries: retries + 1, animate: animate);
-            }
-          });
-        }
-      }
+      _scrollToAyat(ayatNomor, retries: retries + 1, animate: animate);
     });
   }
 
@@ -425,20 +375,34 @@ class _SurahDetailPageState extends State<SurahDetailPage>
 
           final ayatList = ayatSnap.data!;
 
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            itemCount: ayatList.length,
-            itemBuilder: (context, index) {
-              final ayat = ayatList[index];
-              final isLastRead = _lastReadAyat == ayat.nomor;
+          // Trigger scroll ONCE setelah data tersedia dan ListView terbangun
+          if (!_initialScrollDone && _lastReadAyat != null) {
+            _initialScrollDone = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _scrollToAyat(_lastReadAyat!, animate: false);
+            });
+          }
 
-              // Create GlobalKey untuk ayat ini jika belum ada
-              if (!_ayatKeys.containsKey(ayat.nomor)) {
-                _ayatKeys[ayat.nomor] = GlobalKey();
-              }
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final screenSize = ResponsiveHelper.screenSizeFrom(constraints.maxWidth);
+              final contentMaxWidth = ResponsiveHelper.contentMaxWidth(screenSize);
+              final padding = ResponsiveHelper.surahDetailPadding(constraints.maxWidth);
 
-              return GestureDetector(
+              return ListView.builder(
+                controller: _scrollController,
+                padding: padding,
+                itemCount: ayatList.length,
+                itemBuilder: (context, index) {
+                  final ayat = ayatList[index];
+                  final isLastRead = _lastReadAyat == ayat.nomor;
+
+                  // Create GlobalKey untuk ayat ini jika belum ada
+                  if (!_ayatKeys.containsKey(ayat.nomor)) {
+                    _ayatKeys[ayat.nomor] = GlobalKey();
+                  }
+
+                  final tile = GestureDetector(
                 onTap: () async {
                   await ProgressService.saveWithHistory(
                     surah: widget.nomor,
@@ -542,6 +506,18 @@ class _SurahDetailPageState extends State<SurahDetailPage>
                     ],
                   ),
                 ),
+              );
+
+                  if (contentMaxWidth == double.infinity) {
+                    return tile;
+                  }
+                  return Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: contentMaxWidth),
+                      child: tile,
+                    ),
+                  );
+                },
               );
             },
           );

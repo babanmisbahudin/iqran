@@ -3,10 +3,12 @@ import '../../../widgets/animated_card_wrapper.dart';
 
 class StatsSection extends StatelessWidget {
   final int versesReadToday;
+  final int dailyTarget;
 
   const StatsSection({
     super.key,
     this.versesReadToday = 0,
+    this.dailyTarget = 50,
   });
 
   @override
@@ -15,8 +17,8 @@ class StatsSection extends StatelessWidget {
 
     // Calculate derived stats
     final totalSessions = versesReadToday > 0 ? 1 : 0;
-    final dailyTarget = versesReadToday > 0
-        ? ((versesReadToday / 50.0) * 100).toInt()
+    final progressPercent = dailyTarget > 0
+        ? ((versesReadToday / dailyTarget) * 100).toInt().clamp(0, 999)
         : 0;
 
     return AnimatedCardWrapper(
@@ -112,7 +114,7 @@ class StatsSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '$dailyTarget%',
+                    '$progressPercent%',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: cs.primary,

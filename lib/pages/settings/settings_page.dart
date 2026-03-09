@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'audio_settings_card.dart';
 import '../../widgets/developer_info_card.dart';
 import '../../widgets/animated_card_wrapper.dart';
+import '../../utils/responsive_helper.dart';
 
 import '../../services/quran_preload_service.dart';
 import '../../services/offline_status_service.dart';
@@ -114,7 +115,9 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 520),
+                  constraints: BoxConstraints(
+                    maxWidth: ResponsiveHelper.isDesktop(context) ? 720 : 520,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

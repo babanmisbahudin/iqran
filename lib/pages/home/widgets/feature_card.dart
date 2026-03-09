@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../../utils/responsive_helper.dart';
 
 class FeatureCard extends StatefulWidget {
   final IconData? icon;
@@ -66,27 +67,6 @@ class _FeatureCardState extends State<FeatureCard>
     super.dispose();
   }
 
-  double _getIconSize(double width) {
-    if (width > 1200) return 64;
-    if (width > 900) return 60;
-    return 56;
-  }
-
-  double _getIconPadding(double width) {
-    if (width > 900) return 16;
-    return 14;
-  }
-
-  double _getTitleFontSize(double width) {
-    if (width > 900) return 16;
-    return 15;
-  }
-
-  double _getDescriptionFontSize(double width) {
-    if (width > 900) return 13;
-    return 12;
-  }
-
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -142,7 +122,7 @@ class _FeatureCardState extends State<FeatureCard>
                           color: widget.gradientColor.withValues(alpha: 0.25),
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        padding: EdgeInsets.all(_getIconPadding(screenWidth)),
+                        padding: EdgeInsets.all(ResponsiveHelper.featureIconPadding(screenWidth)),
                         child: _buildIconWidget(screenWidth),
                       ),
                       const SizedBox(height: 14),
@@ -152,7 +132,7 @@ class _FeatureCardState extends State<FeatureCard>
                             Theme.of(context).textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: cs.onSurface,
-                                  fontSize: _getTitleFontSize(screenWidth),
+                                  fontSize: ResponsiveHelper.featureTitleFontSize(screenWidth),
                                 ),
                         textAlign: TextAlign.center,
                       ),
@@ -162,7 +142,7 @@ class _FeatureCardState extends State<FeatureCard>
                         style:
                             Theme.of(context).textTheme.labelSmall?.copyWith(
                                   color: cs.onSurfaceVariant,
-                                  fontSize: _getDescriptionFontSize(screenWidth),
+                                  fontSize: ResponsiveHelper.featureDescriptionFontSize(screenWidth),
                                 ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -180,7 +160,7 @@ class _FeatureCardState extends State<FeatureCard>
   }
 
   Widget _buildIconWidget(double screenWidth) {
-    final iconSize = _getIconSize(screenWidth);
+    final iconSize = ResponsiveHelper.featureIconSize(screenWidth);
     if (widget.lottieAsset != null) {
       return SizedBox(
         width: iconSize,

@@ -5,6 +5,7 @@ import 'pages/splash_screen.dart';
 import 'pages/quran/surah_detail_page.dart';
 import 'services/onboarding_service.dart';
 import 'services/background_audio_service.dart';
+import 'services/progress_service.dart';
 import 'config/device_config.dart';
 
 void main() async {
@@ -15,6 +16,9 @@ void main() async {
 
   // Initialize onboarding service
   await OnboardingService.initialize();
+
+  // Initialize progress notifiers
+  await ProgressService.initializeNotifiers();
 
   // Initialize background audio service
   if (!kIsWeb) {

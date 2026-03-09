@@ -3,6 +3,7 @@ import '../quran/surah_list_page.dart';
 import '../quran/surah_detail_page.dart';
 import '../bookmark/bookmark_page.dart';
 import '../../services/progress_service.dart';
+import '../../utils/responsive_helper.dart';
 import '../../widgets/animated_page_route.dart';
 import 'widgets/feature_card.dart';
 import 'widgets/last_read_section.dart';
@@ -26,7 +27,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<Map<String, int>?> _progressFuture;
-  late Future<int> _todayVersesFuture;
 
   @override
   void initState() {
@@ -36,17 +36,13 @@ class _HomePageState extends State<HomePage> {
 
   void _loadData() {
     _progressFuture = ProgressService.load();
-    _todayVersesFuture = ProgressService.getVersesReadToday();
   }
 
   Future<void> _onRefresh() async {
     setState(() {
       _loadData();
     });
-    await Future.wait([
-      _progressFuture.then((_) {}).catchError((_) {}),
-      _todayVersesFuture.then((_) {}).catchError((_) {}),
-    ]);
+    await _progressFuture.then((_) {}).catchError((_) {});
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -65,32 +61,6 @@ class _HomePageState extends State<HomePage> {
             });
           }
         });
-  }
-
-  int _getGridColumns(double width) {
-    if (width > 1200) return 4; // Landscape tablet / desktop
-    if (width > 900) return 3; // Tablet
-    if (width > 600) return 2; // Large phone
-    return 2; // Mobile
-  }
-
-  double _getHorizontalPadding(double width) {
-    if (width > 1200) return 32.0;
-    if (width > 900) return 24.0;
-    if (width > 600) return 20.0;
-    return 16.0;
-  }
-
-  double _getGridSpacing(double width) {
-    if (width > 1200) return 20.0;
-    if (width > 900) return 16.0;
-    return 14.0;
-  }
-
-  double _getCardAspectRatio(int columns) {
-    if (columns >= 4) return 0.85;
-    if (columns == 3) return 0.88;
-    return 0.92;
   }
 
   String _getIndonesianDayName(int weekday) {
@@ -112,10 +82,10 @@ class _HomePageState extends State<HomePage> {
     final now = DateTime.now();
     final dateStr = _formatDateWithDay(now);
     final screenWidth = MediaQuery.of(context).size.width;
-    final horizontalPadding = _getHorizontalPadding(screenWidth);
-    final gridColumns = _getGridColumns(screenWidth);
-    final gridSpacing = _getGridSpacing(screenWidth);
-    final cardAspectRatio = _getCardAspectRatio(gridColumns);
+    final horizontalPadding = ResponsiveHelper.horizontalPadding(screenWidth);
+    final gridColumns = ResponsiveHelper.featureGridColumns(screenWidth);
+    final gridSpacing = ResponsiveHelper.featureGridSpacing(screenWidth);
+    final cardAspectRatio = ResponsiveHelper.featureCardAspectRatio(gridColumns);
 
     return Scaffold(
       body: RefreshIndicator(
@@ -194,12 +164,15 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     // Today's Stats Section
-                    FutureBuilder<int>(
-                      future: _todayVersesFuture,
-                      builder: (context, snapshot) {
-                        final versesReadToday = snapshot.data ?? 0;
-                        return StatsSection(versesReadToday: versesReadToday);
-                      },
+                    ValueListenableBuilder<int>(
+                      valueListenable: ProgressService.versesTodayNotifier,
+                      builder: (_, versesReadToday, __) => ValueListenableBuilder<int>(
+                        valueListenable: ProgressService.dailyTargetNotifier,
+                        builder: (_, dailyTarget, __) => StatsSection(
+                          versesReadToday: versesReadToday,
+                          dailyTarget: dailyTarget,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 28),
 

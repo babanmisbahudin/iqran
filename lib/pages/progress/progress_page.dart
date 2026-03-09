@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iqran/models/dashboard_metrics.dart';
 import 'package:iqran/services/progress_service.dart';
 import 'package:iqran/services/stats_service.dart';
+import '../../utils/responsive_helper.dart';
 import '../../widgets/animated_card_wrapper.dart';
 import 'widgets/overall_progress_card.dart';
 import 'widgets/progress_chart_widget.dart';
@@ -24,6 +25,24 @@ class _ProgressPageState extends State<ProgressPage> {
   void initState() {
     super.initState();
     _loadData();
+
+    // Add listeners untuk real-time updates
+    ProgressService.versesTodayNotifier.addListener(_onDataChanged);
+    ProgressService.dailyTargetNotifier.addListener(_onDataChanged);
+  }
+
+  @override
+  void dispose() {
+    // Remove listeners
+    ProgressService.versesTodayNotifier.removeListener(_onDataChanged);
+    ProgressService.dailyTargetNotifier.removeListener(_onDataChanged);
+    super.dispose();
+  }
+
+  void _onDataChanged() {
+    if (mounted) {
+      setState(() => _loadData());
+    }
   }
 
   void _loadData() {
@@ -80,91 +99,80 @@ class _ProgressPageState extends State<ProgressPage> {
             // Get metrics data
             final metrics = snapshot.data ?? DashboardMetrics.empty();
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  // a. DailyTargetCard (top priority)
-                  AnimatedCardWrapper(
-                    entranceDelay: const Duration(milliseconds: 100),
-                    child: DailyTargetCard(
-                      versesReadToday: metrics.versesReadToday,
-                      dailyTarget: metrics.dailyTarget,
-                      progressPercentage: metrics.todayProgressPercentage,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final useTwoColumn = ResponsiveHelper.useProgressTwoColumn(constraints.maxWidth);
+                final hPadding = ResponsiveHelper.horizontalPadding(constraints.maxWidth);
 
-                  // b. ProgressChartWidget (7-day chart)
-                  AnimatedCardWrapper(
-                    entranceDelay: const Duration(milliseconds: 200),
-                    child: ProgressChartWidget(
-                      dailyVerses: metrics.last7DaysVerses,
-                      maxDaily: 150,
-                    ),
+                // Define card widgets
+                final dailyTargetCard = AnimatedCardWrapper(
+                  entranceDelay: const Duration(milliseconds: 100),
+                  child: DailyTargetCard(
+                    versesReadToday: metrics.versesReadToday,
+                    dailyTarget: metrics.dailyTarget,
+                    progressPercentage: metrics.todayProgressPercentage,
                   ),
-                  const SizedBox(height: 16),
+                );
 
-                  // c. MetricsSummaryCard (4 metrics dalam grid)
-                  AnimatedCardWrapper(
-                    entranceDelay: const Duration(milliseconds: 300),
-                    child: MetricsSummaryCard(
-                      totalVersesRead: metrics.totalVersesRead,
-                      totalSurahCompleted: metrics.totalSurahCompleted,
-                      currentStreak: metrics.streak.currentStreak,
-                      monthlyAverageVerses: metrics.monthlyAverageVerses,
-                    ),
+                final chartCard = AnimatedCardWrapper(
+                  entranceDelay: const Duration(milliseconds: 200),
+                  child: ProgressChartWidget(
+                    dailyVerses: metrics.last7DaysVerses,
+                    maxDaily: 150,
                   ),
-                  const SizedBox(height: 16),
+                );
 
-                  // d. Keeping existing widgets
-                  // Overall progress card
-                  AnimatedCardWrapper(
-                    entranceDelay: const Duration(milliseconds: 400),
-                    child: FutureBuilder<Map<String, int>?>(
-                      future: _progressFuture,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData || snapshot.data == null) {
-                          return const Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                final metricsCard = AnimatedCardWrapper(
+                  entranceDelay: const Duration(milliseconds: 300),
+                  child: MetricsSummaryCard(
+                    totalVersesRead: metrics.totalVersesRead,
+                    totalSurahCompleted: metrics.totalSurahCompleted,
+                    currentStreak: metrics.streak.currentStreak,
+                    monthlyAverageVerses: metrics.monthlyAverageVerses,
+                  ),
+                );
+
+                final overallCard = AnimatedCardWrapper(
+                  entranceDelay: const Duration(milliseconds: 400),
+                  child: FutureBuilder<Map<String, int>?>(
+                    future: _progressFuture,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data == null) {
+                        return const Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Center(
+                              child: Text('Belum ada progress murajaah'),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Center(
-                                child: Text('Belum ada progress murajaah'),
-                              ),
-                            ),
-                          );
-                        }
-
-                        final surah = snapshot.data!['surah']!;
-                        final ayat = snapshot.data!['ayat']!;
-
-                        return OverallProgressCard(
-                          surah: surah,
-                          ayat: ayat,
+                          ),
                         );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                      }
 
-                  // Estimation card
-                  const AnimatedCardWrapper(
-                    entranceDelay: Duration(milliseconds: 500),
-                    child: EstimationCard(),
-                  ),
-                  const SizedBox(height: 16),
+                      final surah = snapshot.data!['surah']!;
+                      final ayat = snapshot.data!['ayat']!;
 
-                  // e. Reset button di bottom
-                  AnimatedCardWrapper(
-                    entranceDelay: const Duration(milliseconds: 600),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
+                      return OverallProgressCard(
+                        surah: surah,
+                        ayat: ayat,
+                      );
+                    },
+                  ),
+                );
+
+                final estimationCard = const AnimatedCardWrapper(
+                  entranceDelay: Duration(milliseconds: 500),
+                  child: EstimationCard(),
+                );
+
+                final resetButton = AnimatedCardWrapper(
+                  entranceDelay: const Duration(milliseconds: 600),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
                       icon: const Icon(Icons.restart_alt),
                       label: const Text('Reset Progress'),
                       style: OutlinedButton.styleFrom(
@@ -208,11 +216,62 @@ class _ProgressPageState extends State<ProgressPage> {
                         }
                       },
                     ),
-                    ),
                   ),
-                  const SizedBox(height: 100),
-                ],
-              ),
+                );
+
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 16),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      if (useTwoColumn) ...[
+                        // Row 1: DailyTarget | Chart
+                        IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(child: dailyTargetCard),
+                              const SizedBox(width: 16),
+                              Expanded(child: chartCard),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Row 2: Metrics | Overall
+                        IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(child: metricsCard),
+                              const SizedBox(width: 16),
+                              Expanded(child: overallCard),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Estimation + Reset (full width)
+                        estimationCard,
+                        const SizedBox(height: 16),
+                        resetButton,
+                      ] else ...[
+                        // Single column layout (phone)
+                        dailyTargetCard,
+                        const SizedBox(height: 16),
+                        chartCard,
+                        const SizedBox(height: 16),
+                        metricsCard,
+                        const SizedBox(height: 16),
+                        overallCard,
+                        const SizedBox(height: 16),
+                        estimationCard,
+                        const SizedBox(height: 16),
+                        resetButton,
+                      ],
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                );
+              },
             );
           },
         ),

@@ -1,26 +1,33 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProgressService {
   static const String _key = 'progress_murajaah';
   static const String _historyKey = 'reading_history';
   static const String _dailyPositionKey = 'daily_position_history'; // Simpan posisi setiap hari
+  static const String _dailyTargetKey = 'daily_target_ayat';
+  static const int _defaultDailyTarget = 50;
   static const int totalVerses = 6236;
 
-  // Jumlah ayat per surah (114 surahs)
+  // Real-time notifiers untuk listener (pattern sama seperti AudioPlayerService)
+  static final ValueNotifier<int> versesTodayNotifier = ValueNotifier<int>(0);
+  static final ValueNotifier<int> dailyTargetNotifier = ValueNotifier<int>(_defaultDailyTarget);
+
+  // Jumlah ayat per surah (114 surahs) - FIXED
   static const List<int> surahVerseCount = [
-    7, 286, 200, 176, 120, 165, 206, 75, 129, 109, // 1-10
-    123, 111, 43, 52, 99, 128, 111, 110, 98, 135, // 11-20
-    112, 78, 118, 64, 77, 227, 93, 88, 69, 60, // 21-30
-    34, 30, 73, 54, 45, 37, 182, 36, 45, 54, // 31-40
-    11, 98, 35, 36, 23, 97, 53, 87, 72, 64, // 41-50
-    63, 34, 30, 73, 54, 45, 37, 182, 36, 45, // 51-60
-    54, 11, 98, 35, 36, 23, 97, 53, 87, 72, // 61-70
-    64, 63, 34, 30, 73, 54, 45, 37, 182, 36, // 71-80
-    45, 54, 11, 98, 35, 36, 23, 97, 53, 87, // 81-90
-    72, 64, 63, 34, 30, 73, 54, 45, 37, 182, // 91-100
-    36, 45, 54, 11, 98, 35, 36, 23, 97, 53, // 101-110
-    87, 72, 64, 63, 34, 30, // 111-114
+    7, 286, 200, 176, 120, 165, 206, 75, 129, 109,   // 1-10
+    123, 111, 43, 52, 99, 128, 111, 110, 98, 135,    // 11-20
+    112, 78, 118, 64, 77, 227, 93, 88, 69, 60,       // 21-30
+    34, 30, 73, 54, 45, 83, 182, 88, 75, 85,         // 31-40 (FIXED: 83,88,75,85)
+    54, 53, 89, 59, 37, 35, 38, 29, 18, 45,          // 41-50 (FIXED)
+    60, 49, 62, 55, 78, 96, 29, 22, 24, 13,          // 51-60 (FIXED)
+    14, 11, 11, 18, 12, 12, 30, 52, 52, 44,          // 61-70 (FIXED)
+    28, 28, 20, 56, 40, 31, 50, 40, 46, 42,          // 71-80 (FIXED)
+    29, 19, 36, 25, 22, 17, 19, 26, 30, 20,          // 81-90 (FIXED)
+    15, 21, 11, 8, 8, 19, 5, 8, 8, 11,               // 91-100 (FIXED)
+    11, 8, 3, 9, 5, 4, 7, 3, 6, 3,                   // 101-110 (FIXED)
+    5, 4, 5, 6,                                       // 111-114 (FIXED)
   ];
 
   // ============ HELPER METHODS ============
@@ -117,6 +124,10 @@ class ProgressService {
       final dailyPos = jsonDecode(dailyPosJson) as Map<String, dynamic>;
       dailyPos[today] = cumulativeVerses;
       await prefs.setString(_dailyPositionKey, jsonEncode(dailyPos));
+
+      // Notify real-time listeners
+      final todayCount = await getUniquePagesReadToday();
+      versesTodayNotifier.value = todayCount;
     } catch (e) {
       // Fallback: jika history tracking gagal, minimal simpan current position
       await save(surah: surah, ayat: ayat);
@@ -134,23 +145,11 @@ class ProgressService {
     return calculateCumulativeVerses(surah, ayat);
   }
 
-  /// Get jumlah ayat dibaca hari ini (selisih posisi hari ini vs hari kemarin)
+  /// Get jumlah ayat dibaca hari ini (gunakan unique verse count, bukan position delta)
+  /// FIX: Position delta bisa negative jika user jump ke earlier surah
   static Future<int> getVersesReadToday() async {
-    final prefs = await SharedPreferences.getInstance();
-    final today = _getTodayDateString();
-
-    final dailyPosJson = prefs.getString(_dailyPositionKey) ?? '{}';
-    final dailyPos = jsonDecode(dailyPosJson) as Map<String, dynamic>;
-
-    // Posisi saat ini hari ini
-    final todayPosition = dailyPos[today] ?? 0;
-
-    // Posisi kemarin
-    final yesterday = _getYesterdayDateString();
-    final yesterdayPosition = dailyPos[yesterday] ?? 0;
-
-    // Ayat hari ini = posisi hari ini - posisi kemarin
-    return (todayPosition as int) - (yesterdayPosition as int);
+    // Fix: gunakan unique verse list, bukan position delta (bisa negative!)
+    return getUniquePagesReadToday();
   }
 
   /// Get jumlah ayat unik dibaca hari ini (legacy method - untuk backward compatibility)
@@ -196,6 +195,45 @@ class ProgressService {
     await prefs.remove(_key);
     await prefs.remove(_historyKey);
     await prefs.remove(_dailyPositionKey);
+    // JANGAN reset dailyTargetNotifier — target harian user preference tetap
+    versesTodayNotifier.value = 0;
+  }
+
+  // ============ NOTIFIER INITIALIZATION ============
+
+  /// Initialize notifiers dengan nilai dari SharedPreferences
+  static Future<void> initializeNotifiers() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedTarget = prefs.getInt(_dailyTargetKey) ?? _defaultDailyTarget;
+      dailyTargetNotifier.value = savedTarget;
+      final todayCount = await getUniquePagesReadToday();
+      versesTodayNotifier.value = todayCount;
+    } catch (e) {
+      debugPrint('Error initializing notifiers: $e');
+    }
+  }
+
+  /// Simpan daily target dan update notifier
+  static Future<void> saveDailyTarget(int target) async {
+    try {
+      dailyTargetNotifier.value = target; // Update notifier dulu (sync)
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_dailyTargetKey, target);
+    } catch (e) {
+      debugPrint('Error saving daily target: $e');
+    }
+  }
+
+  /// Load daily target dari SharedPreferences
+  static Future<int> loadDailyTarget() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_dailyTargetKey) ?? _defaultDailyTarget;
+    } catch (e) {
+      debugPrint('Error loading daily target: $e');
+      return _defaultDailyTarget;
+    }
   }
 
   // ============ HELPER METHODS ============
@@ -203,11 +241,6 @@ class ProgressService {
   static String _getTodayDateString() {
     final now = DateTime.now();
     return _formatDate(now);
-  }
-
-  static String _getYesterdayDateString() {
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    return _formatDate(yesterday);
   }
 
   static String _formatDate(DateTime date) {

@@ -6,6 +6,7 @@ import '../pages/progress/progress_page.dart';
 import '../pages/settings/settings_page.dart';
 import '../pages/tadabur/tadabur_page.dart';
 import '../services/audio_player_service.dart';
+import '../utils/responsive_helper.dart';
 import '../widgets/mini_player/mini_player_overlay.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -104,6 +105,8 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildFloatingGlassNavbar() {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final iconSize = ResponsiveHelper.navbarIconSize(screenWidth);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -131,6 +134,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     isActive: index == 0,
                     onTap: () => setState(() => index = 0),
                     cs: cs,
+                    iconSize: iconSize,
                   ),
                   _buildNavbarItem(
                     icon: Icons.menu_book_rounded,
@@ -138,6 +142,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     isActive: index == 1,
                     onTap: () => setState(() => index = 1),
                     cs: cs,
+                    iconSize: iconSize,
                   ),
                   _buildNavbarItem(
                     icon: Icons.insights_rounded,
@@ -145,6 +150,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     isActive: index == 2,
                     onTap: () => setState(() => index = 2),
                     cs: cs,
+                    iconSize: iconSize,
                   ),
                   _buildNavbarItem(
                     icon: Icons.settings_rounded,
@@ -152,6 +158,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     isActive: index == 3,
                     onTap: () => setState(() => index = 3),
                     cs: cs,
+                    iconSize: iconSize,
                   ),
                 ],
               ),
@@ -168,6 +175,7 @@ class _MainNavigationState extends State<MainNavigation> {
     required bool isActive,
     required VoidCallback onTap,
     required ColorScheme cs,
+    required double iconSize,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -185,7 +193,7 @@ class _MainNavigationState extends State<MainNavigation> {
             child: Icon(
               icon,
               color: isActive ? cs.primary : cs.onSurface.withValues(alpha: 0.6),
-              size: 24,
+              size: iconSize,
             ),
           ),
           const SizedBox(height: 4),

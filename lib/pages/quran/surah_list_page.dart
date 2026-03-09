@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../services/quran_service.dart';
 import '../../services/progress_service.dart';
 import '../../models/surah.dart';
+import '../../utils/responsive_helper.dart';
 import 'surah_detail_page.dart';
 
 class SurahListPage extends StatefulWidget {
@@ -127,75 +128,44 @@ class _SurahListPageState extends State<SurahListPage> {
                   );
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: filteredSurah.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (context, index) {
-                    final e = filteredSurah[index];
-                    final isLastRead = e.nomor == lastSurah;
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final columns = ResponsiveHelper.surahListColumns(constraints.maxWidth);
+                    final arabicSize = ResponsiveHelper.arabicTrailingFontSize(constraints.maxWidth);
 
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: isLastRead
-                            ? cs.primary.withValues(alpha: 0.08)
-                            : null,
-                        border: isLastRead
-                            ? Border(
-                                left: BorderSide(color: cs.primary, width: 4),
-                              )
-                            : null,
+                    if (columns == 1) {
+                      // Phone: ListView
+                      return ListView.separated(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        itemCount: filteredSurah.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (ctx, index) => _buildSurahTile(
+                          ctx,
+                          filteredSurah[index],
+                          lastSurah,
+                          arabicSize,
+                          widget.fontSize,
+                          widget.latinFontSize,
+                        ),
+                      );
+                    }
+
+                    // Tablet/Desktop: GridView
+                    return GridView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisExtent: 80,
+                        crossAxisSpacing: 8,
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                e.namaLatin,
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            if (isLastRead)
-                              Text(
-                                'Terakhir dibaca',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: cs.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                          ],
-                        ),
-                        subtitle: Text(
-                          '${e.jumlahAyat} ayat',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        trailing: Text(
-                          e.nama,
-                          textDirection: TextDirection.rtl,
-                          style: const TextStyle(
-                            fontFamily: 'QuranFont',
-                            fontSize: 22,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => SurahDetailPage(
-                                nomor: e.nomor,
-                                nama: e.namaLatin,
-                                fontSize: widget.fontSize,
-                                latinFontSize: widget.latinFontSize,
-                              ),
-                            ),
-                          );
-                        },
+                      itemCount: filteredSurah.length,
+                      itemBuilder: (ctx, index) => _buildSurahTile(
+                        ctx,
+                        filteredSurah[index],
+                        lastSurah,
+                        arabicSize,
+                        widget.fontSize,
+                        widget.latinFontSize,
                       ),
                     );
                   },
@@ -205,4 +175,75 @@ class _SurahListPageState extends State<SurahListPage> {
         ),
       );
     }
+  }
+
+  /// Build a surah tile widget for both ListView and GridView
+  Widget _buildSurahTile(BuildContext context, Surah surah, int? lastSurah, double arabicFontSize, double fontSize, double latinFontSize) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final isLastRead = surah.nomor == lastSurah;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isLastRead
+            ? cs.primary.withValues(alpha: 0.08)
+            : null,
+        border: isLastRead
+            ? Border(
+                left: BorderSide(color: cs.primary, width: 4),
+              )
+            : null,
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                surah.namaLatin,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (isLastRead)
+              Text(
+                'Terakhir dibaca',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+          ],
+        ),
+        subtitle: Text(
+          '${surah.jumlahAyat} ayat',
+          style: theme.textTheme.bodySmall,
+        ),
+        trailing: Text(
+          surah.nama,
+          textDirection: TextDirection.rtl,
+          style: TextStyle(
+            fontFamily: 'QuranFont',
+            fontSize: arabicFontSize,
+          ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SurahDetailPage(
+                nomor: surah.nomor,
+                nama: surah.namaLatin,
+                fontSize: fontSize,
+                latinFontSize: latinFontSize,
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
