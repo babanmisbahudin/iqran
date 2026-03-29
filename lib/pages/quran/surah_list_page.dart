@@ -60,7 +60,6 @@ class _SurahListPageState extends State<SurahListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
 
     final filteredSurah = _keyword.isEmpty
         ? _surah

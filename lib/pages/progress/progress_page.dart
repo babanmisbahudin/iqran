@@ -163,7 +163,7 @@ class _ProgressPageState extends State<ProgressPage> {
                   ),
                 );
 
-                final estimationCard = const AnimatedCardWrapper(
+                const estimationCard = AnimatedCardWrapper(
                   entranceDelay: Duration(milliseconds: 500),
                   child: EstimationCard(),
                 );
