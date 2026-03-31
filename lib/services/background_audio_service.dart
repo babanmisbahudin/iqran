@@ -31,9 +31,6 @@ class BackgroundAudioService {
         if (event.begin) {
           // Pause when interrupted
           _audioHandler?.pause();
-        } else {
-          // Optionally resume when interruption ends
-          // _audioHandler?.play();
         }
       });
 
