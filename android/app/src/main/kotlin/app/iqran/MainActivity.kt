@@ -1,4 +1,4 @@
-package com.example.iqran
+package app.iqran
 
 import io.flutter.embedding.android.FlutterActivity
 

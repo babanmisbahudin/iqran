@@ -2,7 +2,7 @@ name: iqran
 description: A personal Quran app for murajaah
 publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.0+1  # Naikkan angka setelah + setiap kali upload ke Play Store
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.iqran">
+    package="app.iqran">
 
     <!-- WAJIB: IZIN INTERNET UNTUK API EQURAN -->
     <uses-permission android:name="android.permission.INTERNET" />
